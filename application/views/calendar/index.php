@@ -37,12 +37,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $(document).ready(function() {
     $('#calendar').fullCalendar({
 		eventSources: [
-            {
-                color: '#18b9e6',   
-                textColor: '#000000',
-                events: []
-            }
-        ]
+         {
+             events: function(start, end, timezone, callback) {
+                 $.ajax({
+                 url: '<?php echo base_url() ?>calendar/get_events',
+                 dataType: 'json',
+                 data: {
+                 // our hypothetical feed requires UNIX timestamps
+                 start: start.unix(),
+                 end: end.unix()
+                 },
+                 success: function(msg) {
+                     var events = msg.events;
+                     callback(events);
+                 }
+                 });
+             }
+         },
+     ]
     });
 });
 </script>
