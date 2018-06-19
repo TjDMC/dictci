@@ -11,4 +11,8 @@ class Main extends MY_Controller {
 			$this->load->view('login');
 		}
 	}
+
+	public function login(){
+		$data = parse_custom_post( $this->input->post('data'));
+	}
 }

@@ -13,8 +13,8 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 		success = function(response) {
 			var responseData = {};
 			responseData = response.data;
-			if(!('success' in responseData) || !('msg' in responseData)){
-				$rootScope.customAlert('ERROR','Something is missing');
+			if(!responseData || !('success' in responseData) || !('msg' in responseData)){
+				alert('ERROR Something is missing');
 				return;
 			}
 			if(responseData.success){
@@ -25,7 +25,7 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 		}
 
 		error = function(response){
-			$rootScope.customAlert('Error','Something went wrong');
+			alert('ERROR Something went wrong');
 			$rootScope.busy = false;
 		}
 
@@ -49,9 +49,25 @@ app.controller('initializer',function($scope,$rootScope){
 });
 
 app.controller('login',function($scope,$rootScope,$http,$window){
-	$scope.account = {};
 
 	$scope.test = function(){
 		alert("TESTING WORKS!!! "+$rootScope.csrf.tokenName+" "+$rootScope.csrf.hash);
+	}
+
+	$scope.login = function(){
+		$rootScope.post(
+			$rootScope.baseURL+"main/login",
+			{
+				'username':$scope.username,
+				'password':$scope.password
+			},
+			function(){
+				alert("login success");
+				$window.location.reload();
+			},
+			function(){
+				alert("login failed");
+			}
+		);
 	}
 });
