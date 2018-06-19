@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
 
-<html>
-<head>
+<html ng-app="app">
+<head ng-controller="initializer" ng-init="init('<?=base_url()?>','<?= $this->security->get_csrf_token_name()?>','<?= $this->security->get_csrf_hash()?>')">
     <title>DICT</title>
 	<link href="<?= base_url() ?>/css/bootstrap.min.css">
 	<link href="<?= base_url() ?>/css/example.css" type="text/css" rel="stylesheet">
