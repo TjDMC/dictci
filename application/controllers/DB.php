@@ -3,16 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DB extends MY_Controller {
 
-	public function body()
+	//Override
+	public function index()
 	{
-		if($this->ion_auth->logged_in()){
-			$this->load->view('welcome_message');
-		}else{
-			$this->load->view('login');
-		}
+
 	}
 
 	public function initDB(){
+		if(!$this->ion_auth->is_admin()){
+			show_error("You don't have permission to access this page.",403);
+			return;
+		}
 		$this->load->model("employee_model");
 		$this->employee_model->createTable();
 	}
