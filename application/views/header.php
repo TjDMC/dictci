@@ -9,7 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link href="<?= base_url() ?>/css/bootstrap.min.css">
 	<link href="<?= base_url() ?>/css/example.css" type="text/css" rel="stylesheet">
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
-	
+    <script src="<?= base_url().'js/app.js'?>"></script>
+
 	<!-- Header -->
 	<div style="background-color:black;border: 1px solid #D0D0D0;margin: 10px;box-shadow: 0 0 8px #D0D0D0;">
 		<br/><br/><br/><br/><br/>Sample header
