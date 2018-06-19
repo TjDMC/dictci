@@ -18,4 +18,10 @@ class MY_Controller extends CI_Controller{
         $this->load->view("footer");
     }
 
+    public function html($lambda){
+        $this->load->view("header");
+        $lambda();
+        $this->load->view("footer");
+    }
+
 }
