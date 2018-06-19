@@ -24,8 +24,11 @@ class Employee extends MY_Controller{
         ));
     }
 
-    public function display($employeeID){
-        $class = $this;
+    public function display($employeeID=null){
+        if($employeeID == null){
+            show_404();
+        }
+
         $this->html(
             function() use ($employeeID){
                 $this->load->view("employee/display",array("employeeID"=>$employeeID));
