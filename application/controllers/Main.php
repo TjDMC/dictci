@@ -25,4 +25,8 @@ class Main extends MY_Controller {
 
 		custom_response(true,$data['username']);
 	}
+
+	public function logout(){
+		$this->ion_auth->logout();
+	}
 }
