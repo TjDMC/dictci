@@ -4,5 +4,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 <div id="container">
-	<p>Test</p>
+	<p>HA! Ha! It Works!</p>
 </div>
