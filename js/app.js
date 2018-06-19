@@ -50,10 +50,6 @@ app.controller('initializer',function($scope,$rootScope){
 
 app.controller('login',function($scope,$rootScope,$http,$window){
 
-	$scope.test = function(){
-		alert("TESTING WORKS!!! "+$rootScope.csrf.tokenName+" "+$rootScope.csrf.hash);
-	}
-
 	$scope.login = function(){
 		$rootScope.post(
 			$rootScope.baseURL+"main/login",
@@ -61,13 +57,25 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 				'username':$scope.username,
 				'password':$scope.password
 			},
-			function(){
-				alert("login success");
+			function(response){
+				alert("Successfully logged in");
 				$window.location.reload();
 			},
-			function(){
-				alert("login failed");
+			function(response){
+				alert("Login Failed: "+response.msg);
 			}
 		);
+	}
+
+	$scope.logout = function(){
+		$http({
+			method: 'GET',
+			url: $rootScope.baseURL+"main/logout"
+		}).then(function(){
+			alert("Successfully logged out.");
+			$window.location.reload();
+		},function(){
+			alert("Logout Error");
+		});
 	}
 });

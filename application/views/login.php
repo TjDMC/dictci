@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div ng-controller="login" ng-init="test()">
+<div ng-controller="login">
     <form>
         <p>
             Username: <input ng-model="username" type="text" />
