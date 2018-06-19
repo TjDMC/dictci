@@ -6,5 +6,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<button ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">LOGOUT</button>
 	</div>
 </div>
+
+<!-- Bootstrap Scripts -->
+<script src="<?= base_url() ?>/js/jquery.min.js"></script>
+<script src="<?= base_url() ?>/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
