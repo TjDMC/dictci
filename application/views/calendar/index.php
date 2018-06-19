@@ -16,6 +16,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<script src="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.js"></script>
 		<script src="<?php echo base_url() ?>scripts/fullcalendar/gcal.js"></script>
 		
+		<script src="<?php echo base_url() ?>bootstrap/js/bootstrap.min.js"></script>
+		
     </head>
     <body>
 
