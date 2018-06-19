@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Header -->
 	<div style="background-color:black;border: 1px solid #D0D0D0;margin: 10px;box-shadow: 0 0 8px #D0D0D0;">
 		<br/><br/><br/><br/><br/>Sample header<br/>
-		<button>Calendar</button>
+		<a href="<?=base_url() ?>"><button>Home</button></a>
+		<a href="<?=base_url().'calendar'?>"><button>Calendar</button></a>
 		<button>Employee</button>
 	</div>
