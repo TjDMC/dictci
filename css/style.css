@@ -1,0 +1,11 @@
+header{
+	background-color: #70a0ff;
+	padding: 10px;
+	text-align: left;
+	/* Fonts */
+	color: white;
+	font-size: 50px;
+}
+
+#wrapper{
+	height: 100%;
