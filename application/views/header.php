@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <body>
 <div id="wrapper">
+	<div id="content">
 	<!-- Header -->
 	<header>
 		<div class="row">
@@ -32,20 +33,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		
 			<div class="col-md-7 col-12" style="text-align: right; font-size: 25px;">
-				Leave Credit</br>
-				Computation
-			</div>
-		<div>
-	</header>
-	
-	<nav class="nav">
-		<div>
-			<div class="row button-grp">
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#employee" aria-expanded="false">Working</button>
+				Leave Credit Computation</br>
+				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Menu</a>
 			</div>
 		</div>
-	</nav>
-	
-	<div id="employee" class="collapse">
-		Sad Life
-	</div>
+	</header>
