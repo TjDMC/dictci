@@ -20,7 +20,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<li>
 				<a data-toggle="collapse" data-target="#employee" aria-expanded="false">Employee</a>
 				<div id="employee" class="collapse">
-					Sad Life
+					<a href="#">&nbsp;&nbsp;Add New</a></br>
+					<a href="#">&nbsp;&nbsp;Application for Leave</a></br>
+					<a href="#">&nbsp;&nbsp;View List</a></br>
+					<a href="#">&nbsp;&nbsp;Resignation</a>
 				</div>
 			</li>
 			<li>
