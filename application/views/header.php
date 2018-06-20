@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 	<link href="<?= base_url() ?>/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
-	<link href="<?= base_url() ?>bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
 
 	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
@@ -31,13 +31,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- Header -->
 	<header>
 		<div class="row">
-			<div class="col-md-5 col-12">
+			<div class="col-sm-5 col-12">
 				<a href="<?= base_url() ?>"><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
 			</div>
 
-			<div class="col-md-7 col-12" style="text-align: right; font-size: 25px;">
+			<div class="col-sm-7 col-12" style="text-align: right; font-size: 50px;">
 				Leave Credit Computation</br>
-				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon-option-horizontal"></span></button>
+				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-ellipsis-h"></span></button>
 			</div>
 		</div>
 	</header>
