@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 Name: <input type="text" ng-model="employee.name">
             </p>
             <p>
-                Start Date: <input type="datetime-local" ng-model="leave.start_date"/>
+                Start Date: <input type="datetime-local" ng-model="leave.start_date" ng-init="debug()" ng-change="debug()"/>
             </p>
             <p>
                 End Date: <input type="datetime-local" ng-model="leave.end_date"/>
