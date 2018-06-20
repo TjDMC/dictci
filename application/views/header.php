@@ -12,9 +12,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 	<link href="<?= base_url() ?>/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
-	
-	
+
+	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
+	<script src="<?= base_url().'js/moment.min.js' ?>"></script>
+	<script src="<?= base_url().'js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
 
     <script src="<?= base_url().'js/app.js'?>"></script>
@@ -31,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				(logo)
 				DICT
 			</div>
-		
+
 			<div class="col-md-7 col-12" style="text-align: right; font-size: 25px;">
 				Leave Credit Computation</br>
 				<a ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle">Menu</a>

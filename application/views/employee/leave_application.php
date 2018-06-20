@@ -10,13 +10,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 Employee No: <input type="text" ng-model="employee.emp_no">
             </p>
             <p>
-                Last Name: <input type="text" ng-model="employee.last_name">
+                Name: <input type="text" ng-model="employee.name">
             </p>
             <p>
-                First Name: <input type="text" ng-model="employee.first_name">
+                Start Date: <input type="datetime-local" ng-model="leave.start_date"/>
             </p>
             <p>
-                Middle Name: <input type="text" ng-model="employee.middle_name">
+                End Date: <input type="datetime-local" ng-model="leave.end_date"/>
+            </p>
+            <div>
+                Leave Type:
+                <p><input type="radio" ng-model="leave.type" value="vacation"/>Vacation</p>
+                <p><input type="radio" ng-model="leave.type" value="sick"/>Sick</p>
+                <p><input type="radio" ng-model="leave.type" value="maternity"/>Maternity</p>
+                <p><input type="radio" ng-model="leave.type" value="paternity"/>Paternity</p>
+                <p><input type="radio" ng-model="leave.type" value="others"/>Others</p>
+                <p ng-if="leave.type=='others'">Specify: <input  type="text" ng-model="leave.type_others"/></p>
+            </div>
+            <p>
+                <input type="submit" ng-click="submit()"/>
             </p>
         </form>
     </div>
