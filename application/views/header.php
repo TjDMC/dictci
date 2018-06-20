@@ -9,10 +9,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <title>DICT</title>
+	<link rel="icon" href="<?= base_url()?>/favicon.png" type="image/gif">
 
 
-	<link href="<?= base_url() ?>/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
 
 	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
@@ -31,8 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<header>
 		<div class="row">
 			<div class="col-md-5 col-12">
-				(logo)
-				DICT
+				<a><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
 			</div>
 
 			<div class="col-md-7 col-12" style="text-align: right; font-size: 25px;">
