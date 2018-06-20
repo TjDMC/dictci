@@ -5,9 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 
 
-		<footer ng-controller="login">
-			<br/><br/><br/><br/><br/>Sample footer
-			<button ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">LOGOUT</button>
+		<footer>
+			Sample footer
 		</footer>
 	</div>
 	
@@ -15,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div id="sidebar-wrapper">
 		<ul class="sidebar-nav">
 			<li class="sidebar-brand">
-				<a>DICT</a>
+				<a href="<?= base_url() ?>">DICT</a>
 			</li>
 			<li>
 				<a href="<?= base_url() ?>">Home</a>
@@ -36,6 +35,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<a href="<?= base_url().'calendar' ?>">&nbsp;&nbsp;View Calendar</a></br>
 					<a href="#">&nbsp;&nbsp;Suspended Work</a>
 				</div>
+			</li>
+			<li ng-controller="login">
+				<a ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">Logout</a>
 			</li>
 		</ul>
 	</div>

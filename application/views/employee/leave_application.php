@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 Employee No: <input type="text" ng-model="employee.emp_no">
             </p>
             <p>
-                Name: <input type="text" ng-model="employee.name">
+                Employee Name: <input type="text" ng-model="employee.name">
             </p>
             <p>
                 Start Date: <input type="datetime-local" ng-model="leave.start_date" ng-init="debug()" ng-change="debug()"/>
@@ -18,6 +18,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <p>
                 End Date: <input type="datetime-local" ng-model="leave.end_date"/>
             </p>
+			<p>
+				Remark: <input type="textarea" ng-model="leave.remark"/>
+			</p>
             <div>
                 Leave Type:
                 <p><input type="radio" ng-model="leave.type" value="vacation"/>Vacation</p>
