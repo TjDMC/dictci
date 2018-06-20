@@ -3,35 +3,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Employee extends MY_Controller{
 
-    public $sampleEmployees = array(
-        array(
-            "ID"=>1,
-            "Name"=>"Peter"
-        ),
-        array(
-            "ID"=>2,
-            "Name"=>"Paul"
-        ),
-        array(
-            "ID"=>3,
-            "Name"=>"Israel"
-        ),
-    );
+    public function __construct(){
+        parent::__construct();
+        $this->load->model("employee_model");
+    }
 
     public function body(){
-        $this->load->view("employee/list",array(
-            "employees"=>json_encode($this->sampleEmployees,JSON_HEX_QUOT|JSON_HEX_APOS)
+        $this->load->view("employee/navigation",array(
+            "employees"=>json_encode($this->employee_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT)
         ));
     }
 
-    public function display($employeeID=null){
-        if($employeeID == null){
+    public function display($employeeNo=null){
+        if($employeeNo == null){
+            show_404();
+        }
+        $employee = $this->employee_model->getEmployee($employeeNo);
+        if($employee==null){
             show_404();
         }
 
         $this->html(
-            function() use ($employeeID){
-                $this->load->view("employee/display",array("employeeID"=>$employeeID));
+            function() use ($employee){
+                $this->load->view("employee/display",array(
+                    "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT)
+                ));
             }
         );
     }
@@ -44,7 +40,18 @@ class Employee extends MY_Controller{
         );
     }
 
-    public function delete($employeeID){
+    public function delete(){
+    }
+
+    public function leaveApplication($employeeNo=null){
+        $this->html(
+            function() use ($employeeNo){
+                $this->load->view('employee/leave_application',array(
+                    "employees"=>json_encode($this->employee_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT),
+                    "employee_no"=>$employeeNo
+                ));
+            }
+        );
     }
 
 }
