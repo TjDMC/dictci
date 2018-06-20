@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Bootstrap Scripts -->
 <script src="<?= base_url() ?>/js/jquery.min.js"></script>
-<script src="<?= base_url() ?>/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url() ?>bootstrap/js/bootstrap.min.js"></script>
 
 <script>
 	$("#menu-toggle").click(function(e) {
