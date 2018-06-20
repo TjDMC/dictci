@@ -24,4 +24,7 @@ class MY_Controller extends CI_Controller{
         $this->load->view("footer");
     }
 
+    public function body(){
+        //To Override
+    }
 }
