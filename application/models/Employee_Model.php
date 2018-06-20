@@ -23,6 +23,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("emp_no char(7) not null");
             $this->dbforge->add_field("from_date datetime not null");
             $this->dbforge->add_field("to_date datetime not null");
+            $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (id)");
             $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX."leaves");
@@ -70,6 +71,10 @@ class Employee_Model extends MY_Model{
 
         $this->db->insert(DB_PREFIX."employee",$employee);
         return null;
+    }
+
+    public function addLeave($employeeNo,$leaveData){
+        
     }
 
     public function getEmployee($employeeNo){

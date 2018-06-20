@@ -39,10 +39,21 @@ app.controller('leave_application',function($scope,$rootScope){
         "emp_no":"",
         "last_name":"",
         "first_name":"",
-        "middle_name":""
+        "middle_name":"",
+        "name":""
     };
+    $scope.leave={};
+
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
-        $scope.employee = employee===null?$scope.employee:employee;
+        if(employee!=null){
+            $scope.employee = employee;
+            $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
+        }
+
+    }
+
+    $scope.submit = function(){
+
     }
 });
