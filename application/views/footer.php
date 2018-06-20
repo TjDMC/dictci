@@ -14,6 +14,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- SideBar -->
 	<div id="sidebar-wrapper">
 		<ul class="sidebar-nav">
+			<li class="sidebar-brand">
+				<a>DICT</a>
+			</li>
 			<li>
 				<a href="<?= base_url() ?>">Home</a>
 			</li>

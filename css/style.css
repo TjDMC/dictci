@@ -1,5 +1,10 @@
+:root{
+	--transition-duration: 1s;
+}
+
 header{
-	background-color: #2d8fa3;
+	background: linear-gradient(30deg, #2abe91, #23969d);
+	/*background-color: #2d8fa3;*/
 	padding: 10px;
 	text-align: left;
 	/* Fonts */
@@ -13,10 +18,6 @@ body{
 
 #wrapper{
 	padding-right: 0;
-	-webkit-transition: all 5s;
-	-moz-transition: all 5s;
-	-o-transition: all 5s;
-	transition: all 5s;
 }
 
 #wrapper.active{
@@ -24,6 +25,7 @@ body{
 }
 
 #sidebar-wrapper{
+	background: #2d8fa3;
 	z-index: 1000;
 	position: fixed;
 	right: 250px;
@@ -31,10 +33,11 @@ body{
 	width:0;
 	height: 100%;
 	overflow-y: auto;
-	-webkit-transition: all 5s;
-	-moz-transition: all 5s;
-	-o-transition: all 5s;
-	transition: all 5s;
+	overflow-x: hidden;
+	-webkit-transition: all var(--transition-duration);
+	-moz-transition: all var(--transition-duration);
+	-o-transition: all var(--transition-duration);
+	transition: all var(--transition-duration);
 }
 
 #wrapper.active #sidebar-wrapper{
@@ -45,12 +48,29 @@ body{
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	-webkit-transition: all var(--transition-duration);
+	-moz-transition: all var(--transition-duration);
+	-o-transition: all var(--transition-duration);
+	transition: all var(--transition-duration);
 }
 
 #wrapper.active #content{
 	position: absolute;
 	padding-right: 250px;
 	height: 100%;
+}
+
+.sidebar-nav{
+	list-style: none;
+}
+
+.sidebar-nav li a{
+	color: white;
+	text-decoration: none;
+}
+
+.sidebar-brand{
+	
 }
 
 /*a[data-toggle="collapse"]{
