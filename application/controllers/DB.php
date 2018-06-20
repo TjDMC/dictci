@@ -4,9 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class DB extends MY_Controller {
 
 	//Override
-	public function index()
+	public function body()
 	{
-
+		echo '<p><a href="'.base_url().'/db/initDB"> Initialize Database </a></p>';
+		echo '<p><a href="'.base_url().'/db/populate"> Populate Database </a></p>';
 	}
 
 	public function initDB(){

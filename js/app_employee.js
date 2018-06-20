@@ -16,9 +16,33 @@ app.controller('employee_display',function($scope,$rootScope){
     }
 });
 
+app.controller('employee_add',function($scope,$rootScope,$window){
+    $scope.employee={};
+    $scope.add = function(){
+        $rootScope.post(
+            $rootScope.baseURL+"employee/add/",
+            $scope.employee,
+            function (response){
+                alert("Success: "+response.msg)
+                $window.location.reload();
+            },
+            function(response){
+                alert("Error: "+response.msg);
+            }
+        );
+    }
+})
+
 app.controller('leave_application',function($scope,$rootScope){
-
-    $scope.init = function(employees,employeeNo=0){
-
+    $scope.employees = [];
+    $scope.employee={
+        "emp_no":"",
+        "last_name":"",
+        "first_name":"",
+        "middle_name":""
+    };
+    $scope.init = function(employees,employee=null){
+        $scope.employees = employees;
+        $scope.employee = employee===null?$scope.employee:employee;
     }
 });
