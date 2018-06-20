@@ -3,13 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends MY_Controller {
 
-	public function body()
+	//Override
+	public function checkLogin(){
+		//In case login and logout functions are called, checklogin would have empty logic
+	}
+
+	//Override
+	public function index()
 	{
-		if($this->ion_auth->logged_in()){
+		parent::checkLogin();
+
+		$this->html(function(){
 			$this->load->view('welcome_message');
-		}else{
-			$this->load->view('login');
-		}
+		});
 	}
 
 	public function login(){
