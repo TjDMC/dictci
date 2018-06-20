@@ -53,6 +53,10 @@ app.controller('leave_application',function($scope,$rootScope){
 
     }
 
+    $scope.debug = function(){
+        console.log($scope.leave);
+    }
+
     $scope.submit = function(){
 
     }
