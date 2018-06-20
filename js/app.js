@@ -58,7 +58,6 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 				'password':$scope.password
 			},
 			function(response){
-				alert("Successfully logged in");
 				$window.location.reload();
 			},
 			function(response){
@@ -72,7 +71,6 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 			method: 'GET',
 			url: $rootScope.baseURL+"main/logout"
 		}).then(function(){
-			alert("Successfully logged out.");
 			$window.location.reload();
 		},function(){
 			alert("Logout Error");
