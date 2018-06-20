@@ -15,21 +15,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div id="sidebar-wrapper">
 		<ul class="sidebar-nav">
 			<li>
-				<a href="#">Home</a>
+				<a href="<?= base_url() ?>">Home</a>
 			</li>
 			<li>
 				<a data-toggle="collapse" data-target="#employee" aria-expanded="false">Employee</a>
 				<div id="employee" class="collapse">
-					<a href="#">&nbsp;&nbsp;Add New</a></br>
-					<a href="#">&nbsp;&nbsp;Application for Leave</a></br>
-					<a href="#">&nbsp;&nbsp;View List</a></br>
+					<a href="<?= base_url()?>/employee/add">&nbsp;&nbsp;Add New</a></br>
+					<a href="<?= base_url()?>/employee/leaveapplication">&nbsp;&nbsp;Application for Leave</a></br>
+					<a href="<?= base_url()?>/employee">&nbsp;&nbsp;View List</a></br>
 					<a href="#">&nbsp;&nbsp;Resignation</a>
 				</div>
 			</li>
 			<li>
 				<a data-toggle="collapse" data-target="#calendar" aria-expanded="false">Calendar</a>
 				<div id="calendar" class="collapse">
-					Happy
+					<a href="#">&nbsp;&nbsp;Add Holiday</a></br>
+					<a href="<?= base_url().'calendar' ?>">&nbsp;&nbsp;View Calendar</a></br>
+					<a href="#">&nbsp;&nbsp;Suspended Work</a>
 				</div>
 			</li>
 		</ul>

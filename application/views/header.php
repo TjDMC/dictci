@@ -13,8 +13,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<link href="<?= base_url() ?>/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
-
-	<!--<link href="<?= base_url() ?>/css/example.css" type="text/css" rel="stylesheet">-->
+	
+	
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
 
     <script src="<?= base_url().'js/app.js'?>"></script>
