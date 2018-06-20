@@ -32,12 +32,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<header>
 		<div class="row">
 			<div class="col-md-5 col-12">
-				<a><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
+				<a href="<?= base_url() ?>"><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
 			</div>
 
 			<div class="col-md-7 col-12" style="text-align: right; font-size: 25px;">
 				Leave Credit Computation</br>
-				<a ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle">Menu</a>
+				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon-option-horizontal"></span></button>
 			</div>
 		</div>
 	</header>
