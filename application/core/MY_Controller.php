@@ -10,7 +10,20 @@ class MY_Controller extends CI_Controller{
         $this->load->library('ion_auth');
 
         $this->load->helper('custom_routing');
+
+        $this->checkLogin();
     }
+
+    protected function checkLogin(){
+        //Check if user is logged in and is admin, if not, display login page
+        if(!$this->ion_auth->logged_in()||!$this->ion_auth->is_admin()){
+            $this->html(function(){
+                $this->load->view("login");
+            });
+            die($this->output->get_output());
+        }
+    }
+
 
     public function index(){
         $this->load->view("header");
@@ -18,13 +31,13 @@ class MY_Controller extends CI_Controller{
         $this->load->view("footer");
     }
 
-    public function html($lambda){
+    protected function html($lambda){
         $this->load->view("header");
         $lambda();
         $this->load->view("footer");
     }
 
-    public function body(){
+    protected function body(){
         //To Override
     }
 }
