@@ -31,14 +31,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- Header -->
 	<header>
 		<div class="row">
-			<div class="col-sm-5 col-12">
+			<div class="col-sm-4 col-12">
 				<a href="<?= base_url() ?>"><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
 			</div>
 
-			<div class="col-sm-7 col-12" style="text-align: right; font-size: 50px;">
+			<div class="col-sm-8 col-12" style="text-align: right; font-size: 50px;">
 				Leave Credit Computation</br>
 				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-ellipsis-h"></span></button>
 			</div>
 		</div>
 	</header>
 	<!-- /#header -->
+	<div id="container">
