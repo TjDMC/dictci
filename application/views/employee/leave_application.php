@@ -7,16 +7,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h1>Application for Leave</h1>
         <form>
             <p>
-                Employee No: <input type="text" ng-model="employee.emp_no">
+                Employee No: <input id="empNo" type="text" ng-model="employee.emp_no" pattern="[0-9]{7}" min="7">
             </p>
             <p>
-                Employee Name: <input type="text" ng-model="employee.name">
+                Employee Name: <input id="empName" type="text" ng-model="employee.name">
             </p>
             <p>
-                Start Date: <input type="datetime-local" ng-model="leave.start_date" ng-init="debug()" ng-change="debug()"/>
+                Start Date: <input type="datetime-local" ng-model="leave.start_date" ng-init="debug()" ng-change="debug()"/ required>
             </p>
             <p>
-                End Date: <input type="datetime-local" ng-model="leave.end_date"/>
+                End Date: <input type="datetime-local" ng-model="leave.end_date"/ required>
             </p>
 			<p>
 				Remark: <input type="textarea" ng-model="leave.remark"/>
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <p ng-if="leave.type=='others'">Specify: <input  type="text" ng-model="leave.type_others"/></p>
             </div>
             <p>
-                <input type="submit" ng-click="submit()"/>
+				<input type="submit" ng-click="submit()"/>
             </p>
         </form>
     </div>

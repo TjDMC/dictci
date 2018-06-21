@@ -117,3 +117,9 @@ body{
 		margin-left: 0px;
 	}
 }*/
+
+
+.autocomplete{
+	position: relative;
+	display: inline-block;
+}

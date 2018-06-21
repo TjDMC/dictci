@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div ng-controller="employee_nav" ng-init='init(<?=$employees?>)'>
     <h1>Employees</h1>
     <div>
-        <a href="<?=base_url()."employee/leaveapplication"?>">Application For Leave</a> |
+        <a href="<?=base_url()."employee/leaveapplication"?>">Application For Leave</a> &#124;
         <a href="<?=base_url()."employee/add"?>">Add Employee</a>
     </div>
     <div>
