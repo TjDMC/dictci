@@ -6,7 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 
 		<footer>
-			Sample footer
+			<div style="float:right; padding:5px">
+				All Rights Reserved. © 2018 YEEAA BOIII!!!
+			</div>
 		</footer>
 	</div>
 	
