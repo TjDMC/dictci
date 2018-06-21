@@ -27,10 +27,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.templates.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/dateTimeInput.js' ?>"></script>
-	
+
     <script src="<?= base_url().'js/app.js'?>"></script>
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>
-	
+
 	<link rel="stylesheet" href="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.css" />
 	<script src="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.js"></script>
 	<script src="<?php echo base_url() ?>scripts/fullcalendar/gcal.js"></script>
@@ -43,10 +43,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<header>
 		<div class="row">
 			<div class="col-sm-4 col-12">
-				<a href="<?= base_url() ?>"><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" height="140px" /></a>
+				<a href="<?= base_url() ?>"><img src="<?=base_url()?>/dict_logo.png" alt="DICT Logo" style="max-width:55%;width: auto;height: auto;" /></a>
 			</div>
 
-			<div class="col-sm-8 col-12" style="text-align: right; font-size: 50px;">
+			<div class="col-sm-8 col-12" style="text-align: right; font-size:calc(12px + 1.25vw);">
 				Leave Credit Computation</br>
 				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-ellipsis-h"></span></button>
 			</div>
