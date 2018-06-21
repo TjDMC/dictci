@@ -16,10 +16,17 @@ app.controller('employee_display',function($scope,$rootScope){
         $scope.employee = employee;
         $scope.leaves = leaves;
 
+        //sort $leaves
+        $scope.leaves.sort(function(a,b){
+            return moment(b.start_date).diff(moment(a.start_date));
+        });
+
+        //format leaves
         for(var i = 0 ; i<$scope.leaves.length ; i++){
             $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY - hh:mm a");
             $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY - hh:mm a");
         }
+
     }
 });
 
