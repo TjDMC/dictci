@@ -101,7 +101,7 @@ class Employee extends MY_Controller{
                     custom_response(false,"Please fill-in the required field Specify");
                 }
                 $invalidSpecialTypes = array('maternity','paternity','vacation','sick');
-                if(in_array($insertData["type_others"],$invalidSpecialTypes)){
+                if(in_array($data["type_others"],$invalidSpecialTypes)){
                     custom_response(false,"Invalid leave type.");
                 }
                 $insertData["type"] = $data['type_others'];
