@@ -18,19 +18,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </p>
     <div>
         <h3>Leave History</h3>
-        <table border="1">
-            <tr>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Type</th>
-                <th>Remarks</th>
-            </tr>
-            <tr ng-repeat="leave in leaves">
-                <td>{{leave.start_date}}</td>
-                <td>{{leave.end_date}}</td>
-                <td>{{leave.type}}</td>
-                <td>{{leave.remarks}}</td>
-            </tr>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tr>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Type</th>
+                    <th>Remarks</th>
+                </tr>
+                <tr ng-repeat="leave in leaves">
+                    <td>{{leave.start_date}}</td>
+                    <td>{{leave.end_date}}</td>
+                    <td>{{leave.type}}</td>
+                    <td>{{leave.remarks}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
