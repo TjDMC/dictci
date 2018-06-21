@@ -25,12 +25,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>End Date</th>
                     <th>Type</th>
                     <th>Remarks</th>
+                    <th>Days:Hours:Minutes</th>
+                    <th>Credits Equivalent</th>
                 </tr>
                 <tr ng-repeat="leave in leaves">
                     <td>{{leave.start_date}}</td>
                     <td>{{leave.end_date}}</td>
                     <td>{{leave.type}}</td>
                     <td>{{leave.remarks}}</td>
+                    <td>{{leave.time}}</td>
+                    <td>{{leave.credits}}</td>
                 </tr>
             </table>
         </div>

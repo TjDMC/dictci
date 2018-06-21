@@ -21,8 +21,17 @@ app.controller('employee_display',function($scope,$rootScope){
             return moment(b.start_date).diff(moment(a.start_date));
         });
 
-        //format leaves
+
         for(var i = 0 ; i<$scope.leaves.length ; i++){
+            //Compute credits equivalence
+            var difference = moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date)/1000;
+            var days = Math.floor(difference/86400);
+            var hours = Math.floor((difference/86400 - days)*24);
+            var minutes = Math.round(((difference/86400 -  days)*24-hours)*60);
+            $scope.leaves[i].time = days+" : "+hours+" : "+minutes;
+            $scope.leaves[i].credits = days*1.25+hours*0.125+minutes*0.002
+
+            //format leaves
             $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY - hh:mm a");
             $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY - hh:mm a");
         }
