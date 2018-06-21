@@ -126,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<input type="text" class="form-control" name="description" id="description">
 					</div>
 				</div>
-				<div class="form-group">
+				<!--<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
 					<div class="col-md-8">
 						<input type="text" class="form-control" name="start_date" id="start_date">
@@ -137,6 +137,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<div class="col-md-8">
 						<input type="text" class="form-control" name="end_date" id="end_date">
 					</div>
+				</div>-->
+				<div class="dropdown form-group dropdown-start-parent">
+					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
+					<a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent"
+					   href="#">
+						<div class="input-group date">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm" data-ng-model="dateRangeStart" name="start_date" id="start_date">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+						<datetimepicker data-ng-model="dateRangeStart"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
+										data-on-set-time="startDateOnSetTime()"
+										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+					</ul>
+				</div>
+				<div class="dropdown form-group dropdown-end-parent">
+					<label for="p-in" class="col-md-4 label-heading">End Date</label>
+					<a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
+					   href="#">
+						<div class="input-group date">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm" data-ng-model="dateRangeEnd" name="end_date" id="end_date">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+						<datetimepicker data-ng-model="dateRangeEnd"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
+										data-on-set-time="endDateOnSetTime()"
+										data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+					</ul>
 				</div>
 				<div class="form-group">
 					<label for="p-in" class="col-md-4 label-heading">Delete Event</label>
