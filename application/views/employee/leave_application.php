@@ -13,11 +13,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 Employee Name: <input type="text" ng-model="employee.name">
             </p>
             <p>
-                Start Date: <input type="datetime-local" ng-model="leave.start_date" ng-init="debug()" ng-change="debug()"/>
+                <div>
+                    Start Date:
+                    <a id="startdate" data-toggle="dropdown" data-target=".startdate" href="#">
+                        <span>
+                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%;" type="text" data-ng-model="leave.start_date">
+                            <span><i class="far fa-calendar-alt"></i></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <datetimepicker  data-ng-model="leave.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate',minuteStep:1 }" data-on-set-time="startDateSet()"></datetimepicker>
+                    </ul>
+                </div>
             </p>
+
             <p>
-                End Date: <input type="datetime-local" ng-model="leave.end_date"/>
+                <div ng-if="leave.start_date!=''">
+                    End Date:
+                    <a id="enddate" data-toggle="dropdown" data-target=".enddate" href="#">
+                        <span>
+                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%" type="text" data-ng-model="leave.end_date">
+                            <span><i class="far fa-calendar-alt"></i></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <datetimepicker data-before-render="endDateRender($view,$dates)" data-ng-model="leave.end_date" data-datetimepicker-config="{ minuteStep:1 }"></datetimepicker>
+                    </ul>
+                </div>
             </p>
+
 			<p>
 				Remark: <input type="textarea" ng-model="leave.remark"/>
 			</p>

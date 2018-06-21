@@ -42,7 +42,10 @@ app.controller('leave_application',function($scope,$rootScope){
         "middle_name":"",
         "name":""
     };
-    $scope.leave={};
+    $scope.leave={
+        start_date:"",
+        end_date:""
+    };
 
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
@@ -51,6 +54,22 @@ app.controller('leave_application',function($scope,$rootScope){
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
         }
 
+    }
+
+    $scope.startDateSet = function () {
+        $scope.leave.end_date = $scope.leave.start_date;
+    }
+
+    $scope.endDateRender = function($view,$dates){
+        if($scope.leave.start_date){
+            var activeDate = moment($scope.leave.start_date).subtract(1, $view).add(1, 'minute');
+
+            $dates.filter(function(date){
+                return date.localDateValue() <= activeDate.valueOf();
+            }).forEach(function(date){
+                date.selectable = false;
+            });
+        }
     }
 
     $scope.debug = function(){

@@ -14,12 +14,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 	<link href="<?= base_url() ?>/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>/css/datetimepicker/datetimepicker.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
 
 	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
 	<script src="<?= base_url().'js/moment.min.js' ?>"></script>
+	<script src="<?= base_url().'js/moment-timezone.min.js' ?>"></script>
+	<script src="<?= base_url().'js/popper.min.js' ?>"></script>
 	<script src="<?= base_url().'js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
+
+	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
+	<script src="<?= base_url().'js/datetimepicker/datetimepicker.templates.js' ?>"></script>
+	<script src="<?= base_url().'js/datetimepicker/dateTimeInput.js' ?>"></script>
 
     <script src="<?= base_url().'js/app.js'?>"></script>
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>

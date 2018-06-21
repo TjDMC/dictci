@@ -1,4 +1,4 @@
-var app = angular.module("app",[]);
+var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput']);
 
 app.run(function($rootScope,$http,$httpParamSerializer){
 	$rootScope.busy = false;
