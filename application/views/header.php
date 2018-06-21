@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/moment.min.js' ?>"></script>
 	<script src="<?= base_url().'js/moment-timezone.min.js' ?>"></script>
 	<script src="<?= base_url().'js/popper.min.js' ?>"></script>
-	<script src="<?= base_url().'js/bootstrap.min.js' ?>"></script>
+	<script src="<?= base_url().'bootstrap/js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
 
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
@@ -30,6 +30,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <script src="<?= base_url().'js/app.js'?>"></script>
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>
+	
+	<link rel="stylesheet" href="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.css" />
+	<script src="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.js"></script>
+	<script src="<?php echo base_url() ?>scripts/fullcalendar/gcal.js"></script>
 </head>
 
 <body>
