@@ -212,6 +212,7 @@ $(document).ready(function() {
 			  }
 			},
 		],
+		eventColor: '#209270',
 	   eventClick: function(event, jsEvent, view) {
 		  $('#name').val(event.title);
 		  $('#description').val(event.description);
