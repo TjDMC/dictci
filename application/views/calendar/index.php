@@ -38,16 +38,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
-					<div class="col-md-8">
-						<input type="text" class="form-control" name="start_date">
-					</div>
+					<p>
+						<div class="dropdown">
+							<label for="p-in" class="col-md-4 label-heading">Start Date</label>
+							<a id="startdate" data-toggle="dropdown" data-target=".dropdown" href="#">
+								<div class="col-md-8"><input data-date-time-input="YYYY/MM/DD hh:mm" type="text" data-ng-model="data.date" name="start_date" class="form-control"></div>
+							</a>
+							<ul class="dropdown-menu">
+								<datetimepicker  data-ng-model="data.date" data-datetimepicker-config="{ dropdownSelector:'#startdate',minuteStep:1 }" data-on-set-time="startDateSet()"></datetimepicker>
+							</ul>
+						</div>
+					</p>
 				</div>
 				<div class="form-group">
-					<label for="p-in" class="col-md-4 label-heading">End Date</label>
-					<div class="col-md-8">
-						<input type="text" class="form-control" name="end_date">
-					</div>
+					<p>
+						<div class="dropdown">
+							<label for="p-in" class="col-md-4 label-heading">End Date</label>
+							<a id="enddate" data-toggle="dropdown" data-target=".dropdown" href="#">
+								<div class="col-md-8"><input data-date-time-input="YYYY/MM/DD hh:mm" type="text" data-ng-model="data.date" name="end_date" class="form-control"></div>
+							</a>
+							<ul class="dropdown-menu">
+								<datetimepicker  data-ng-model="data.date" data-datetimepicker-config="{ dropdownSelector:'#enddate',minuteStep:1 }" data-on-set-time="startDateSet()"></datetimepicker>
+							</ul>
+						</div>
+					</p>
 				</div>
 			</div>
 			<div class="modal-footer">

@@ -50,7 +50,6 @@ class Calendar extends MY_Controller
 
     public function add_event() 
     {
-		log_message("debug","DEBUGGG");
         /* Our calendar data */
         $name = $this->input->post("name");
         $desc = $this->input->post("description");
