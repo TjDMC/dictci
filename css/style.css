@@ -1,11 +1,14 @@
 :root{
 	--transition-duration: 1s;
+	--pad: 5%;
 }
 
 header{
 	background: linear-gradient(30deg, #2abe91, #23969d);
 	/*background-color: #2d8fa3;*/
 	padding: 10px;
+	padding-left: var(--pad);
+	padding-right: calc(var(--pad)/2);
 	text-align: left;
 	/* Fonts */
 	color: white;
@@ -15,12 +18,23 @@ header{
 footer{
 	position: fixed;
     bottom: 0;
+	padding: 2px;
     width: 100%;
 	background-color: lightgray;
 }
 
 body{
 	overflow-x: hidden;
+}
+
+#container{
+	padding: 10px;
+	padding-left: var(--pad);
+	padding-right: var(--pad);
+}
+
+.smaller a{
+	font-size: smaller;
 }
 
 #wrapper{
