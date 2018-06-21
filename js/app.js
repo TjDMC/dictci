@@ -1,6 +1,9 @@
 var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput']);
 
 app.run(function($rootScope,$http,$httpParamSerializer){
+	moment.tz.add("Asia/Manila|+08 +09|-80 -90|010101010|-1kJI0 AL0 cK10 65X0 mXB0 vX0 VK10 1db0|24e6");
+	moment.tz.setDefault("Asia/Manila");
+
 	$rootScope.busy = false;
 	$rootScope.post = function(url,inputData,onSuccess,onFailure){
 
@@ -36,6 +39,17 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 			headers : {'Content-Type': 'application/x-www-form-urlencoded'}
 		}).then(success,error);
 
+	}
+
+	$rootScope.employeesToArray = function(employees){
+		var result = [];
+		for(var i = 0 ; i<employees.length ; i++){
+			result.push({
+				string:employees[i].emp_no+" - "+employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
+				emp_no:employees[i].emp_no
+			});
+		}
+		return result;
 	}
 });
 

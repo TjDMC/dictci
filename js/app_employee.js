@@ -78,5 +78,13 @@ app.controller('leave_application',function($scope,$rootScope){
 
     $scope.submit = function(){
 
+        var data = {
+            leave:angular.copy($scope.leave),
+            emp_no:$scope.employee.emp_no
+        }
+
+        data.leave.start_date = moment(data.leave.start_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD - HH:mm");
+        data.leave.end_date = moment(data.leave.end_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD - HH:mm");
+        console.log(data);
     }
 });
