@@ -5,19 +5,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div ng-controller="leave_application" ng-init='init(<?=$employees?><?=isset($employee)?','.$employee:''?>)'>
     <div>
         <h1>Application for Leave</h1>
-        <form>
-            <p>
-                Employee No: <input id="empNo" type="text" ng-model="employee.emp_no" pattern="[0-9]{7}" min="7">
+        <form ng-submit="submit()">
+            <p class="autocomplete">
+                Employee No: <input id="empNo" type="text" ng-model="employee.emp_no" ng-blur="fillName()" pattern="[0-9]{7}" min="7" required>
             </p>
-            <p>
-                Employee Name: <input id="empName" type="text" ng-model="employee.name">
+            <p class="autocomplete">
+                Employee Name: <input id="empName" type="text" ng-model="employee.name" required>
             </p>
             <p>
                 <div>
                     Start Date:
                     <a id="startdate" data-toggle="dropdown" data-target=".startdate" href="#">
                         <span>
-                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%;" type="text" data-ng-model="leave.start_date">
+                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%;" type="text" data-ng-model="leave.start_date" required>
                             <span><i class="far fa-calendar-alt"></i></span>
                         </span>
                     </a>
@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     End Date:
                     <a id="enddate" data-toggle="dropdown" data-target=".enddate" href="#">
                         <span>
-                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%" type="text" data-ng-model="leave.end_date">
+                            <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%" type="text" data-ng-model="leave.end_date" required>
                             <span><i class="far fa-calendar-alt"></i></span>
                         </span>
                     </a>
@@ -55,8 +55,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <p ng-if="leave.type=='others'">Specify: <input  type="text" ng-model="leave.type_others"/></p>
             </div>
             <p>
-				<input type="submit" ng-click="submit()"/>
+				<input type="submit" />
             </p>
         </form>
+		{{employees}}
+		{{employee}}
+		<a hidden>
+			{{autocomplete()}}
+		</a>
     </div>
 </div>

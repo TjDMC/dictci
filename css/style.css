@@ -118,8 +118,29 @@ body{
 	}
 }*/
 
-
+/* Autocomplete style */
 .autocomplete{
 	position: relative;
 	display: inline-block;
+}
+
+.autocomplete-items{
+	position: absolute;
+	z-index: 99;
+	top: 100%;
+	left: 0;
+	right: 0;
+}
+
+.autocomplete-items div{
+	background: #ffffff;
+	border-bottom: 1px solid #0000ff;
+}
+
+.autocomplete-items div:hover{
+	background: #eeeeee;
+}
+
+.autocomplete-active{
+	background: blue;
 }

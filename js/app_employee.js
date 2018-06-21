@@ -77,7 +77,6 @@ app.controller('leave_application',function($scope,$rootScope){
     }
 
     $scope.submit = function(){
-
         var data = {
             leave:angular.copy($scope.leave),
             emp_no:$scope.employee.emp_no
@@ -87,4 +86,95 @@ app.controller('leave_application',function($scope,$rootScope){
         data.leave.end_date = moment(data.leave.end_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD - HH:mm");
         console.log(data);
     }
+
+    $scope.autocomplete = function(){
+		// Script taken from: https://www.w3schools.com/howto/howto_js_autocomplete.asp
+		
+		inp = document.getElementById("empNo");
+		var currFocus;
+		inp.addEventListener("input", function(e){
+			var divList, item, val=this.value;
+			closeList();
+			if(!val){return false;}
+			currFocus = -1;
+			divList = document.createElement("DIV");
+			divList.setAttribute("id", this.id + "autocomplete-list");
+			divList.setAttribute("class", "autocomplete-items");
+			this.parentNode.appendChild(divList);
+			for(var i=0; i<$scope.employees.length; i++){
+				if($scope.employees[i].emp_no.toLowerCase().includes(val.toLowerCase())){
+					item = document.createElement("DIV");
+					item.innerHTML = $scope.employees[i].emp_no;
+					item.innerHTML += "<input type='hidden' value='"+$scope.employees[i].emp_no+"'>";
+					item.addEventListener("click", function(e){
+						inp.value = this.getElementsByTagName("input")[0].value;
+						closeList();
+					});
+					divList.appendChild(item);
+				}
+			}
+		});
+		
+		inp.addEventListener("keydown", function(e){
+			var x = document.getElementById(this.id + "autocomplete-list");
+			if(x) x = x.getElementsByTagName("div");
+			if(x==null || x.length==0) return;
+			if(e.keyCode == 40){
+				currFocus++;
+				addActive(x);
+			}else if(e.keyCode == 38){
+				currFocus--;
+				addActive(x);
+			}else if(e.keyCode == 13){
+				e.preventDefault();
+				if(currFocus>-1){ if(x) x[currFocus].click();}
+			}
+		});
+		
+		function addActive(elem){
+			if(!elem) return false;
+			remActive(elem);
+			console.log(elem.length)
+			if(currFocus>=elem.length) currFocus=0;
+			if(currFocus<0) currFocus=(elem.length-1);
+			console.log(currFocus);
+			if(isNaN(currFocus)) return;
+			elem[currFocus].classList.add("autocom-active");
+			console.log("should work");
+		}
+		
+		function remActive(elem){
+			for(var i=0; i<elem.length;i++){
+				elem[i].classList.remove("autocom-active");
+			}
+		}
+		
+		function closeList(elem){
+			var remove = document.getElementsByClassName("autocomplete-items");
+			for(var i=0; i<remove.length; i++){
+				if(elem!=remove[i] && elem!=inp){
+					remove[i].parentNode.removeChild(remove[i]);
+				}
+			}
+		}
+		
+		document.addEventListener("click", function(e){
+			closeList();
+		});
+	}
+	
+	$scope.fillName = function(){
+		number = document.getElementById("empNo");
+		var i;
+		for(i=0; i<$scope.employees.length;i++){
+			if(number.value==$scope.employees[i].emp_no) break;
+			if(i==($scope.employees.length-1)) return;
+		}
+		for(var key in $scope.employees[i]){
+			if($scope.employees[i].hasOwnProperty(key)){
+				$scope.employee[key] = $scope.employees[i][key];
+			}
+		}
+		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
+	}
 });
