@@ -45,8 +45,9 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 		var result = [];
 		for(var i = 0 ; i<employees.length ; i++){
 			result.push({
-				string:employees[i].emp_no+" - "+employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
-				emp_no:employees[i].emp_no
+				emp_no:employees[i].emp_no,
+				emp_name:employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
+				string:employees[i].emp_no+" - "+employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name
 			});
 		}
 		return result;
