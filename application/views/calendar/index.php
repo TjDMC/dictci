@@ -5,9 +5,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="row">
 <div class="col-md-12">
 
+<button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
+
 <h1>Calendar</h1>
 
-<div id="calendar" >
+<div id="calendar">
 
 </div>
 
@@ -132,11 +134,6 @@ $(document).ready(function() {
 			  }
 			},
 		],
-		dayClick: function(date, jsEvent, view) {
-			date_last_clicked = $(this);
-			$(this).css('background-color', '#bed7f3');
-			$('#addModal').modal();
-		},
 	   eventClick: function(event, jsEvent, view) {
 		  $('#name').val(event.title);
 		  $('#description').val(event.description);
