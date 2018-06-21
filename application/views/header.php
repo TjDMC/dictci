@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <title>DICT</title>
+    <title>&#124;  DICT</title>
 	<link rel="icon" href="<?= base_url()?>/favicon.png" type="image/gif">
 
 
