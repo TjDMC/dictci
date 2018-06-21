@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Calendar extends CI_Controller 
+class Calendar extends MY_Controller 
 {
 
     public function __construct() {
@@ -9,7 +9,7 @@ class Calendar extends CI_Controller
 		$this->load->helper('form');
     }
 
-    public function index() 
+    public function body() 
     {
         $this->load->view("calendar/index.php", array());
     }
@@ -50,7 +50,6 @@ class Calendar extends CI_Controller
 
     public function add_event() 
     {
-		log_message("debug","DEBUGGG");
         /* Our calendar data */
         $name = $this->input->post("name");
         $desc = $this->input->post("description");

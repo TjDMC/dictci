@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <div ng-controller="employee_add">
     <div>
-        Add Employee
+        <h1>Add Employee</h1>
     </div>
     <form>
         <p>

@@ -6,7 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 
 		<footer>
-			Sample footer
+			<div style="float:right; padding:5px">
+				All Rights Reserved. © 2018 YEEAA BOIII!!!
+			</div>
 		</footer>
 	</div>
 	
@@ -29,8 +31,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 			</li>
 			<li>
-				<a data-toggle="collapse" data-target="#calendar" aria-expanded="false">Calendar</a>
-				<div id="calendar" class="collapse smaller">
+				<a data-toggle="collapse" data-target="#choice_calendar" aria-expanded="false">Calendar</a>
+				<div id="choice_calendar" class="collapse smaller">
 					<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;Add Holiday</a></br>
 					<a href="<?= base_url().'calendar' ?>">&nbsp;&nbsp;&nbsp;&nbsp;View Calendar</a></br>
 					<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;Suspended Work</a>
@@ -44,10 +46,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!-- /#sidebar -->
 	
 </div>
-
-<!-- Bootstrap Scripts -->
-<script src="<?= base_url() ?>/js/jquery.min.js"></script>
-<script src="<?= base_url() ?>bootstrap/js/bootstrap.min.js"></script>
 
 <script>
 	$("#menu-toggle").click(function(e) {

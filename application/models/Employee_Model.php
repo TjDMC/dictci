@@ -21,8 +21,8 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("id int unsigned not null auto_increment unique");
             $this->dbforge->add_field("type varchar(20) not null");
             $this->dbforge->add_field("emp_no char(7) not null");
-            $this->dbforge->add_field("from_date datetime not null");
-            $this->dbforge->add_field("to_date datetime not null");
+            $this->dbforge->add_field("start_date datetime not null");
+            $this->dbforge->add_field("end_date datetime not null");
             $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (id)");
             $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
@@ -61,20 +61,31 @@ class Employee_Model extends MY_Model{
         );
     }
 
-    public function addEmployee($employee){
-        $this->db->where("emp_no",$employee["emp_no"]);
+    public function addEmployee($employeeData){
+        $this->db->where("emp_no",$employeeData["emp_no"]);
         $res = $this->db->get(DB_PREFIX."employee")->result_array();
 
         if(count($res)>0){
             return "Employee Number already exists";
         }
 
-        $this->db->insert(DB_PREFIX."employee",$employee);
+        $this->db->insert(DB_PREFIX."employee",$employeeData);
         return null;
     }
 
-    public function addLeave($employeeNo,$leaveData){
-        
+    public function addLeave($leaveData){
+        $this->db->where("emp_no",$leaveData["emp_no"]);
+        $res = $this->db->get(DB_PREFIX."employee")->result_array();
+
+        if(count($res)<1){
+            return "Employee does not exist.";
+        }
+
+        $this->db->insert(DB_PREFIX."leaves",$leaveData);
+
+        //TODO check if leave overlaps with other leaves
+
+        return null;
     }
 
     public function getEmployee($employeeNo){
@@ -95,7 +106,7 @@ class Employee_Model extends MY_Model{
 
     public function getLeaves($employeeNo){
         $this->db->where("emp_no",$employeeNo);
-        $res = $this->db->get(DB_PREFIX."employee")->result_array();
+        $res = $this->db->get(DB_PREFIX."leaves")->result_array();
         return $res;
     }
 }
