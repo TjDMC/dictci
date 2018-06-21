@@ -11,8 +11,15 @@ app.controller('employee_search',function($scope,$rootScope){
 
 app.controller('employee_display',function($scope,$rootScope){
     $scope.employee = {};
-    $scope.init = function(employee){
+    $scope.leaves = [];
+    $scope.init = function(employee,leaves){
         $scope.employee = employee;
+        $scope.leaves = leaves;
+
+        for(var i = 0 ; i<$scope.leaves.length ; i++){
+            $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY - hh:mm a");
+            $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY - hh:mm a");
+        }
     }
 });
 
@@ -33,7 +40,7 @@ app.controller('employee_add',function($scope,$rootScope,$window){
     }
 })
 
-app.controller('leave_application',function($scope,$rootScope){
+app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
     $scope.employee={
         "emp_no":"",
@@ -78,13 +85,22 @@ app.controller('leave_application',function($scope,$rootScope){
 
     $scope.submit = function(){
 
-        var data = {
-            leave:angular.copy($scope.leave),
-            emp_no:$scope.employee.emp_no
-        }
-
-        data.leave.start_date = moment(data.leave.start_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD - HH:mm");
-        data.leave.end_date = moment(data.leave.end_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD - HH:mm");
+        var data = angular.copy($scope.leave);
+        data.emp_no = $scope.employee.emp_no;
+        data.start_date = moment(data.start_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD HH:mm");
+        data.end_date = moment(data.end_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD HH:mm");
         console.log(data);
+
+        $rootScope.post(
+            $rootScope.baseURL+"/employee/leaveApplication",
+            data,
+            function(response){
+                alert("Success: "+response.msg);
+                $window.location.reload();
+            },
+            function(response){
+                alert("Error: "+response.msg);
+            }
+        );
     }
 });

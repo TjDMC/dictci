@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <p>
                 <div>
                     Start Date:
-                    <a id="startdate" data-toggle="dropdown" data-target=".startdate" href="#">
+                    <a id="startdate" data-toggle="dropdown" href="#">
                         <span>
                             <input data-date-time-input="MMMM DD, YYYY - hh:mm a" style="width:25%;" type="text" data-ng-model="leave.start_date">
                             <span><i class="far fa-calendar-alt"></i></span>
@@ -43,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </p>
 
 			<p>
-				Remark: <input type="textarea" ng-model="leave.remark"/>
+				Remarks: <input type="textarea" ng-model="leave.remarks"/>
 			</p>
             <div>
                 Leave Type:
