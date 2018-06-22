@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<li class="sidebar-brand">
 				<a href="<?= base_url() ?>">DICT</a>
 			</li>
-			<li>
+			<li style="margin-top: 2px; margin-bottom: 5px">
 				<a href="<?= base_url() ?>">Home</a>
 			</li>
 			<li>

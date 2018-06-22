@@ -106,6 +106,7 @@ body{
 
 .sidebar-nav{
 	list-style: none;
+	padding-top: 10px;
 }
 
 .sidebar-nav li a{
@@ -156,6 +157,7 @@ body{
 	font-size: 16px;
 	border: 1px solid #a0a0a0;
 	box-shadow: 0px 0px 2px 2px #90c0ff;
+	border-radius: 5px;
 }
 
 .autocomplete-items div{
