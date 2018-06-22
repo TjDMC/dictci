@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 
 			<div class="col-sm-8 col-12" style="text-align: right; font-size:calc(12px + 1.25vw);">
-				Leave Credit Computation</br>
+				<span style="cursor:default">Leave Credit Computation</span></br>
 				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-ellipsis-h"></span></button>
 			</div>
 		</div>

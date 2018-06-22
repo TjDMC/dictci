@@ -106,6 +106,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     }
 
     $scope.submit = function(){
+		alert("Start date: "+$scope.leave.start_date);
         var data = angular.copy($scope.leave);
         data.emp_no = $scope.employee.emp_no;
         data.start_date = moment(data.start_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
@@ -129,7 +130,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		// Script taken from: https://www.w3schools.com/howto/howto_js_autocomplete.asp
 
 		inp = document.getElementById("empNo");
-		var currFocus;
+		var currFocus=-1;
 		inp.addEventListener("input", function(e){
 			var divList, item, val=this.value;
 			closeList();
@@ -138,12 +139,14 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 			divList = document.createElement("DIV");
 			divList.setAttribute("id", this.id + "autocomplete-list");
 			divList.setAttribute("class", "autocomplete-items");
+			divList.classList.add("form-group");
 			this.parentNode.appendChild(divList);
 			for(var i=0; i<$scope.employees.length; i++){
 				if($scope.employees[i].emp_no.toLowerCase().includes(val.toLowerCase())){
 					item = document.createElement("DIV");
 					item.innerHTML = $scope.employees[i].emp_no;
 					item.innerHTML += "<input type='hidden' value='"+$scope.employees[i].emp_no+"'>";
+					item.classList.add("form-control");
 					item.addEventListener("click", function(e){
 						inp.value = this.getElementsByTagName("input")[0].value;
 						closeList();
@@ -157,28 +160,24 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if(x) x = x.getElementsByTagName("div");
 			if(x==null || x.length==0) return;
-			if(e.keyCode == 40){
+			if(e.which == 40){
 				currFocus++;
 				addActive(x);
-			}else if(e.keyCode == 38){
+			}else if(e.which == 38){
 				currFocus--;
 				addActive(x);
-			}else if(e.keyCode == 13){
+			}else if(e.which == 13){
 				e.preventDefault();
-				if(currFocus>-1){ if(x) x[currFocus].click();}
+				if(currFocus>-1) if(x) x[currFocus].click();
 			}
 		});
 
 		function addActive(elem){
 			if(!elem) return false;
 			remActive(elem);
-			console.log(elem.length)
 			if(currFocus>=elem.length) currFocus=0;
 			if(currFocus<0) currFocus=(elem.length-1);
-			console.log(currFocus);
-			if(isNaN(currFocus)) return;
 			elem[currFocus].classList.add("autocom-active");
-			console.log("should work");
 		}
 
 		function remActive(elem){
@@ -206,13 +205,13 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		var i;
 		for(i=0; i<$scope.employees.length;i++){
 			if(number.value==$scope.employees[i].emp_no) break;
-			if(i==($scope.employees.length-1)) return;
-		}
-		for(var key in $scope.employees[i]){
-			if($scope.employees[i].hasOwnProperty(key)){
-				$scope.employee[key] = $scope.employees[i][key];
+			if(i==($scope.employees.length-1)){
+				if(number.value.length==7) alert("No employee has the corresponding employee number.");
+				return;
 			}
 		}
+		
+		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
 	}
 });
