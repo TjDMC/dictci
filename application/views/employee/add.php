@@ -20,6 +20,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             Middle Name: <input type="text" ng-model="employee.middle_name"/>
         </p>
         <p>
+            First Day: <input type="text" ng-model="employee.first_day"/>
+        </p>
+        <p>
             Salary: <input type="text" ng-model="employee.salary"/>
         </p>
         <p>

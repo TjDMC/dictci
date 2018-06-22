@@ -8,3 +8,8 @@ class MY_Model extends CI_Model{
         $this->load->dbforge();
     }
 }
+
+class Flags{
+	const DEF = 0;
+	const DELETED = 1;
+}

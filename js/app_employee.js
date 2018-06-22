@@ -65,17 +65,8 @@ app.controller('employee_add',function($scope,$rootScope,$window){
 
 app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
-    $scope.employee={
-        "emp_no":"",
-        "last_name":"",
-        "first_name":"",
-        "middle_name":"",
-        "name":""
-    };
-    $scope.leave={
-        start_date:"",
-        end_date:""
-    };
+    $scope.employee={};
+    $scope.leave={};
 
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
@@ -116,6 +107,10 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.submit = function(){
         var data = angular.copy($scope.leave);
+        if(!data.hasOwnProperty('start_date') || !data.hasOwnProperty('end_date') || !$scope.employee.hasOwnProperty('emp_no')){
+            alert("Error: Please fill-in the Employee Number, Start Date and End Date");
+            return;
+        }
         data.emp_no = $scope.employee.emp_no;
         data.start_date = moment(data.start_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
         data.end_date = moment(data.end_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
