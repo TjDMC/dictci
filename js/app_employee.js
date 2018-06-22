@@ -100,7 +100,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
         if($scope.leave.start_date==''){
             return 0;
         }else{
-            return (moment($scope.leave.end_date).diff($scope.leave.start_date))/86400000+1;
+            return Math.round((moment($scope.leave.end_date).diff($scope.leave.start_date))/86400000)+1;
         }
     }
 
@@ -245,7 +245,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				return;
 			}
 		}
-		
+
 		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
 		$scope.$apply();

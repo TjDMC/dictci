@@ -25,10 +25,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
         <div class="dropdown form-group" style="max-width:400px">
             <label>First Day:</label>
-            <a id="firstday" data-toggle="dropdown" data-target="dropdown" href="#">
+            <a id="firstday" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                 <div class="input-group">
                     <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="employee.first_day">
-                    <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
                 </div>
             </a>
             <ul class="dropdown-menu">

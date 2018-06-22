@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     <div ng-init='employeeArray =employeesToArray(<?=$employees?>)'>
         <div class="input-group input-group-lg" style="max-width:500px;margin-bottom:25px">
-            <div class="input-group-addon">
+            <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-lg">Search</span>
             </div>
             <input type="text" class="form-control" ng-model="searchTerm">

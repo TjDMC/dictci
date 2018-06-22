@@ -12,16 +12,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="icon" href="<?= base_url()?>/favicon.png" type="image/gif">
 
 
-	<link href="<?= base_url() ?>/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
-	<link href="<?= base_url() ?>/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-	<link href="<?= base_url() ?>/css/datetimepicker/datetimepicker.css" type="text/css" rel="stylesheet">
-	<link href="<?= base_url() ?>/css/style.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>css/datetimepicker/datetimepicker.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>css/style.css" type="text/css" rel="stylesheet">
 
 	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
 	<script src="<?= base_url().'js/moment.min.js' ?>"></script>
 	<script src="<?= base_url().'js/moment-timezone.min.js' ?>"></script>
 	<script src="<?= base_url().'js/popper.min.js' ?>"></script>
-	<script src="<?= base_url().'bootstrap/js/bootstrap.min.js' ?>"></script>
+	<script src="<?= base_url().'js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
 	<script src="<?= base_url().'js/angular-sanitize.min.js' ?>"></script>
 
@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 			<div class="col-sm-8 col-12" style="text-align: right; font-size:calc(12px + 1.25vw);">
 				<span style="cursor:default">Leave Credit Computation</span></br>
-				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-ellipsis-h"></span></button>
+				<button ng-hide="<?=$this->ion_auth->logged_in()?1:0?>==false" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="fas fa-bars"></span></button>
 			</div>
 		</div>
 	</header>
