@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-		
+
 <div class="row">
 <div class="col-md-12">
 
@@ -20,8 +20,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="myModalLabel">Add Calendar Event</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fas fa-times"></i></span></button>
 			</div>
 			<div class="modal-body">
 				<?php echo form_open(site_url("calendar/add_event"), array("class" => "form-horizontal")) ?>
@@ -65,11 +65,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>-->
 				<div class="dropdown form-group dropdown-start-parent">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
-					<a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent"
+					<a id="dropdownStart" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent"
 					   href="#">
 						<div class="input-group date">
 							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm" data-ng-model="dateRangeStart" name="start_date">
-							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							<div class="input-group-append">
+		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -81,11 +83,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>
 				<div class="dropdown form-group dropdown-end-parent">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
-					<a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
+					<a id="dropdownEnd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
 					   href="#">
 						<div class="input-group date">
 							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm" data-ng-model="dateRangeEnd" name="end_date">
-							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							<div class="input-group-append">
+		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">

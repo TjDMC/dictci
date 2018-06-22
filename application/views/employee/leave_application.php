@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="dropdown form-group" >
                 <label>Start Date:</label>
-                <a id="startdate" data-toggle="dropdown" data-target="dropdown" href="#">
+                <a id="startdate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
                         <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.start_date">
                         <div class="input-group-append">
@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <div class="dropdown form-group"  ng-if="leave.start_date!=''" >
                 <label>End Date:</label>
-                <a id="enddate" data-toggle="dropdown" data-target="dropdown" href="#">
+                <a id="enddate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
                         <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.end_date">
                         <div class="input-group-append">

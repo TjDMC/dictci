@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <div class="dropdown form-group" style="max-width:400px">
         <label>Vacation Leave Balance: {{computeBal(0)}}</label>
-        <a id="vacBalDate" data-toggle="dropdown" data-target="dropdown" href="#">
+        <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">As of: </span>
@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <div class="dropdown form-group" style="max-width:400px">
         <label>Sick Leave Balance: {{computeBal(1)}}</label>
-        <a id="sickBalDate" data-toggle="dropdown" data-target="dropdown" href="#">
+        <a id="sickBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">As of: </span>
