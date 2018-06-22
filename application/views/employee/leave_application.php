@@ -19,7 +19,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a id="startdate" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
                         <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.start_date">
-                        <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        </div>
                     </div>
                 </a>
                 <ul class="dropdown-menu">
@@ -32,7 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a id="enddate" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
                         <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.end_date">
-                        <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        </div>
                     </div>
                 </a>
                 <ul class="dropdown-menu">

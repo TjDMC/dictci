@@ -91,7 +91,7 @@ body{
 	color: #f5f5f5;
 	text-decoration: none;
 	cursor:pointer;
-}	
+}
 
 .sidebar-nav>.sidebar-brand a{
 	font-size: 30px;
@@ -143,4 +143,8 @@ body{
 
 .autocom-active{
 	background-color: #eeeeee;
+}
+
+.dropdown a:hover{
+    text-decoration: none;
 }

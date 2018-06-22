@@ -14,13 +14,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <label>Vacation Leave Balance: {{computeBal(0)}}</label>
         <a id="vacBalDate" data-toggle="dropdown" data-target="dropdown" href="#">
             <div class="input-group">
-                <span class="input-group-addon">As of: </span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">As of: </span>
+                </div>
                 <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="vac_bal_date">
-                <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
             </div>
         </a>
         <ul class="dropdown-menu">
-            <datetimepicker  data-ng-model="vac_bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatDate(0)"></datetimepicker>
+            <datetimepicker  data-ng-model="vac_bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month' }" data-on-set-time="formatDate(0)"></datetimepicker>
         </ul>
     </div>
 
@@ -28,9 +32,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <label>Sick Leave Balance: {{computeBal(1)}}</label>
         <a id="sickBalDate" data-toggle="dropdown" data-target="dropdown" href="#">
             <div class="input-group">
-                <span class="input-group-addon">As of: </span>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">As of: </span>
+                </div>
                 <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="sick_bal_date">
-                <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                <div class="input-group-append">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>
             </div>
         </a>
         <ul class="dropdown-menu">
@@ -54,7 +62,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>Remarks</th>
                     <th>Days</th>
                     <th>Credits Equivalent</th>
-                    <th>Deducted Credits</th>
+                    <th>Deducted Credits (Vacation : Sick)</th>
                 </tr>
                 <tr ng-repeat="leave in leaves">
                     <td>{{leave.start_date}}</td>
