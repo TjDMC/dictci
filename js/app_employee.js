@@ -86,6 +86,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
     $scope.employee={};
     $scope.leave={};
+    $scope.isStartDateSet= false;
 
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
@@ -93,7 +94,6 @@ app.controller('leave_application',function($scope,$rootScope,$window){
             $scope.employee = employee;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
         }
-
     }
 
     $scope.computeDays = function(){
@@ -106,6 +106,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.startDateSet = function () {
         $scope.leave.end_date = $scope.leave.start_date;
+        $scope.isStartDateSet = true;
     }
 
     $scope.endDateRender = function($view,$dates){
@@ -229,7 +230,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				}
 			}
 		}
-		
+
 		document.addEventListener("click", function(e){
 			closeList();
 		});
