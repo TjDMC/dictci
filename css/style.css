@@ -5,7 +5,7 @@
 
 header{
 	background: linear-gradient(30deg, #2abe91, #23969d);
-	padding: 15px;
+	padding: 10px;
 	padding-left: var(--pad);
 	padding-right: calc(var(--pad)/2);
 	text-align: left;
@@ -91,7 +91,7 @@ body{
 	position: absolute;
 	width: 100%;
 	min-height: 400px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 	-webkit-transition: all var(--transition-duration);
 	-moz-transition: all var(--transition-duration);
 	-o-transition: all var(--transition-duration);
@@ -154,7 +154,8 @@ body{
 	left: 0;
 	right: 0;
 	font-size: 16px;
-	border: 1px solid #707070;
+	border: 1px solid #a0a0a0;
+	box-shadow: 0px 0px 2px 2px #90c0ff;
 }
 
 .autocomplete-items div{
