@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </ul>
                         </div>
 
-                        <div class="dropdown form-group col-sm"  ng-if="leave.start_date!=''" style="max-width:400px">
+                        <div class="dropdown form-group col-sm"  ng-if="isStartDateSet" style="max-width:400px">
                             <a id="enddate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <datetimepicker data-before-render="endDateRender($view,$dates)" data-ng-model="leave.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate', minView:'day' }" data-on-time-set="endDateSet()"></datetimepicker>
                             </ul>
                         </div>
-                        <div class="form-group col-" style="max-width:200px">
+                        <div class="form-group col-" ng-if="isStartDateSet" style="max-width:200px">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Hours</i></span>
@@ -61,7 +61,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input class="form-control" min="0" step="1" type="number">
                             </div>
                         </div>
-                        <div class="form-group col-" style="max-width:200px;margin-left:10px">
+                        <div class="form-group col-" ng-if="isStartDateSet" style="max-width:200px;margin-left:10px">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">Minutes</i></span>
