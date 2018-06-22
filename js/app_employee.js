@@ -43,6 +43,25 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
             $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY");
         }
 
+        $scope.sick_bal_date = moment().endOf("month");
+        $scope.vac_bal_date = moment().endOf("month");
+    }
+
+    $scope.formatDate = function(type){
+        switch(type){
+            case 0:
+                $scope.vac_bal_date = moment($scope.vac_bal_date).add(1,"M").add(-1,"d");
+                break;
+            case 1:
+                $scope.sick_bal_date = moment($scope.sick_bal_date).add(1,"M").add(-1,"d");
+                break;
+            default:
+                return;
+        }
+    }
+
+    $scope.computeBal = function(type){
+
     }
 });
 

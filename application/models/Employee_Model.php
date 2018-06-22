@@ -122,6 +122,7 @@ class Employee_Model extends MY_Model{
                     "last_name"=>"Naraval",
                     "first_name"=>"Paul",
                     "middle_name"=>"Paul",
+                    "first_day"=>"2018/06/19",
                     "position"=>"idk",
                     "salary"=>123
                 ),
@@ -130,6 +131,7 @@ class Employee_Model extends MY_Model{
                     "last_name"=>"Ramos",
                     "first_name"=>"Peter",
                     "middle_name"=>"Peter",
+                    "first_day"=>"2018/04/19",
                     "position"=>"idk",
                     "salary"=>1234
                 ),
@@ -138,6 +140,7 @@ class Employee_Model extends MY_Model{
                     "last_name"=>"Aquino",
                     "first_name"=>"Israel",
                     "middle_name"=>"Israel",
+                    "first_day"=>"2018/05/19",
                     "position"=>"idk",
                     "salary"=>1234
                 )
