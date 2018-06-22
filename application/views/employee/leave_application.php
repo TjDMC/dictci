@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div>
         <h1>Application for Leave</h1>
         <form style="max-width:600px;margin-left:25px" ng-submit="submit()">
-            <div class="form-group autocomplete">
+			<div class="form-group autocomplete">
                 <label>Employee No: </label>
                 <input id="empNo" class="form-control" type="text" ng-model="employee.emp_no" ng-blur="fillName()" pattern="[0-9]{7}" maxlength="7" required>
             </div>
@@ -91,6 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		{{employee}}
 		<a hidden>
 			{{autocomplete()}}
+			{{fillName()}}
 		</a>
     </div>
 </div>

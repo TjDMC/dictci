@@ -169,12 +169,25 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 					item = document.createElement("DIV");
 					item.innerHTML = $scope.employees[i].emp_no;
 					item.innerHTML += "<input type='hidden' value='"+$scope.employees[i].emp_no+"'>";
-					item.classList.add("form-control");
 					item.addEventListener("click", function(e){
-						inp.value = this.getElementsByTagName("input")[0].value;
+						inp.value = this.getElementsByTagName('input')[0].value;
 						closeList();
+						$scope.fillName();
 					});
+					/*item.addEventListener("mouseenter", function(){
+						var x = document.getElementById(inp.id + "autocomplete-list");
+						if(x) x = x.getElementsByTagName("div");
+						if(x==null || x.length==0) return;
+						for(var i=0; i<x.length;i++){
+							if(x[i].innerHTML==this.innerHTML){
+								currFocus=i;
+								addActive(x);
+								break;
+							}
+						}
+					});*/
 					divList.appendChild(item);
+					if(divList.children.length==5) break;
 				}
 			}
 		});
@@ -217,7 +230,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				}
 			}
 		}
-
+		
 		document.addEventListener("click", function(e){
 			closeList();
 		});
@@ -225,16 +238,17 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
 	$scope.fillName = function(){
 		number = document.getElementById("empNo");
+		if(number.value.length!=7) return;
 		var i;
 		for(i=0; i<$scope.employees.length;i++){
 			if(number.value==$scope.employees[i].emp_no) break;
 			if(i==($scope.employees.length-1)){
-				if(number.value.length==7) alert("No employee has the corresponding employee number.");
 				return;
 			}
 		}
 
 		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
+		$scope.$apply();
 	}
 });
