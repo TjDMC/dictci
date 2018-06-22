@@ -5,7 +5,7 @@
 
 header{
 	background: linear-gradient(30deg, #2abe91, #23969d);
-	padding: 10px;
+	padding: 15px;
 	padding-left: var(--pad);
 	padding-right: calc(var(--pad)/2);
 	text-align: left;
@@ -20,10 +20,27 @@ footer{
 	padding: 2px;
     width: 100%;
 	background-color: lightgray;
+	-webkit-transition: all var(--transition-duration);
+	-moz-transition: all var(--transition-duration);
+	-o-transition: all var(--transition-duration);
+	transition: all var(--transition-duration);
 }
 
 body{
 	overflow-x: hidden;
+}
+
+.thumbnail{
+	width: 425px;
+	text-align:center;
+	font-size:75px;
+	padding: 40px;
+	border: 5px solid;
+	background-color: #f0f0f0;
+}
+
+.myLargeIcon{
+	display: inline-block;
 }
 
 #container{
@@ -38,10 +55,15 @@ body{
 
 #wrapper{
 	padding-right: 0;
+	background-color: #000000;
 }
 
 #wrapper.active{
 	padding-right: 250px;
+}
+
+#wrapper.active #content footer{
+	width: calc(100% - 250px);
 }
 
 #sidebar-wrapper{
@@ -120,19 +142,24 @@ body{
 
 /* Autocomplete style */
 .autocomplete{
+	position: relative;
+	display: inline-block;
 }
 
-.empNoautocomplete-items{
+.autocomplete-items{
 	background: #ffffff;
 	position: absolute;
-	z-index: 1000;
+	z-index: 99;
 	top: 100%;
 	left: 0;
 	right: 0;
+	font-size: 16px;
+	border: 1px solid #707070;
 }
 
 .autocomplete-items div{
-	border-bottom: 1px solid #a0a0ff;
+	/*border-bottom: 1px solid #a0a0ff;*/
+	padding: 3px 6px;
 }
 
 .autocomplete-items div:hover{
@@ -140,5 +167,5 @@ body{
 }
 
 .autocom-active{
-	background-color: #eeeeee;
+	background-color: #aaaaaa;
 }
