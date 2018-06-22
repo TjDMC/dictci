@@ -150,11 +150,22 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 					item = document.createElement("DIV");
 					item.innerHTML = $scope.employees[i].emp_no;
 					item.innerHTML += "<input type='hidden' value='"+$scope.employees[i].emp_no+"'>";
-					item.classList.add("form-control");
 					item.addEventListener("click", function(e){
-						inp.value = this.getElementsByTagName("input")[0].value;
+						inp.value = this.getElementsByTagName('input')[0].value;
 						closeList();
 					});
+					/*item.addEventListener("mouseenter", function(){
+						var x = document.getElementById(inp.id + "autocomplete-list");
+						if(x) x = x.getElementsByTagName("div");
+						if(x==null || x.length==0) return;
+						for(var i=0; i<x.length;i++){
+							if(x[i].innerHTML==this.innerHTML){
+								currFocus=i;
+								addActive(x);
+								break;
+							}
+						}
+					});*/
 					divList.appendChild(item);
 				}
 			}

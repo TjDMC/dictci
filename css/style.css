@@ -120,25 +120,23 @@ body{
 
 /* Autocomplete style */
 .autocomplete{
-	position: relative;
-	display: inline-block;
 }
 
-.autocomplete-items{
+.empNoautocomplete-items{
 	background: #ffffff;
 	position: absolute;
-	z-index: 99;
+	z-index: 1000;
 	top: 100%;
 	left: 0;
 	right: 0;
 }
 
 .autocomplete-items div{
-	border-bottom: 1px solid #0000ff;
+	border-bottom: 1px solid #a0a0ff;
 }
 
 .autocomplete-items div:hover{
-	background: #eeeeee;
+	background: #aaaaaa;
 }
 
 .autocom-active{
