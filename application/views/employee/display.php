@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>End Date</th>
                     <th>Type</th>
                     <th>Remarks</th>
-                    <th>Days:Hours:Minutes</th>
+                    <th>Days</th>
                     <th>Credits Equivalent</th>
                 </tr>
                 <tr ng-repeat="leave in leaves">

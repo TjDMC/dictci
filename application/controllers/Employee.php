@@ -86,7 +86,7 @@ class Employee extends MY_Controller{
             );
         }else{
             $data = parse_custom_post($input);
-            $requiredFields = array("emp_no","start_date","end_date","remarks","type");
+            $requiredFields = array("emp_no","start_date","end_date","type");
             $insertData = array();
             foreach($requiredFields as $field){
                 if(isset($data[$field])){

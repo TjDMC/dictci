@@ -26,14 +26,12 @@ app.controller('employee_display',function($scope,$rootScope){
             //Compute credits equivalence
             var difference = moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date)/1000;
             var days = Math.floor(difference/86400);
-            var hours = Math.floor((difference/86400 - days)*24);
-            var minutes = Math.round(((difference/86400 -  days)*24-hours)*60);
-            $scope.leaves[i].time = days+" : "+hours+" : "+minutes;
-            $scope.leaves[i].credits = days*1.25+hours*0.125+minutes*0.002
+            $scope.leaves[i].time = days;
+            $scope.leaves[i].credits = days*1.25;
 
             //format leaves
-            $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY - hh:mm a");
-            $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY - hh:mm a");
+            $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY");
+            $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY");
         }
 
     }
@@ -79,6 +77,14 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     }
 
+    $scope.computeDays = function(){
+        if($scope.leave.start_date==''){
+            return 0;
+        }else{
+            return (moment($scope.leave.end_date).diff($scope.leave.start_date))/86400000+1;
+        }
+    }
+
     $scope.startDateSet = function () {
         $scope.leave.end_date = $scope.leave.start_date;
     }
@@ -102,8 +108,8 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.submit = function(){
         var data = angular.copy($scope.leave);
         data.emp_no = $scope.employee.emp_no;
-        data.start_date = moment(data.start_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD HH:mm");
-        data.end_date = moment(data.end_date,'MMMM DD, YYYY - hh:mm a').format("YYYY/MM/DD HH:mm");
+        data.start_date = moment(data.start_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
+        data.end_date = moment(data.end_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
         console.log(data);
 
         $rootScope.post(
@@ -121,7 +127,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.autocomplete = function(){
 		// Script taken from: https://www.w3schools.com/howto/howto_js_autocomplete.asp
-		
+
 		inp = document.getElementById("empNo");
 		var currFocus;
 		inp.addEventListener("input", function(e){
@@ -146,7 +152,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				}
 			}
 		});
-		
+
 		inp.addEventListener("keydown", function(e){
 			var x = document.getElementById(this.id + "autocomplete-list");
 			if(x) x = x.getElementsByTagName("div");
@@ -162,7 +168,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				if(currFocus>-1){ if(x) x[currFocus].click();}
 			}
 		});
-		
+
 		function addActive(elem){
 			if(!elem) return false;
 			remActive(elem);
@@ -174,13 +180,13 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 			elem[currFocus].classList.add("autocom-active");
 			console.log("should work");
 		}
-		
+
 		function remActive(elem){
 			for(var i=0; i<elem.length;i++){
 				elem[i].classList.remove("autocom-active");
 			}
 		}
-		
+
 		function closeList(elem){
 			var remove = document.getElementsByClassName("autocomplete-items");
 			for(var i=0; i<remove.length; i++){
@@ -189,12 +195,12 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 				}
 			}
 		}
-		
+
 		document.addEventListener("click", function(e){
 			closeList();
 		});
 	}
-	
+
 	$scope.fillName = function(){
 		number = document.getElementById("empNo");
 		var i;

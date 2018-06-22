@@ -18,12 +18,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label>Start Date:</label>
                 <a id="startdate" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
-                        <input data-date-time-input="MMMM DD, YYYY - hh:mm a" class="form-control" type="text" data-ng-model="leave.start_date">
+                        <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.start_date">
                         <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu">
-                    <datetimepicker  data-ng-model="leave.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate',minuteStep:1 }" data-on-set-time="startDateSet()"></datetimepicker>
+                    <datetimepicker  data-ng-model="leave.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate',minView:'day' }" data-on-set-time="startDateSet()"></datetimepicker>
                 </ul>
             </div>
 
@@ -31,13 +31,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label>End Date:</label>
                 <a id="enddate" data-toggle="dropdown" data-target="dropdown" href="#">
                     <div class="input-group">
-                        <input data-date-time-input="MMMM DD, YYYY - hh:mm a" class="form-control" type="text" data-ng-model="leave.end_date">
+                        <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.end_date">
                         <span class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu">
-                    <datetimepicker data-before-render="endDateRender($view,$dates)" data-ng-model="leave.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate', minuteStep:1 }"></datetimepicker>
+                    <datetimepicker data-before-render="endDateRender($view,$dates)" data-ng-model="leave.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate', minView:'day' }" data-on-time-set="endDateSet()"></datetimepicker>
                 </ul>
+            </div>
+
+            <div>
+                <label>Days: {{computeDays()}}</label>
             </div>
 
 			<div class="form-group">
