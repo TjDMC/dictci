@@ -96,11 +96,11 @@ class Employee extends MY_Controller{
                     custom_response(false,"Please fill-in the required field ".$field);
                 }
             }
-            if($insertData["type"] == "others"){
+            if($insertData["type"] == "Others"){
                 if(!isset($data['type_others'])){
                     custom_response(false,"Please fill-in the required field Specify");
                 }
-                $invalidSpecialTypes = array('maternity','paternity','vacation','sick');
+                $invalidSpecialTypes = array('Maternity','Maternity','Vacation','Sick');
                 if(in_array($data["type_others"],$invalidSpecialTypes)){
                     custom_response(false,"Invalid leave type.");
                 }

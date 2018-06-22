@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/popper.min.js' ?>"></script>
 	<script src="<?= base_url().'bootstrap/js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
+	<script src="<?= base_url().'js/angular-sanitize.min.js' ?>"></script>
 
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.templates.js' ?>"></script>

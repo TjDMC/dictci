@@ -27,6 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>Remarks</th>
                     <th>Days</th>
                     <th>Credits Equivalent</th>
+                    <th>Deducted Credits</th>
                 </tr>
                 <tr ng-repeat="leave in leaves">
                     <td>{{leave.start_date}}</td>
@@ -35,6 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <td>{{leave.remarks}}</td>
                     <td>{{leave.time}}</td>
                     <td>{{leave.credits}}</td>
+                    <td ng-bind-html="leave.deducted"></td>
                 </tr>
             </table>
         </div>
