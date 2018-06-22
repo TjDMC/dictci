@@ -125,7 +125,6 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     }
 
     $scope.submit = function(){
-		alert("Start date: "+$scope.leave.start_date);
         var data = angular.copy($scope.leave);
         if(!data.hasOwnProperty('start_date') || !data.hasOwnProperty('end_date') || !$scope.employee.hasOwnProperty('emp_no')){
             alert("Error: Please fill-in the Employee Number, Start Date and End Date");
