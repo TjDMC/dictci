@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <input type="text" class="form-control" ng-model="searchTerm">
         </div>
         <div class="list-group">
-            <a class="list-group-item list-group-item-action" ng-repeat='employee in employeeArray' ng-if="employee.string.toLowerCase().includes(searchTerm.toLowerCase()) || !searchTerm" href="<?=base_url()."employee/display/"?>{{employee.emp_no}}">
+            <a class="list-group-item list-group-item-action" ng-repeat='employee in employeeArray | filter:searchTerm'  href="<?=base_url()."employee/display/"?>{{employee.emp_no}}">
                 {{employee.string}}
             </a>
         </div>

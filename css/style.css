@@ -5,7 +5,6 @@
 
 header{
 	background: linear-gradient(30deg, #2abe91, #23969d);
-	/*background-color: #2d8fa3;*/
 	padding: 10px;
 	padding-left: var(--pad);
 	padding-right: calc(var(--pad)/2);
@@ -62,6 +61,7 @@ body{
 }
 
 #wrapper.active #sidebar-wrapper{
+	max-width:90%;
 	width: 250px;
 }
 
@@ -125,6 +125,7 @@ body{
 }
 
 .autocomplete-items{
+	background: #ffffff;
 	position: absolute;
 	z-index: 99;
 	top: 100%;
@@ -133,7 +134,6 @@ body{
 }
 
 .autocomplete-items div{
-	background: #ffffff;
 	border-bottom: 1px solid #0000ff;
 }
 
@@ -141,6 +141,6 @@ body{
 	background: #eeeeee;
 }
 
-.autocomplete-active{
-	background: blue;
+.autocom-active{
+	background-color: #eeeeee;
 }
