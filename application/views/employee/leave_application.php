@@ -87,8 +87,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<button type="submit" class="btn btn-primary"/>Submit</button>
             </p>
         </form>
-		{{employees}}
-		{{employee}}
 		<a hidden>
 			{{autocomplete()}}
 			{{fillName()}}
