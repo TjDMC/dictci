@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </a>
         <ul class="dropdown-menu">
-            <datetimepicker  data-ng-model="vac_bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month' }" data-on-set-time="formatDate(0)"></datetimepicker>
+            <datetimepicker  data-ng-model="vac_bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatDate(0)"></datetimepicker>
         </ul>
     </div>
 
