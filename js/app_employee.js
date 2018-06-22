@@ -9,7 +9,7 @@ app.controller('employee_search',function($scope,$rootScope){
 
 });
 
-app.controller('employee_display',function($scope,$rootScope){
+app.controller('employee_display',function($scope,$rootScope,$sce){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.init = function(employee,leaves){
@@ -24,10 +24,19 @@ app.controller('employee_display',function($scope,$rootScope){
 
         for(var i = 0 ; i<$scope.leaves.length ; i++){
             //Compute credits equivalence
-            var difference = moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date)/1000;
-            var days = Math.floor(difference/86400);
-            $scope.leaves[i].time = days;
-            $scope.leaves[i].credits = days*1.25;
+            var difference = moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date,'days') + 1;
+            $scope.leaves[i].time = difference;
+            $scope.leaves[i].credits = difference;
+            switch($scope.leaves[i].type){
+                case 'Vacation':
+                    $scope.leaves[i].deducted =  $sce.trustAsHtml("<span style='color:green'>"+$scope.leaves[i].credits+"</span> : <span style='color:red'>0</span>");
+                    break;
+                case 'Sick':
+                    $scope.leaves[i].deducted = $sce.trustAsHtml("<span style='color:green'>0</span> : <span style='color:red'>"+$scope.leaves[i].credits+"</span>");
+                    break;
+                default:
+                    $scope.leaves[i].deducted =  $sce.trustAsHtml("<span style='color:green'>0</span> : <span style='color:red'>0</span>");
+            }
 
             //format leaves
             $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY");
@@ -56,17 +65,8 @@ app.controller('employee_add',function($scope,$rootScope,$window){
 
 app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
-    $scope.employee={
-        "emp_no":"",
-        "last_name":"",
-        "first_name":"",
-        "middle_name":"",
-        "name":""
-    };
-    $scope.leave={
-        start_date:"",
-        end_date:""
-    };
+    $scope.employee={};
+    $scope.leave={};
 
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
@@ -108,6 +108,10 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.submit = function(){
 		alert("Start date: "+$scope.leave.start_date);
         var data = angular.copy($scope.leave);
+        if(!data.hasOwnProperty('start_date') || !data.hasOwnProperty('end_date') || !$scope.employee.hasOwnProperty('emp_no')){
+            alert("Error: Please fill-in the Employee Number, Start Date and End Date");
+            return;
+        }
         data.emp_no = $scope.employee.emp_no;
         data.start_date = moment(data.start_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
         data.end_date = moment(data.end_date,'MMMM DD, YYYY').format("YYYY/MM/DD");

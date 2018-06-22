@@ -10,12 +10,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <p>Name: {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
     <p>Sick Leave Balance: {{employee.sick_leave_bal}}</p>
     <p>Vacation Leave Balance: {{employee.vac_leave_bal}}</p>
-    <p>
-        <a href="<?=base_url()."employee/leaveapplication/{{employee.emp_no}}"?>">Application For Leave</a>
-    </p>
-    <p>
-        <button onclick="alert('No')">Delete Employee Record</button>
-    </p>
+    <div class="form-group">
+        <a href="<?=base_url()."employee/leaveapplication/{{employee.emp_no}}"?>" class="btn btn-primary">Application For Leave</a>
+        <button onclick="alert('No')" class="btn btn-primary">Delete Employee Record</button>
+    </div>
     <div>
         <h3>Leave History</h3>
         <div class="table-responsive">
@@ -27,6 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>Remarks</th>
                     <th>Days</th>
                     <th>Credits Equivalent</th>
+                    <th>Deducted Credits</th>
                 </tr>
                 <tr ng-repeat="leave in leaves">
                     <td>{{leave.start_date}}</td>
@@ -35,6 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <td>{{leave.remarks}}</td>
                     <td>{{leave.time}}</td>
                     <td>{{leave.credits}}</td>
+                    <td ng-bind-html="leave.deducted"></td>
                 </tr>
             </table>
         </div>

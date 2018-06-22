@@ -53,23 +53,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label>Leave Type:</label>
                 <div style="margin-left:25px">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" ng-model="leave.type" value="vacation"/>
+                        <input class="form-check-input" type="radio" ng-model="leave.type" value="Vacation"/>
                         <label class="form-check-label">Vacation</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" ng-model="leave.type" value="sick"/>
+                        <input class="form-check-input" type="radio" ng-model="leave.type" value="Sick"/>
                         <label class="form-check-label">Sick</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" ng-model="leave.type" value="maternity"/>
+                        <input class="form-check-input" type="radio" ng-model="leave.type" value="Maternity"/>
                         <label class="form-check-label">Maternity</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" ng-model="leave.type" value="paternity"/>
+                        <input class="form-check-input" type="radio" ng-model="leave.type" value="Paternity"/>
                         <label class="form-check-label">Paternity</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" ng-model="leave.type" value="others"/>
+                        <input class="form-check-input" type="radio" ng-model="leave.type" value="Others"/>
                         <label class="form-check-label">Others</label>
                     </div>
 
