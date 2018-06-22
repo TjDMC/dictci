@@ -87,6 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		{{employee}}
 		<a hidden>
 			{{autocomplete()}}
+			{{fillName()}}
 		</a>
     </div>
 </div>
