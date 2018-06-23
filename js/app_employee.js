@@ -84,9 +84,18 @@ app.controller('employee_add',function($scope,$rootScope,$window){
 
 app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
-    $scope.employee={};
-    $scope.leave={};
-    $scope.isStartDateSet= false;
+    $scope.employee = {};
+    $scope.leaves = [];
+	
+	$scope.leaveTemplate = {
+		start_date:'',
+		end_date:'',
+		type:'',
+		remarks:'',
+		hours:0,
+		minutes:0
+	};
+	$scope.dateFormat = 'MMMM DD, YYYY';
 
     $scope.init = function(employees,employee=null){
         $scope.employees = employees;
@@ -94,24 +103,63 @@ app.controller('leave_application',function($scope,$rootScope,$window){
             $scope.employee = employee;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
         }
+		$scope.rangeAction(0);
     }
 
-    $scope.computeDays = function(){
-        if($scope.leave.start_date==''){
+    $scope.computeDays = function(index = -1){
+		if(index==-1){
+		}else{
+			return Math.round((moment($scope.leaves[index].end_date).diff($scope.leaves[index].start_date))/86400000)+1;
+		}
+        /*if($scope.leaves.start_date==''){
             return 0;
         }else{
-            return Math.round((moment($scope.leave.end_date).diff($scope.leave.start_date))/86400000)+1;
-        }
+            
+        }*/
     }
 
-    $scope.startDateSet = function () {
-        $scope.leave.end_date = $scope.leave.start_date;
-        $scope.isStartDateSet = true;
+	var computeTime = function(index){
+		var difference = moment($scope.leaves[index].end_date,$scope.dateFormat).diff(moment($scope.leaves[index].start_date,$scope.dateFormat))/1000;
+		$scope.leaves[index].hours = $scope.computeDays(index)*8;
+	}
+	
+    $scope.startDateSet = function (index) {
+		if($scope.leaves[index].end_date){
+			if(moment($scope.leaves[index].end_date,$scope.dateFormat).diff(moment($scope.leaves[index].start_date,$scope.dateFormat))<0){
+				$scope.leaves[index].end_date = $scope.leaves[index].start_date;
+			}
+		}else{
+			$scope.leaves[index].end_date = $scope.leaves[index].start_date;
+		}
+		computeTime(index);
     }
+	
+	$scope.rangeAction = function(action,index=-1){
+		if(index == 0){
+			alert("First date range cannot be deleted.");
+			return;
+		}
+		switch(action){
+			case 0://add
+				$scope.leaves.push(angular.copy($scope.leaveTemplate));
+				return;
+			case 1://delete
+				$scope.leaves.splice(index==-1?$scope.leaves.length-1:index,1);
+				return;
+		}
+	}
+	
+	$scope.endDateSet = function(index){
+		//$scope.leave.end_date = $scope.leave.start_date;
+		if(!$scope.leaves[index].start_date){
+			$scope.leaves[index].start_date = $scope.leaves[index].end_date;
+		}
+		computeTime(index);
+	}
 
-    $scope.endDateRender = function($view,$dates){
-        if($scope.leave.start_date){
-            var activeDate = moment($scope.leave.start_date).subtract(1, $view).add(1, 'minute');
+    $scope.endDateRender = function($view,$dates,index){
+        if($scope.leaves[index].start_date){
+            var activeDate = moment($scope.leaves[index].start_date).subtract(1, $view).add(1, 'minute');
 
             $dates.filter(function(date){
                 return date.localDateValue() <= activeDate.valueOf();
@@ -132,8 +180,8 @@ app.controller('leave_application',function($scope,$rootScope,$window){
             return;
         }
         data.emp_no = $scope.employee.emp_no;
-        data.start_date = moment(data.start_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
-        data.end_date = moment(data.end_date,'MMMM DD, YYYY').format("YYYY/MM/DD");
+        data.start_date = moment(data.start_date,$scope.dateFormat).format("YYYY/MM/DD");
+        data.end_date = moment(data.end_date,$scope.dateFormat).format("YYYY/MM/DD");
         console.log(data);
 
         $rootScope.post(

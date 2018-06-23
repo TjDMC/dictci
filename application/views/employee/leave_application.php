@@ -2,6 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
+<script>
+ $('body') .on('show.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "visible"); }) .on('hide.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "auto"); });
+</script>
+
 <div ng-controller="leave_application" ng-init='init(<?=$employees?><?=isset($employee)?','.$employee:''?>)'>
     <div>
         <h1>Application for Leave</h1>
@@ -15,64 +19,59 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
             </div>
 
-            <div>
+            <div class="table-responsive">
                 <label>Date Ranges: </label>
-                <div>
-                    <div class="container row">
-                        <button class="btn btn-light form-group" type="button"><i class="fas fa-times"></i></button>
-                        <div class="dropdown form-group col-sm" style="max-width:400px">
-                            <a id="startdate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                <table class="table table-bordered">
+					<tr>
+						<th>#</th>
+						<th>From</th>
+						<th>To</th>
+						<th>Hours</th>
+						<th>Minutes</th>
+					</tr>
+                    <tr ng-repeat="leave in leaves track by $index">
+                        <td style="width:40px"><button class="btn btn-light" type="button" ng-click="rangeAction(1,$index)"><i class="fas fa-times"></i></button></td>
+                        <td><div class="dropdown" style="min-width:300px;max-width:400px">
+                            <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">From</i></span>
-                                    </div>
-                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.start_date">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.start_date">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                     </div>
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker  data-ng-model="leave.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate',minView:'day' }" data-on-set-time="startDateSet()"></datetimepicker>
+                                <datetimepicker  data-ng-model="leave.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate'+$index,minView:'day' }" data-on-set-time="startDateSet($index)"></datetimepicker>
                             </ul>
-                        </div>
+                        </div></td>
 
-                        <div class="dropdown form-group col-sm"  ng-if="isStartDateSet" style="max-width:400px">
-                            <a id="enddate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                        <td><div class="dropdown" style="min-width:300px;max-width:400px">
+                            <a id="enddate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">To</i></span>
-                                    </div>
-                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="leave.end_date">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.end_date">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                     </div>
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-before-render="endDateRender($view,$dates)" data-ng-model="leave.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate', minView:'day' }" data-on-time-set="endDateSet()"></datetimepicker>
+                                <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="leave.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day' }" data-on-set-time="endDateSet($index)"></datetimepicker>
                             </ul>
-                        </div>
-                        <div class="form-group col-" ng-if="isStartDateSet" style="max-width:200px">
+                        </div></td>
+                        <td style="max-width:200px">
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Hours</i></span>
-                                </div>
-                                <input class="form-control" min="0" step="1" type="number">
+                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.hours">
                             </div>
-                        </div>
-                        <div class="form-group col-" ng-if="isStartDateSet" style="max-width:200px;margin-left:10px">
+                        </td>
+                        <td style="max-width:200px;margin-left:10px">
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Minutes</i></span>
-                                </div>
-                                <input class="form-control" min="0" step="1" type="number">
+                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.minutes">
                             </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary form-group" type="button"><span>Add Range</span></button>
-                </div>
-
+                        </td>
+                    </tr>
+                    
+                </table>
+				<button class="btn btn-secondary form-group" type="button" ng-click="rangeAction(0)"><span>Add Range</span></button>
             </div>
 
             <div>
