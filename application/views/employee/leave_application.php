@@ -37,14 +37,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					    <input type="radio" name="type" value="Others" ng-model="leaveData.type" autocomplete="off" required> Others
 				    </label>
 				</div>
-				<div class="form-group" ng-if="leave.type=='Others'" style="max-width:400px">
+				<div class="form-group" ng-if="leaveData.type=='Others'" style="max-width:400px">
 					<div class="input-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text">
 								Specify: 
 							</span>
 						</div>
-						<input class="form-control" type="text" ng-model="leave.type_others" ng-required="leave.type=='Others'"/>
+						<input class="form-control" type="text" ng-model="leaveData.type_others" ng-required="leaveData.type=='Others'"/>
 					</div>
 				</div>
             </div>
