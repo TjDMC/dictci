@@ -16,8 +16,9 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 		success = function(response) {
 			var responseData = {};
 			responseData = response.data;
-			if(!responseData || !('success' in responseData) || !('msg' in responseData)){
-				alert('ERROR Something is missing');
+			if(!responseData || typeof responseData !== 'object' || !('success' in responseData) || !('msg' in responseData)){
+				alert(typeof responseData === 'object'?'PHP error':'ERROR Something is missing');
+				console.log(responseData);
 				return;
 			}
 			if(responseData.success){

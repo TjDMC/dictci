@@ -53,11 +53,6 @@ class Employee_Model extends MY_Model{
 
     private $leaveFields = array(
         array(
-            "field_name"=>"id",
-            "field_title"=>"Leave ID",
-            "required"=>false
-        ),
-        array(
             "field_name"=>"type",
             "field_title"=>"Leave Type",
             "required"=>true
@@ -67,7 +62,20 @@ class Employee_Model extends MY_Model{
             "field_title"=>"Employee Number",
             "required"=>true
         ),
+		array(
+            "field_name"=>"leaves",
+            "field_title"=>"Leave Date Ranges",
+            "required"=>true
+        ),
         array(
+            "field_name"=>"remarks",
+            "field_title"=>"Remarks",
+            "required"=>false
+        )
+    );
+	
+	private $leaveDateRangeFields = array(
+		array(
             "field_name"=>"start_date",
             "field_title"=>"Start Date",
             "required"=>true
@@ -77,12 +85,17 @@ class Employee_Model extends MY_Model{
             "field_title"=>"End Date",
             "required"=>true
         ),
-        array(
-            "field_name"=>"remarks",
-            "field_title"=>"Remarks",
-            "required"=>false
-        )
-    );
+		array(
+			"field_name"=>"hours",
+            "field_title"=>"Hours",
+            "required"=>true
+		),
+		array(
+			"field_name"=>"minutes",
+            "field_title"=>"Minutes",
+            "required"=>true
+		)
+	);
 
     public function createTable(){
         if(!$this->db->table_exists(DB_PREFIX."employee")){
@@ -102,15 +115,23 @@ class Employee_Model extends MY_Model{
 
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
             $this->dbforge->add_field("flag int not null default 0");
-            $this->dbforge->add_field("id int unsigned not null auto_increment unique");
+            $this->dbforge->add_field("leave_id int unsigned not null auto_increment unique");
             $this->dbforge->add_field("type varchar(20) not null");
             $this->dbforge->add_field("emp_no char(7) not null");
-            $this->dbforge->add_field("start_date date not null");
-            $this->dbforge->add_field("end_date date not null");
             $this->dbforge->add_field("remarks varchar(50)");
-            $this->dbforge->add_field("primary key (id)");
+            $this->dbforge->add_field("primary key (leave_id)");
             $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX."leaves");
+        }
+		
+		if(!$this->db->table_exists(DB_PREFIX."leave_date_range")){
+            $this->dbforge->add_field("leave_id int unsigned not null");
+            $this->dbforge->add_field("start_date date not null");
+            $this->dbforge->add_field("end_date date not null");
+            $this->dbforge->add_field("hours int not null default 0");
+            $this->dbforge->add_field("minutes int not null default 0");
+            $this->dbforge->add_field("foreign key (leave_id) references ".DB_PREFIX."leaves(leave_id) on update cascade on delete cascade");
+            $this->dbforge->create_table(DB_PREFIX."leave_date_range");
         }
     }
 
@@ -165,6 +186,40 @@ class Employee_Model extends MY_Model{
         return null;
     }
 
+	public function addLeaves($leaveData){
+		//Validate leave data
+		$leaveChecker = $this->checkFields($this->leaveFields,$leaveData);
+		if(!is_array($leaveChecker)){
+			return $leaveChecker;
+		}
+		unset($leaveChecker['leaves']);
+		
+		//Check if employee exists
+		$this->db->where("emp_no",$leaveChecker["emp_no"]);
+        $res = $this->db->get(DB_PREFIX."employee")->result_array();
+        if(count($res)<1){
+            return "Employee does not exist.";
+        }
+		
+		//Get next auto_increment
+		$nextID = $this->db->query("SHOW TABLE STATUS LIKE '".DB_PREFIX."leaves'")->result_array()[0]["Auto_increment"];
+		
+		//Validate date ranges
+		$dateRangeChecker = array();
+		foreach($leaveData['leaves'] as $leave){
+			$checker = $this->checkFields($this->leaveDateRangeFields,$leave);
+			if(!is_array($checker)){
+				return $checker;
+			}
+			$checker['leave_id']=$nextID;
+			array_push($dateRangeChecker,$checker);
+		}
+		
+		//Inserting leaves to tables
+		$this->db->insert(DB_PREFIX."leaves",$leaveChecker);
+		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
+	}
+	
     public function addLeave($leaveData){
         $checker = $this->checkFields($this->leaveFields,$leaveData);
         if(!is_array($checker)){
@@ -220,8 +275,17 @@ class Employee_Model extends MY_Model{
     }
 
     public function getLeaves($employeeNo){
+		$leaves = array();
         $this->db->where("emp_no",$employeeNo);
         $res = $this->db->get(DB_PREFIX."leaves")->result_array();
-        return $res;
+		
+		foreach($res as $leave){
+			$this->db->where("leave_id",$leave['leave_id']);
+			array_push($leaves,array(
+				'info'=>$leave,
+				'date_ranges'=>$this->db->get(DB_PREFIX."leave_date_range")->result_array()
+			));
+		}
+        return $leaves;
     }
 }

@@ -18,23 +18,53 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label>Employee Name: </label>
                 <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
             </div>
-
+			<div class="form-group">
+                <p>Leave Type:</p>
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				    <label class="btn btn-outline-info">
+					    <input type="radio" name="type" value="Vacation" ng-model="leaveData.type" autocomplete="off" required> Vacation
+				    </label>
+					<label class="btn btn-outline-info">
+					    <input type="radio" name="type" value="Sick" ng-model="leaveData.type" autocomplete="off" required> Sick
+				    </label>
+					<label class="btn btn-outline-info">
+					    <input type="radio" name="type" value="Maternity" ng-model="leaveData.type" autocomplete="off" required> Maternity
+				    </label>
+					<label class="btn btn-outline-info">
+					    <input type="radio" name="type" value="Paternity" ng-model="leaveData.type" autocomplete="off" required> Paternity
+				    </label>
+					<label class="btn btn-outline-info">
+					    <input type="radio" name="type" value="Others" ng-model="leaveData.type" autocomplete="off" required> Others
+				    </label>
+				</div>
+				<div class="form-group" ng-if="leave.type=='Others'" style="max-width:400px">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">
+								Specify: 
+							</span>
+						</div>
+						<input class="form-control" type="text" ng-model="leave.type_others" ng-required="leave.type=='Others'"/>
+					</div>
+				</div>
+            </div>
             <div class="table-responsive">
                 <label>Date Ranges: </label>
                 <table class="table table-bordered">
 					<tr>
-						<th>#</th>
+						<th></th>
 						<th>From</th>
 						<th>To</th>
 						<th>Hours</th>
 						<th>Minutes</th>
+						<th>Credits Equivalent</th>
 					</tr>
                     <tr ng-repeat="leave in leaves track by $index">
                         <td style="width:40px"><button class="btn btn-light" type="button" ng-click="rangeAction(1,$index)"><i class="fas fa-times"></i></button></td>
-                        <td><div class="dropdown" style="min-width:300px;max-width:400px">
+                        <td><div class="dropdown" style="min-width:200px;max-width:400px">
                             <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
-                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.start_date">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.start_date" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                     </div>
@@ -45,10 +75,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </ul>
                         </div></td>
 
-                        <td><div class="dropdown" style="min-width:300px;max-width:400px">
+                        <td><div class="dropdown" style="min-width:200px;max-width:400px">
                             <a id="enddate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
-                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.end_date">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="leave.end_date" required>
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                     </div>
@@ -60,59 +90,34 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div></td>
                         <td style="max-width:200px">
                             <div class="input-group">
-                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.hours">
+                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.hours" ng-disabled="!leave.start_date" required>
                             </div>
                         </td>
                         <td style="max-width:200px;margin-left:10px">
                             <div class="input-group">
-                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.minutes">
+                                <input class="form-control" min="0" step="1" type="number" ng-model="leave.minutes" ng-disabled="!leave.start_date" required>
                             </div>
                         </td>
+						<td>
+							<span>{{leave.hours/8+leave.minutes/(60*8) | number:3}}</span>
+						</td>
                     </tr>
-                    
+                    <tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>Total Credits: {{getTotalCredits()|number:3}}</td>
+					</tr>
                 </table>
 				<button class="btn btn-secondary form-group" type="button" ng-click="rangeAction(0)"><span>Add Range</span></button>
             </div>
 
-            <div>
-                <label>Days: {{computeDays()}}</label>
-            </div>
-
 			<div class="form-group">
 				<label>Remarks: </label>
-                <input class="form-control" type="textarea" ng-model="leave.remarks"/>
+                <input class="form-control" type="textarea" ng-model="leaveData.remarks"/>
 			</div>
-
-            <div class="form-group">
-                <label>Leave Type:</label>
-                <div style="margin-left:25px">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="vacation" ng-model="leave.type" value="Vacation"/>
-                        <label class="form-check-label" for="vacation">Vacation</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="sick" ng-model="leave.type" value="Sick"/>
-                        <label class="form-check-label" for="sick">Sick</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="maternity" ng-model="leave.type" value="Maternity"/>
-                        <label class="form-check-label" for="maternity">Maternity</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="paternity" ng-model="leave.type" value="Paternity"/>
-                        <label class="form-check-label" for="paternity">Paternity</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="others" ng-model="leave.type" value="Others"/>
-                        <label class="form-check-label" for="others">Others</label>
-                    </div>
-
-                    <div class="form-group" ng-if="leave.type=='Others'">
-        				<label>Specify: </label>
-                        <input class="form-control" type="text" ng-model="leave.type_others"/>
-        			</div>
-                </div>
-            </div>
             <p>
 				<button type="submit" class="btn btn-primary"/>Submit</button>
             </p>

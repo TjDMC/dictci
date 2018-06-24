@@ -76,28 +76,6 @@ class Employee extends MY_Controller{
             );
         }else{
             $data = parse_custom_post($input);
-            /*$requiredFields = array("emp_no","start_date","end_date","type");
-            $insertData = array();
-            foreach($requiredFields as $field){
-                if(isset($data[$field])){
-                    $insertData[$field] = $data[$field];
-                }else{
-                    log_message('debug',"DEBUGGG ".$field);
-                    custom_response(false,"Please fill-in the required field ".$field);
-                }
-            }
-            if($insertData["type"] == "Others"){
-                if(!isset($data['type_others'])){
-                    custom_response(false,"Please fill-in the required field Specify");
-                }
-                $invalidSpecialTypes = array('Maternity','Maternity','Vacation','Sick');
-                if(in_array($data["type_others"],$invalidSpecialTypes)){
-                    custom_response(false,"Invalid leave type.");
-                }
-                $insertData["type"] = $data['type_others'];
-            }
-
-            $response = $this->employee_model->addLeave($insertData);*/
 
             if(isset($data["type"]) && $data["type"] == "Others"){
                 if(!isset($data['type_others'])){
@@ -109,7 +87,7 @@ class Employee extends MY_Controller{
                 }
                 $data["type"] = $data['type_others'];
             }
-            $response = $this->employee_model->addLeave($data);
+            $response = $this->employee_model->addLeaves($data);
             if($response !== null){
                 custom_response(false, $response);
             }else{

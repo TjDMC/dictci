@@ -15,32 +15,20 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
         $scope.leaves = leaves;
-
+		console.log(leaves);
         //sort $leaves
         $scope.leaves.sort(function(a,b){
-            return moment(b.start_date).diff(moment(a.start_date));
+            return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
         });
 
-
         for(var i = 0 ; i<$scope.leaves.length ; i++){
-            //Compute credits equivalence
-            var difference = moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date,'days') + 1;
-            $scope.leaves[i].time = difference;
-            $scope.leaves[i].credits = difference;
-            switch($scope.leaves[i].type){
-                case 'Vacation':
-                    $scope.leaves[i].deducted =  $sce.trustAsHtml("<span style='color:green'>"+$scope.leaves[i].credits+"</span> : <span style='color:red'>0</span>");
-                    break;
-                case 'Sick':
-                    $scope.leaves[i].deducted = $sce.trustAsHtml("<span style='color:green'>0</span> : <span style='color:red'>"+$scope.leaves[i].credits+"</span>");
-                    break;
-                default:
-                    $scope.leaves[i].deducted =  $sce.trustAsHtml("<span style='color:green'>0</span> : <span style='color:red'>0</span>");
-            }
-
-            //format leaves
-            $scope.leaves[i].start_date = moment($scope.leaves[i].start_date).format("MMMM DD, YYYY");
-            $scope.leaves[i].end_date = moment($scope.leaves[i].end_date).format("MMMM DD, YYYY");
+			var leave = $scope.leaves[i];
+            for(var j = 0 ; j<leave.date_ranges.length ; j++){
+				var date_range = leave.date_ranges[j];
+				date_range.start_date = moment(date_range.start_date).format("MMMM DD, YYYY");
+				date_range.end_date = moment(date_range.end_date).format("MMMM DD, YYYY");
+			}
+			console.log(leave);
         }
 
         $scope.sick_bal_date = moment().endOf("month");
@@ -59,9 +47,13 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
                 return;
         }
     }
-
-    $scope.computeBal = function(type){
-
+	
+    $scope.getDeductedCredits = function(type,date_range){
+		if(type=='Vacation'||type=='Sick'){
+			return (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+		}else{
+			return 0;
+		}
     }
 });
 
@@ -86,6 +78,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employees = [];
     $scope.employee = {};
     $scope.leaves = [];
+	$scope.leaveData = {};
 	
 	$scope.leaveTemplate = {
 		start_date:'',
@@ -106,21 +99,48 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		$scope.rangeAction(0);
     }
 
-    $scope.computeDays = function(index = -1){
+    var getTotalDays = function(index = -1){
 		if(index==-1){
+			var days = 0;
+			
+			for(var i = 0 ; i<$scope.leaves.length ; i++){
+				if($scope.leaves[i].end_date=='' || $scope.leaves[i].start_date==''){
+					continue;
+				}
+				days += Math.round((moment($scope.leaves[i].end_date).diff($scope.leaves[i].start_date))/86400000)+1;
+				days += $scope.leaves[i].minutes/(8*60);
+			}
+			return days;
 		}else{
 			return Math.round((moment($scope.leaves[index].end_date).diff($scope.leaves[index].start_date))/86400000)+1;
 		}
-        /*if($scope.leaves.start_date==''){
-            return 0;
-        }else{
-            
-        }*/
     }
-
-	var computeTime = function(index){
-		var difference = moment($scope.leaves[index].end_date,$scope.dateFormat).diff(moment($scope.leaves[index].start_date,$scope.dateFormat))/1000;
-		$scope.leaves[index].hours = $scope.computeDays(index)*8;
+	
+	$scope.getTotalCredits = function(){
+		var credits = 0;
+		for(var i = 0 ; i<$scope.leaves.length ; i++){
+			if($scope.leaves[i].end_date=='' || $scope.leaves[i].start_date==''){
+				continue;
+			}
+			credits += $scope.leaves[i].hours/8;
+			credits += $scope.leaves[i].minutes/(8*60);
+		}
+		return credits;
+	}
+	
+	$scope.rangeAction = function(action,index=-1){
+		switch(action){
+			case 0://add
+				$scope.leaves.push(angular.copy($scope.leaveTemplate));
+				return;
+			case 1://delete
+				if($scope.leaves.length<=1){
+					alert("Date ranges must have at least 1 range.");
+					return;
+				}
+				$scope.leaves.splice(index==-1?$scope.leaves.length-1:index,1);
+				return;
+		}
 	}
 	
     $scope.startDateSet = function (index) {
@@ -131,30 +151,14 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		}else{
 			$scope.leaves[index].end_date = $scope.leaves[index].start_date;
 		}
-		computeTime(index);
+		$scope.leaves[index].hours = getTotalDays(index)*8;
     }
 	
-	$scope.rangeAction = function(action,index=-1){
-		if(index == 0){
-			alert("First date range cannot be deleted.");
-			return;
-		}
-		switch(action){
-			case 0://add
-				$scope.leaves.push(angular.copy($scope.leaveTemplate));
-				return;
-			case 1://delete
-				$scope.leaves.splice(index==-1?$scope.leaves.length-1:index,1);
-				return;
-		}
-	}
-	
 	$scope.endDateSet = function(index){
-		//$scope.leave.end_date = $scope.leave.start_date;
 		if(!$scope.leaves[index].start_date){
 			$scope.leaves[index].start_date = $scope.leaves[index].end_date;
 		}
-		computeTime(index);
+		$scope.leaves[index].hours = getTotalDays(index)*8;
 	}
 
     $scope.endDateRender = function($view,$dates,index){
@@ -174,16 +178,16 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     }
 
     $scope.submit = function(){
-        var data = angular.copy($scope.leave);
-        if(!data.hasOwnProperty('start_date') || !data.hasOwnProperty('end_date') || !$scope.employee.hasOwnProperty('emp_no')){
-            alert("Error: Please fill-in the Employee Number, Start Date and End Date");
-            return;
-        }
-        data.emp_no = $scope.employee.emp_no;
-        data.start_date = moment(data.start_date,$scope.dateFormat).format("YYYY/MM/DD");
-        data.end_date = moment(data.end_date,$scope.dateFormat).format("YYYY/MM/DD");
-        console.log(data);
-
+        var data = {
+			emp_no:$scope.employee.emp_no,
+			leaves:angular.copy($scope.leaves),
+			type:$scope.leaveData.type,
+			remarks:$scope.leaveData.remarks
+		};
+		for(var i = 0 ; i<data.leaves.length ; i++){
+			data.leaves[i].start_date = moment(data.leaves[i].start_date,$scope.dateFormat).format("YYYY/MM/DD");
+			data.leaves[i].end_date = moment(data.leaves[i].end_date,$scope.dateFormat).format("YYYY/MM/DD");
+		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
             data,
@@ -285,9 +289,9 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	}
 
 	$scope.fillName = function(){
-		number = document.getElementById("empNo");
+		/*number = document.getElementById("empNo");
 		if(number.value.length!=7) return;
-		var i;
+		//var i;
 		for(i=0; i<$scope.employees.length;i++){
 			if(number.value==$scope.employees[i].emp_no) break;
 			if(i==($scope.employees.length-1)){
@@ -297,6 +301,6 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
 		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
-		$scope.$apply();
+		$scope.$apply();*/
 	}
 });

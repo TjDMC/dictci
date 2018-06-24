@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     <p>Employee No: {{employee.emp_no}}</p>
     <p>Name: {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
-    <p>Employed On: {{employee.first_day}}</p>
+    <p>First Day: {{employee.first_day}}</p>
 
     <div class="dropdown form-group" style="max-width:400px">
         <label>Vacation Leave Balance: {{computeBal(0)}}</label>
@@ -54,26 +54,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div>
         <h3>Leave History</h3>
         <div class="table-responsive">
-            <table class="table table-hover">
-                <tr>
+			<table class="table" >
+				<tr>
+					<th>Leave Type</th>
+					<th>Remarks</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Type</th>
-                    <th>Remarks</th>
-                    <th>Days</th>
-                    <th>Credits Equivalent</th>
-                    <th>Deducted Credits (Vacation : Sick)</th>
+                    <th>Hours</th>
+                    <th>Minutes</th>
+                    <th>Deducted Credits</th>
                 </tr>
-                <tr ng-repeat="leave in leaves">
-                    <td>{{leave.start_date}}</td>
-                    <td>{{leave.end_date}}</td>
-                    <td>{{leave.type}}</td>
-                    <td>{{leave.remarks}}</td>
-                    <td>{{leave.time}}</td>
-                    <td>{{leave.credits}}</td>
-                    <td ng-bind-html="leave.deducted"></td>
-                </tr>
-            </table>
+				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true">
+					<tr ng-click="leave.info.show=!leave.info.show" style="background-color:lightgray" >
+						<td colspan=6 >
+							{{leave.info.type}}
+						</td>
+						<td>
+							{{leave.info.remarks}}
+						</td>
+					</tr>
+					<tr ng-show="leave.info.show" ng-repeat="date_range in leave.date_ranges">
+						<td></td>
+						<td></td>
+						<td>{{date_range.start_date}}</td>
+						<td>{{date_range.end_date}}</td>
+						<td>{{date_range.hours}}</td>
+						<td>{{date_range.minutes}}</td>
+						<td>{{getDeductedCredits(leave.info.type,date_range)}}</td>
+					</tr>
+				</tbody>
+				
+			</table>
         </div>
     </div>
 </div>
