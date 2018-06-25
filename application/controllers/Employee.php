@@ -15,6 +15,7 @@ class Employee extends MY_Controller{
     }
 
     public function display($employeeNo=null){
+
         if($employeeNo == null){
             show_404();
         }
@@ -23,7 +24,7 @@ class Employee extends MY_Controller{
             show_404();
         }
         $leaves = $this->employee_model->getLeaves($employeeNo);
-        
+
         $this->html(
             function() use ($employee,$leaves){
                 $this->load->view("employee/display",array(

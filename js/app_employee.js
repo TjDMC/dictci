@@ -55,7 +55,7 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
         }
 
         $scope.computeBal = function(){
-            
+
         }
 
         $scope.sick_bal_date = moment().endOf("month");
@@ -174,7 +174,8 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.startDateSet = function (index) {
 		if($scope.leaves[index].end_date){
-			if(moment($scope.leaves[index].end_date,$scope.dateFormat).diff(moment($scope.leaves[index].start_date,$scope.dateFormat))<0){
+			if(moment($scope.leaves[index].end_date,$scope.dateFormat).diff(moment($scope.leaves[index].start_date,$scope.dateFormat))<0
+                || moment($scope.leaves[index].end_date,$scope.dateFormat).month()!=moment($scope.leaves[index].start_date,$scope.dateFormat).month()){
 				$scope.leaves[index].end_date = $scope.leaves[index].start_date;
 			}
 		}else{
@@ -195,7 +196,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
             var activeDate = moment($scope.leaves[index].start_date).subtract(1, $view).add(1, 'minute');
 
             $dates.filter(function(date){
-                return date.localDateValue() <= activeDate.valueOf();
+                return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment($scope.leaves[index].start_date).endOf('month').valueOf();
             }).forEach(function(date){
                 date.selectable = false;
             });

@@ -73,7 +73,7 @@ class Employee_Model extends MY_Model{
             "required"=>false
         )
     );
-	
+
 	private $leaveDateRangeFields = array(
 		array(
             "field_name"=>"start_date",
@@ -123,7 +123,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX."leaves");
         }
-		
+
 		if(!$this->db->table_exists(DB_PREFIX."leave_date_range")){
             $this->dbforge->add_field("leave_id int unsigned not null");
             $this->dbforge->add_field("start_date date not null");
@@ -193,17 +193,17 @@ class Employee_Model extends MY_Model{
 			return $leaveChecker;
 		}
 		unset($leaveChecker['leaves']);
-		
+
 		//Check if employee exists
 		$this->db->where("emp_no",$leaveChecker["emp_no"]);
         $res = $this->db->get(DB_PREFIX."employee")->result_array();
         if(count($res)<1){
             return "Employee does not exist.";
         }
-		
+
 		//Get next auto_increment
 		$nextID = $this->db->query("SHOW TABLE STATUS LIKE '".DB_PREFIX."leaves'")->result_array()[0]["Auto_increment"];
-		
+
 		//Validate date ranges
 		$dateRangeChecker = array();
 		foreach($leaveData['leaves'] as $leave){
@@ -211,15 +211,28 @@ class Employee_Model extends MY_Model{
 			if(!is_array($checker)){
 				return $checker;
 			}
-			$checker['leave_id']=$nextID;
+
+            //Check for date conflicts
+            $this->db->select("*");
+            $this->db->from(DB_PREFIX.'leaves');
+            $this->db->where("emp_no",$leaveChecker['emp_no']);
+            $this->db->where("start_date <=",$checker['end_date']);
+            $this->db->where("end_date >=",$checker['start_date']);
+            $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
+            $res = $this->db->get()->result_array();
+            if(count($res)>0){
+                return "Conflicting dates found: ".print_r($res,true);
+            }
+
+            $checker['leave_id']=$nextID;
 			array_push($dateRangeChecker,$checker);
 		}
-		
+
 		//Inserting leaves to tables
 		$this->db->insert(DB_PREFIX."leaves",$leaveChecker);
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
 	}
-	
+
     public function addLeave($leaveData){
         $checker = $this->checkFields($this->leaveFields,$leaveData);
         if(!is_array($checker)){
@@ -278,7 +291,7 @@ class Employee_Model extends MY_Model{
 		$leaves = array();
         $this->db->where("emp_no",$employeeNo);
         $res = $this->db->get(DB_PREFIX."leaves")->result_array();
-		
+
 		foreach($res as $leave){
 			$this->db->where("leave_id",$leave['leave_id']);
 			array_push($leaves,array(
