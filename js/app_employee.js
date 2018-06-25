@@ -20,26 +20,8 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
             sick:0,
             vacation:0
         };
-        $scope.bal_date = moment().add(-1,'month').endOf('month');
-
-        //Credits Computation Assuming that no date-range starts in a month and ends in another
-        var leaveCredits = 0;
-        //1. Get leave credits for the employee's first month (Using Table III: No. of days present)
-        //1.1 Compute maximum number of work days in the employee's first month
-        var workDays= moment($scope.employee.first_day).endOf('month').date()-moment($scope.employee.first_day).date()+1;
-        //1.2 Get total number of minute-leaves on the first month
-        var minutes = 0;
-        for(var i = 0 ; i < $scope.leaves.length ; i++){
-            var leave = $scope.leaves[i];
-            for(var j = 0 ;j<leave.date_ranges.length ; j++){
-                console.log(leave);
-                minutes += parseInt(leave.date_ranges[j].hours)*60 + parseInt(leave.date_ranges[j].minutes);
-
-            }
-        }
-        console.log(minutes);
-        //2. Get number of mo
-
+        $scope.bal_date = moment().endOf('month');
+		
         //Sort Leaves
         $scope.leaves.sort(function(a,b){
             return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
@@ -53,14 +35,50 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
 				date_range.end_date = moment(date_range.end_date).format("MMMM DD, YYYY");
 			}
         }
-
-        $scope.computeBal = function(){
-            
-        }
-
+		
         $scope.sick_bal_date = moment().endOf("month");
         $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format("MMMM DD, YYYY");
+    }
+	
+	$scope.computeBal = function(){
+		var currV = Number($scope.employee.vac_leave_bal);
+		var currS = Number($scope.employee.sick_leave_bal);
+		var dateEnd = moment($scope.bal_date).clone();
+		var dateStart = moment($scope.employee.first_day).clone();
+		// First Month Computation
+		var firstMC=0;
+		if(moment($scope.employee.first_day).isSame(moment($scope.employee.first_day).clone().startOf('month'))  &&  currV==0){ firstMC = 1.25; }else{
+			firstMC = Math.abs(moment($scope.employee.first_day).endOf('month').diff($scope.employee.first_day, 'days'))+1;
+			firstMC = firstMC*1.25/moment($scope.employee.first_day).daysInMonth();
+			firstMC = Number(firstMC.toFixed(3));
+		}
+		currV += firstMC; currS += firstMC;
+		dateStart.add(1,'month');
+		// #first_month_computation
+		
+		// Computation For other Months
+		console.log($scope.leaves);
+		while(dateStart<dateEnd){
+			for(var i=0;i<$scope.leaves.length;i++){
+				var leave = $scope.leaves[i];
+				for(var j=0;j<leave.date_ranges.length;j++){
+					var range = leave.date_ranges[j];
+					if( moment(range.end_date).isBefore(moment(dateStart).startOf('month'))  ||  moment(range.start_date).isAfter(moment(dateStart).endOf('month')) )
+						continue;
+					var creditUsed = $scope.getDeductedCredits(leave.info.type,range);
+					console.log(creditUsed);
+					if(leave.info.type=="Vacation") currV -= creditUsed;
+					if(leave.info.type=="Sick") currS -= creditUsed;
+				}
+				console.log(leave);
+			}
+			currV+=1.25;
+			currS+=1.25;
+			dateStart.add(1,'month');
+		}
+		// #computation_for_other_months
+        return "Vacation: " + currV + " Sick: " + currS;
     }
 
     var enumerateDaysBetweenDates = function(startDate, endDate) {
