@@ -56,7 +56,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							{{leave.info.remarks}}
 						</td>
                         <td style="text-align:right">
-                            <button data-toggle="modal" data-target="#editLeaveModal" class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave">
+                            <!--<button data-toggle="modal" data-target="#editLeaveModal" class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="modalOpened = true">
+                                <i class="fas fa-edit"></i>
+                            </button>-->
+							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="openModal($index)">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button ng-click="leave.info.show=!leave.info.show" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.info.show?'Collapse':'Expand'}}">
@@ -78,10 +81,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</table>
         </div>
     </div>
-</div>
-
-
-<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
+	
+	<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="min-width:800px;max-width:1000px" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -92,8 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="modal-body">
                 <?= $this->load->view("employee/leave_application",array(
-                    'isModal'=>true,
-                    'leaves'=>'leaves'
+                    'isModal'=>true
                 ),true);?>
             </div>
             <div class="modal-footer">
@@ -103,3 +103,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
+</div>
+
+
+
