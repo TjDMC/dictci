@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-	
+
 		</div>
 
 		<footer>
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</footer>
 	</div>
-	
+
 	<!-- SideBar -->
 	<div id="sidebar-wrapper">
 		<ul class="sidebar-nav">
@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</ul>
 	</div>
 	<!-- /#sidebar -->
-	
+
 </div>
 
 <script>
