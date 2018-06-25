@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <form ng-submit="add()">
         <div class="form-group">
             <label>Employee No: </label>
-            <input class="form-control" type="text" ng-model="employee.emp_no" pattern="[0-9]{7}" required>
+            <input class="form-control" type="text" ng-model="employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
         </div>
         <div class="form-group">
             <label>Last Name: </label>
