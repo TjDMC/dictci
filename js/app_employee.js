@@ -93,7 +93,7 @@ app.controller('employee_add',function($scope,$rootScope,$window){
             $rootScope.baseURL+"employee/add/",
             $scope.employee,
             function (response){
-                alert("Success: "+response.msg)
+                alert("Success: "+response.msg);
                 $window.location.reload();
             },
             function(response){
@@ -318,7 +318,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	}
 
 	$scope.fillName = function(){
-		/*number = document.getElementById("empNo");
+		number = document.getElementById("empNo");
 		if(number.value.length!=7) return;
 		//var i;
 		for(i=0; i<$scope.employees.length;i++){
@@ -330,6 +330,6 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
 		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
-		$scope.$apply();*/
+		$scope.$apply();
 	}
 });
