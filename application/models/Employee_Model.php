@@ -107,8 +107,8 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("first_day date not null");
             $this->dbforge->add_field("position varchar(50)");
             $this->dbforge->add_field("salary decimal(8,2)");
-            $this->dbforge->add_field("vac_leave_bal decimal(6,2) not null default 0");
-            $this->dbforge->add_field("sick_leave_bal decimal(6,2) not null default 0");
+            $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
+            $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("primary key (emp_no)");
             $this->dbforge->create_table(DB_PREFIX."employee");
         }
