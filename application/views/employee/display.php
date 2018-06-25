@@ -48,13 +48,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th>Deducted Credits</th>
                 </tr>
 				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true">
-					<tr ng-click="leave.info.show=!leave.info.show" style="background-color:lightgray" >
-						<td >
+					<tr style="background-color:lightgray" >
+                        <td>
 							{{leave.info.type}}
 						</td>
-						<td colspan=6>
+						<td colspan=5>
 							{{leave.info.remarks}}
 						</td>
+                        <td style="text-align:right">
+                            <button data-toggle="modal" data-target="#editLeaveModal" class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button ng-click="leave.info.show=!leave.info.show" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.info.show?'Collapse':'Expand'}}">
+                                <i class="far {{leave.info.show?'fa-minus-square':'fa-plus-square'}}"></i>
+                            </button>
+                        </td>
 					</tr>
 					<tr ng-show="leave.info.show" ng-repeat="date_range in leave.date_ranges">
 						<td></td>
@@ -68,6 +76,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</tbody>
 
 			</table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="min-width:800px;max-width:1000px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveModelLabel">Edit Leave</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?= $this->load->view("employee/leave_application",array(
+                    'isModal'=>true,
+                    'leaves'=>'leaves'
+                ),true);?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
 </div>

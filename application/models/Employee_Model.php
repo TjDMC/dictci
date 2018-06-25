@@ -53,6 +53,19 @@ class Employee_Model extends MY_Model{
 
     private $leaveFields = array(
         array(
+            "field_name"=>"info",
+            "field_title"=>"Leave Info",
+            "required"=>true
+        ),
+        array(
+            "field_name"=>"date_ranges",
+            "field_title"=>"Employee Number",
+            "required"=>true
+        )
+    );
+
+    private $leaveInfoFields = array(
+        array(
             "field_name"=>"type",
             "field_title"=>"Leave Type",
             "required"=>true
@@ -60,11 +73,6 @@ class Employee_Model extends MY_Model{
         array(
             "field_name"=>"emp_no",
             "field_title"=>"Employee Number",
-            "required"=>true
-        ),
-		array(
-            "field_name"=>"leaves",
-            "field_title"=>"Leave Date Ranges",
             "required"=>true
         ),
         array(
@@ -203,10 +211,10 @@ class Employee_Model extends MY_Model{
 
 		//Get next auto_increment
 		$nextID = $this->db->query("SHOW TABLE STATUS LIKE '".DB_PREFIX."leaves'")->result_array()[0]["Auto_increment"];
-
+        //INCOMPLETE
 		//Validate date ranges
 		$dateRangeChecker = array();
-		foreach($leaveData['leaves'] as $leave){
+		foreach($leaveChecker['leaves'] as $leave){
 			$checker = $this->checkFields($this->leaveDateRangeFields,$leave);
 			if(!is_array($checker)){
 				return $checker;
