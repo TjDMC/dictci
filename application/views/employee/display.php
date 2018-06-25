@@ -11,40 +11,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <p>First Day: {{employee.first_day}}</p>
 
     <div class="dropdown form-group" style="max-width:400px">
-        <label>Vacation Leave Balance: {{computeBal(0)}}</label>
+        <label>Leave Credits Balance: {{computeBal()}}</label>
         <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">As of: </span>
                 </div>
-                <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="vac_bal_date">
+                <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="bal_date">
                 <div class="input-group-append">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
             </div>
         </a>
         <ul class="dropdown-menu">
-            <datetimepicker  data-ng-model="vac_bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatDate(0)"></datetimepicker>
+            <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatDate()"></datetimepicker>
         </ul>
     </div>
 
-    <div class="dropdown form-group" style="max-width:400px">
-        <label>Sick Leave Balance: {{computeBal(1)}}</label>
-        <a id="sickBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">As of: </span>
-                </div>
-                <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="sick_bal_date">
-                <div class="input-group-append">
-                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                </div>
-            </div>
-        </a>
-        <ul class="dropdown-menu">
-            <datetimepicker  data-ng-model="sick_bal_date" data-datetimepicker-config="{ dropdownSelector:'#sickBalDate',startView:'month',minView:'month' }" data-on-set-time="formatDate(1)"></datetimepicker>
-        </ul>
-    </div>
 
     <div class="form-group">
         <a href="<?=base_url()."employee/leaveapplication/{{employee.emp_no}}"?>" class="btn btn-primary">Application For Leave</a>
@@ -66,10 +49,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </tr>
 				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true">
 					<tr ng-click="leave.info.show=!leave.info.show" style="background-color:lightgray" >
-						<td colspan=6 >
+						<td >
 							{{leave.info.type}}
 						</td>
-						<td>
+						<td colspan=6>
 							{{leave.info.remarks}}
 						</td>
 					</tr>
@@ -83,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<td>{{getDeductedCredits(leave.info.type,date_range)}}</td>
 					</tr>
 				</tbody>
-				
+
 			</table>
         </div>
     </div>
