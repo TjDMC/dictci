@@ -20,13 +20,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
             sick:0,
             vacation:0
         };
-<<<<<<< HEAD
         $scope.bal_date = moment().subtract(1,'month').endOf('month');
-		
-=======
-        $scope.bal_date = moment().endOf('month');
-
->>>>>>> 9432c351de054f1490d817f552829e95de9af334
         //Sort Leaves
         $scope.leaves.sort(function(a,b){
             return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
