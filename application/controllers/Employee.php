@@ -78,15 +78,15 @@ class Employee extends MY_Controller{
         }else{
             $data = parse_custom_post($input);
 
-            if(isset($data["type"]) && $data["type"] == "Others"){
-                if(!isset($data['type_others'])){
+            if(isset($data['info']["type"]) && $data['info']["type"] == "Others"){
+                if(!isset($data['info']['type_others'])){
                     custom_response(false,"Please specify the leave type.");
                 }
                 $invalidSpecialTypes = array('Maternity','Maternity','Vacation','Sick');
-                if(in_array($data["type_others"],$invalidSpecialTypes)){
+                if(in_array($data['info']["type_others"],$invalidSpecialTypes)){
                     custom_response(false,"Invalid leave type.");
                 }
-                $data["type"] = $data['type_others'];
+                $data['info']["type"] = $data['info']['type_others'];
             }
             $response = $this->employee_model->addLeaves($data);
             if($response !== null){

@@ -35,20 +35,20 @@ if(!isset($employee)){
 			<div class="form-group">
                 <p>Leave Type:</p>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-				    <label class="btn btn-outline-info">
-					    <input type="radio" name="type" value="Vacation" ng-model="leave.info.type" autocomplete="off" required> Vacation
+				    <label id="leaveTypeVacation" class="btn btn-outline-info" >
+					    <input type="radio" name="type" ng-value="'Vacation'" ng-model="leave.info.type" autocomplete="off" required> Vacation
 				    </label>
-					<label class="btn btn-outline-info">
-					    <input type="radio" name="type" value="Sick" ng-model="leave.info.type" autocomplete="off" required> Sick
+					<label id="leaveTypeSick" class="btn btn-outline-info" >
+					    <input type="radio" name="type" ng-value="'Sick'" ng-model="leave.info.type" autocomplete="off" required> Sick
 				    </label>
-					<label class="btn btn-outline-info">
-					    <input type="radio" name="type" value="Maternity" ng-model="leave.info.type" autocomplete="off" required> Maternity
+					<label id="leaveTypeMaternity" class="btn btn-outline-info" >
+					    <input type="radio" name="type" ng-value="'Maternity'" ng-model="leave.info.type" autocomplete="off" required> Maternity
 				    </label>
-					<label class="btn btn-outline-info">
-					    <input type="radio" name="type" value="Paternity" ng-model="leave.info.type" autocomplete="off" required> Paternity
+					<label id="leaveTypePaternity" class="btn btn-outline-info" >
+					    <input type="radio" name="type" ng-value="'Paternity'" ng-model="leave.info.type" autocomplete="off" required> Paternity
 				    </label>
-					<label class="btn btn-outline-info">
-					    <input type="radio" name="type" value="Others" ng-model="leave.info.type" autocomplete="off" required> Others
+					<label id="leaveTypeOthers" class="btn btn-outline-info">
+					    <input type="radio" name="type" ng-value="'Others'" ng-model="leave.info.type" autocomplete="off" required> Others
 				    </label>
 				</div>
 				<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:400px">
