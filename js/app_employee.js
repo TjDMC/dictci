@@ -20,8 +20,13 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
             sick:0,
             vacation:0
         };
+<<<<<<< HEAD
         $scope.bal_date = moment().subtract(1,'month').endOf('month');
 		
+=======
+        $scope.bal_date = moment().endOf('month');
+
+>>>>>>> 9432c351de054f1490d817f552829e95de9af334
         //Sort Leaves
         $scope.leaves.sort(function(a,b){
             return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
@@ -35,20 +40,31 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				date_range.end_date = moment(date_range.end_date).format("MMMM DD, YYYY");
 			}
         }
-		
+
         $scope.sick_bal_date = moment().endOf("month");
         $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format("MMMM DD, YYYY");
     }
-	
+
 	$scope.openModal = function(index){
 		angular.element('#editLeaveModal').modal('show');
-		$timeout(function(){
-			$scope.$broadcast('openLeaveModal',$scope.leaves[index]);
-		});
-		
+        var leave = angular.copy($scope.leaves[index]);
+        for(var i = 0 ; i<leave.date_ranges.length ; i++){
+            var date_range =  leave.date_ranges[i];
+            date_range.start_date = moment(date_range.start_date);
+            date_range.end_date = moment(date_range.end_date);
+            date_range.hours = parseInt(date_range.hours);
+            date_range.minutes = parseInt(date_range.minutes);
+        }
+        var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
+        if(validLeaves.indexOf(leave.info.type)==-1){
+            leave.info.type_others = leave.info.type;
+            leave.info.type = 'Others';
+        }
+        console.log(leave);
+		$scope.$broadcast('openLeaveModal',leave);
 	}
-	
+
 	$scope.computeBal = function(){
 		// As per MC No. 14, s. 1999
 		var dayCredits = [0.042,0.083,0.125,0.167,0.208,0.250,0.292,0.333,0.375,0.417,0.458,0.500,0.542,0.583,0.625,0.667,0.708,0.750,0.792,0.833,0.875,0.917,0.958,1.000,1.042,1.083,1.125,1.167,1.208,1.250];
@@ -70,9 +86,8 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		currV += firstMC; currS += firstMC;
 		dateStart.add(1,'month');
 		// #first_month_computation
-		
+
 		// Computation For other Months
-		//console.log($scope.leaves);
 		while(dateStart<dateEnd){
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
@@ -163,9 +178,9 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	};
 	$scope.dateFormat = 'MMMM DD, YYYY';
 
-    $scope.init = function(employees="",employee=""){
+    $scope.init = function(employees="",employee=null){
         $scope.employees = employees==""?$scope.employees:employees;
-        if(employee!=""){
+        if(employee!=null){
             $scope.employee = employee;
 			$scope.leave.info.emp_no = employee.emp_no;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
@@ -176,10 +191,18 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     }
 
 	$scope.$on('openLeaveModal',function(event, leave){
-		console.log(leave);
+        angular.element('#leaveType'+leave.info.type).addClass('active');
+        var leaveTypes = ['Vacation','Sick','Maternity','Paternity','Others'];
+        var index = leaveTypes.indexOf(leave.info.type);
+        if(index>-1){
+            leaveTypes.splice(index,1);
+        }
+        for(var i = 0 ; i<leaveTypes.length ; i++){
+            angular.element('#leaveType'+leaveTypes[i]).removeClass('active');
+        }
 		$scope.leave = leave;
 	});
-	
+
     var getTotalDays = function(index = -1){
 		if(index==-1){
 			var days = 0;

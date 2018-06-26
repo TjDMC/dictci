@@ -81,29 +81,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</table>
         </div>
     </div>
-	
+
 	<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="min-width:800px;max-width:1000px" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="leaveModelLabel">Edit Leave</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <?= $this->load->view("employee/leave_application",array(
-                    'isModal'=>true
-                ),true);?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+        <div class="modal-dialog modal-dialog-centered" style="min-width:800px;max-width:1000px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveModelLabel">Edit Leave</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?= $this->load->view("employee/leave_application",array(
+                        'isModal'=>true
+                    ),true);?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-
-
-
