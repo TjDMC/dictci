@@ -72,16 +72,16 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		var dateStart = moment($scope.employee.first_day).clone();
 		// First Month Computation
 		var firstMC=0;
-		if(moment($scope.employee.first_day).isSame(moment($scope.employee.first_day).clone().startOf('month'))  &&  currV==0){ firstMC = 1.25; }else{
-			firstMC = Math.abs(moment($scope.employee.first_day).endOf('month').diff($scope.employee.first_day, 'days'));
-			firstMC = dayCredits[firstMC];
+		if(moment($scope.employee.first_day).isSame(moment($scope.employee.first_day).clone().startOf('month'))  &&  currV==0){ }else{
+			firstMC = Math.abs(moment($scope.employee.first_day).endOf('month').diff($scope.employee.first_day, 'days'))+1;
+			firstMC = creditByHalfDay[2*firstMC];
 			firstMC = Number(firstMC.toFixed(3));
+			currV += firstMC; currS += firstMC;
+			dateStart.add(1,'month');
 		}
-		currV += firstMC; currS += firstMC;
-		dateStart.add(1,'month');
 		// #first_month_computation
 
-		// Computation For other Months
+		// Computation For Other Months
 		while(dateStart<dateEnd){
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
@@ -102,11 +102,10 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				var absent = Math.floor(2*Math.abs(currV));
 				var rem = 2*Math.abs(currV)%1;
 				rem = Math.round(1000*rem)/2000;
-				console.log(Math.round(420*rem)/1000);
 				currV = 0;
 				currV = creditByHalfDay[60-absent]-(Math.round(420*rem)/1000);
 			}else{
-				currV+=1.25;
+				currV = Number((currV + 1.25).toFixed(3));
 			}
 			currS+=1.25;
 			dateStart.add(1,'month');
