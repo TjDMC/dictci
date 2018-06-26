@@ -312,4 +312,58 @@ class Employee_Model extends MY_Model{
 		}
         return $leaves;
     }
+
+    public function editLeave($leaveData){
+        //Validate leave data
+        $leaveChecker = $this->checkFields($this->leaveFields,$leaveData);
+        if(!is_array($leaveChecker)){
+            return $leaveChecker;
+        }
+
+        //Validate leave info data
+        $leaveInfoFields = $this->leaveInfoFields;
+        $leaveInfoFields['leave_id']=array(
+            'field_name'=>'leave_id',
+            'field_title'=>'Leave ID',
+            'required'=>true
+        );
+        $leaveInfoChecker = $this->checkFields($leaveInfoFields,$leaveChecker['info']);
+        if(!is_array($leaveInfoChecker)){
+            return $leaveInfoChecker;
+        }
+
+        //Validate date ranges data
+        $dateRangeChecker = array();
+        foreach($leaveChecker['date_ranges'] as $dateRange){
+            //Validate date range
+            $checker = $this->checkFields($this->leaveDateRangeFields,$dateRange);
+            if(!is_array($checker)){
+                return $checker;
+            }
+
+            //Check for conflicting dates
+            $this->db->select("*");
+            $this->db->from(DB_PREFIX.'leaves');
+            $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
+            $this->db->where(DB_PREFIX."leaves.leave_id !=",intval($leaveInfoChecker['leave_id']));
+            $this->db->where("start_date <=",$checker['end_date']);
+            $this->db->where("end_date >=",$checker['start_date']);
+            $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
+            $res = $this->db->get()->result_array();
+            if(count($res)>0){
+                return "Conflicting dates found: ".print_r($res,true);
+            }
+
+            $checker['leave_id']=intval($leaveInfoChecker['leave_id']);
+            array_push($dateRangeChecker,$checker);
+        }
+
+        //Delete previous records
+        $this->db->where('leave_id',$leaveInfoChecker['leave_id']);
+        $this->db->delete(DB_PREFIX.'leaves');
+
+        //Insert new records
+        $this->db->insert(DB_PREFIX.'leaves',$leaveInfoChecker);
+        $this->db->insert_batch(DB_PREFIX.'leave_date_range',$dateRangeChecker);
+    }
 }

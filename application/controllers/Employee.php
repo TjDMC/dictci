@@ -88,11 +88,17 @@ class Employee extends MY_Controller{
                 }
                 $data['info']["type"] = $data['info']['type_others'];
             }
-            $response = $this->employee_model->addLeaves($data);
+
+            if(isset($data['action'])&&$data['action']=='edit'){
+                $response = $this->employee_model->editLeave($data);
+            }else{
+                $response = $this->employee_model->addLeaves($data);
+            }
+
             if($response !== null){
                 custom_response(false, $response);
             }else{
-                custom_response(true,"Successfully added leave.");
+                custom_response(true,"Successfully ".(isset($data['action'])&&$data['action']=='edit' ? 'edited':'added' )." leave.");
             }
         }
 
