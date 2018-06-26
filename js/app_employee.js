@@ -67,11 +67,9 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
 					if( moment(range.end_date).isBefore(moment(dateStart).startOf('month'))  ||  moment(range.start_date).isAfter(moment(dateStart).endOf('month')) )
 						continue;
 					var creditUsed = $scope.getDeductedCredits(leave.info.type,range);
-					console.log(creditUsed);
 					if(leave.info.type=="Vacation") currV -= creditUsed;
 					if(leave.info.type=="Sick") currS -= creditUsed;
 				}
-				console.log(leave);
 			}
 			currV+=1.25;
 			currS+=1.25;
