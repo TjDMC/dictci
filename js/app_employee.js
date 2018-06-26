@@ -1,8 +1,21 @@
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
+	$scope.limit = 2;
+	$scope.begin = 0;
+	$scope.res="";
     $scope.init=function(employees){
         $scope.employees=employees;
     }
+	
+	$scope.prev = function(){
+		if($scope.begin<=0) return;
+		$scope.begin -= $scope.limit;
+	}
+	
+	$scope.next = function(){
+		if(($scope.begin+$scope.limit)>=$scope.res.length) return;
+		$scope.begin += $scope.limit;
+	}
 });
 
 app.controller('employee_search',function($scope,$rootScope){
