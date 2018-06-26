@@ -62,10 +62,10 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 	$scope.computeBal = function(){
 		// As per MC No. 14, s. 1999
 		var dayCredits = [0.042,0.083,0.125,0.167,0.208,0.250,0.292,0.333,0.375,0.417,0.458,0.500,0.542,0.583,0.625,0.667,0.708,0.750,0.792,0.833,0.875,0.917,0.958,1.000,1.042,1.083,1.125,1.167,1.208,1.250];
-		
+
 		var creditByHalfDay = [0.000,0.021,0.042,0.062,0.083,0.104,0.125,0.146,0.167,0.187,0.208,0.229,0.250,0.271,0.292,0.312,0.333,0.354,0.375,0.396,417,0.437,0.458,0.479,0.500,0.521,0.542,0.562,0.583,
 		0.604,0.625,0.646,0.667,0.687,0.708,0.729,0.750,0.771,0.792,0.813,0.833,0.854,0.875,0.896,0.917,0.938,0.958,0.979,1.000,1.021,1.042,1.063,1.083,1.104,1.125,1.146,1.167,1.188,1.208,1.229,1.250];
-		
+
 		var currV = Number($scope.employee.vac_leave_bal);
 		var currS = Number($scope.employee.sick_leave_bal);
 		var dateEnd = moment($scope.bal_date).clone();
@@ -112,7 +112,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 			dateStart.add(1,'month');
 		}
 		// #computation_for_other_months
-		
+
         return "Vacation: " + currV + " Sick: " + currS;
     }
 

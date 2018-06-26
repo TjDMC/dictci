@@ -21,7 +21,7 @@ if(!isset($employee)){
         <?php if (!$isModal) :?>
             <h1>Application for Leave</h1>
         <?php endif ?>
-        <form ng-submit="submit()" autocomplete="off">
+        <form ng-submit="submit(<?=$isModal?'true':'false'?>)" autocomplete="off">
             <?php if(!$isModal) :?>
     			<div class="form-group autocomplete" >
                     <label>Employee No: </label>
@@ -132,11 +132,9 @@ if(!isset($employee)){
 				<label>Remarks: </label>
                 <input class="form-control" type="textarea" ng-model="leave.info.remarks"/>
 			</div>
-            <?php if(!$isModal):?>
             <p>
 				<button type="submit" class="btn btn-primary"/>Submit</button>
             </p>
-            <?php endif?>
         </form>
         <?php if(!$isModal):?>
     		<a hidden>
