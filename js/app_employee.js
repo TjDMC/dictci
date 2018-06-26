@@ -2,7 +2,7 @@ app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
 	$scope.limit = 2;
 	$scope.begin = 0;
-	$scope.res="";
+	$scope.res;
     $scope.init=function(employees){
         $scope.employees=employees;
     }
@@ -15,6 +15,17 @@ app.controller('employee_nav',function($scope,$rootScope){
 	$scope.next = function(){
 		if(($scope.begin+$scope.limit)>=$scope.res.length) return;
 		$scope.begin += $scope.limit;
+	}
+	
+	$scope.reBegin = function(){
+		var begin = 0;
+		while(true){
+			if(begin+$scope.limit>$scope.begin){
+				$scope.begin=begin;
+				return;
+			}
+			begin += $scope.limit;
+		}
 	}
 });
 

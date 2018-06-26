@@ -19,8 +19,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="col-sm-5">
 				<div style="float:right">
 					Showing {{begin+1}} to {{begin+res2.length}} of {{res.length}}
-					&nbsp;&nbsp;&nbsp;&nbsp;<span id="left" style="font-size: +35px" data-ng-click="prev()"><i class="fas fa-angle-left"></i></span>
-					&nbsp;&nbsp;&nbsp;&nbsp;<span id="right" style="font-size: +35px" data-ng-click="next()"><i class="fas fa-angle-right"></i></span>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id="left" style="font-size: +35px" data-ng-click="prev()"><i class="fas fa-angle-left"></i></span>
+					<select name="lim" ng-model="limit" ng-change="reBegin()">
+						<option ng-value="1">1</option>
+						<option ng-value="2">2</option>
+						<option ng-value="3">3</option>
+					</select>
+					<span id="right" style="font-size: +35px" data-ng-click="next()"><i class="fas fa-angle-right"></i></span>
 				</div>
 			</div>
 		</div>
