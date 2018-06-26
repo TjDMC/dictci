@@ -153,9 +153,9 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	};
 	$scope.dateFormat = 'MMMM DD, YYYY';
 
-    $scope.init = function(employees="",employee=""){
+    $scope.init = function(employees="",employee=null){
         $scope.employees = employees==""?$scope.employees:employees;
-        if(employee!=""){
+        if(employee!=null){
             $scope.employee = employee;
 			$scope.leave.info.emp_no = employee.emp_no;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
