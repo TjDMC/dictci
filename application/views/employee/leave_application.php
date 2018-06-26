@@ -5,10 +5,10 @@ if(!isset($isModal)){
     $isModal = false;
 }
 if(!isset($employees)){
-    $employees = "\"\"";
+    $employees = '""';
 }
 if(!isset($employee)){
-    $employee= "\"\"";
+    $employee= '""';
 }
 ?><!DOCTYPE html>
 
@@ -16,7 +16,7 @@ if(!isset($employee)){
  $('body') .on('show.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "visible"); }) .on('hide.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "auto"); });
 </script>
 
-<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>,<?=$isModal?$leaves:'""'?>)'>
+<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)'>
     <div>
         <?php if (!$isModal) :?>
             <h1>Application for Leave</h1>

@@ -200,10 +200,13 @@ class Employee_Model extends MY_Model{
 		if(!is_array($leaveChecker)){
 			return $leaveChecker;
 		}
-		unset($leaveChecker['leaves']);
+		$leaveInfoChecker = $this->checkFields($this->leaveInfoFields,$leaveChecker['info']);
+		if(!is_array($leaveInfoChecker)){
+			return $leaveInfoChecker;
+		}
 
 		//Check if employee exists
-		$this->db->where("emp_no",$leaveChecker["emp_no"]);
+		$this->db->where("emp_no",$leaveInfoChecker["emp_no"]);
         $res = $this->db->get(DB_PREFIX."employee")->result_array();
         if(count($res)<1){
             return "Employee does not exist.";
@@ -214,8 +217,8 @@ class Employee_Model extends MY_Model{
         //INCOMPLETE
 		//Validate date ranges
 		$dateRangeChecker = array();
-		foreach($leaveChecker['leaves'] as $leave){
-			$checker = $this->checkFields($this->leaveDateRangeFields,$leave);
+		foreach($leaveChecker['date_ranges'] as $dateRange){
+			$checker = $this->checkFields($this->leaveDateRangeFields,$dateRange);
 			if(!is_array($checker)){
 				return $checker;
 			}
@@ -223,7 +226,7 @@ class Employee_Model extends MY_Model{
             //Check for date conflicts
             $this->db->select("*");
             $this->db->from(DB_PREFIX.'leaves');
-            $this->db->where("emp_no",$leaveChecker['emp_no']);
+            $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
             $this->db->where("start_date <=",$checker['end_date']);
             $this->db->where("end_date >=",$checker['start_date']);
             $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
@@ -237,7 +240,7 @@ class Employee_Model extends MY_Model{
 		}
 
 		//Inserting leaves to tables
-		$this->db->insert(DB_PREFIX."leaves",$leaveChecker);
+		$this->db->insert(DB_PREFIX."leaves",$leaveInfoChecker);
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
 	}
 

@@ -9,7 +9,7 @@ app.controller('employee_search',function($scope,$rootScope){
 
 });
 
-app.controller('employee_display',function($scope,$rootScope,$sce){
+app.controller('employee_display',function($scope,$rootScope,$timeout){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
@@ -40,6 +40,14 @@ app.controller('employee_display',function($scope,$rootScope,$sce){
         $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format("MMMM DD, YYYY");
     }
+	
+	$scope.openModal = function(index){
+		angular.element('#editLeaveModal').modal('show');
+		$timeout(function(){
+			$scope.$broadcast('openLeaveModal',$scope.leaves[index]);
+		});
+		
+	}
 	
 	$scope.computeBal = function(){
 		var currV = Number($scope.employee.vac_leave_bal);
@@ -124,7 +132,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     $scope.employee = {};
     $scope.leave = {
         info:{},
-        date_ranges:{}
+        date_ranges:[]
     }
 
 	$scope.leaveDateRangeTemplate = {
@@ -135,22 +143,23 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	};
 	$scope.dateFormat = 'MMMM DD, YYYY';
 
-    $scope.init = function(employees="",employee="",leaves=""){
+    $scope.init = function(employees="",employee=""){
         $scope.employees = employees==""?$scope.employees:employees;
         if(employee!=""){
             $scope.employee = employee;
+			$scope.leave.info.emp_no = employee.emp_no;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
         }else{
             employee={};
         }
-        if(leaves ==""){
-            $scope.rangeAction(0);
-        }else{
-            $scope.leave = leaves;
-        }
-
+        $scope.rangeAction(0);
     }
 
+	$scope.$on('openLeaveModal',function(event, leave){
+		console.log(leave);
+		$scope.leave = leave;
+	});
+	
     var getTotalDays = function(index = -1){
 		if(index==-1){
 			var days = 0;
@@ -183,7 +192,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	$scope.rangeAction = function(action,index=-1){
 		switch(action){
 			case 0://add
-				$scope.leave.date_ranges.push(angular.copy($scope.leaveTemplate));
+				$scope.leave.date_ranges.push(angular.copy($scope.leaveDateRangeTemplate));
 				return;
 			case 1://delete
 				if($scope.leave.date_ranges.length<=1){
@@ -196,7 +205,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 	}
 
     $scope.startDateSet = function (index) {
-		if($scope.leaves[index].end_date){
+		if($scope.leave.date_ranges[index].end_date){
 			if(moment($scope.leave.date_ranges[index].end_date,$scope.dateFormat).diff(moment($scope.leave.date_ranges[index].start_date,$scope.dateFormat))<0
                 || moment($scope.leave.date_ranges[index].end_date,$scope.dateFormat).month()!=moment($scope.leave.date_ranges[index].start_date,$scope.dateFormat).month()){
 				$scope.leave.date_ranges[index].end_date = $scope.leave.date_ranges[index].start_date;
@@ -227,15 +236,13 @@ app.controller('leave_application',function($scope,$rootScope,$window){
     }
 
     $scope.submit = function(isModal = false){
-        var data = {
-			emp_no:$scope.employee.emp_no,
-			leaves:angular.copy($scope.leaves),
-			type:$scope.leaveData.type,
-			remarks:$scope.leaveData.remarks
-		};
-		for(var i = 0 ; i<data.leave.date_ranges.length ; i++){
-			data.leave.date_ranges[i].start_date = moment(data.leave.date_ranges[i].start_date,$scope.dateFormat).format("YYYY/MM/DD");
-			data.leave.date_ranges[i].end_date = moment(data.leave.date_ranges[i].end_date,$scope.dateFormat).format("YYYY/MM/DD");
+        var data = angular.copy($scope.leave);
+		if(isModal){
+			data.action = "edit";
+		}
+		for(var i = 0 ; i<data.date_ranges.length ; i++){
+			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$scope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$scope.dateFormat).format("YYYY/MM/DD");
 		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
