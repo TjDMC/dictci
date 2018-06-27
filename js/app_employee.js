@@ -2,12 +2,13 @@ app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
 	$scope.limit = 10;
     $scope.page = 1;
+    $scope.filteredEmployees = [];
     $scope.init=function(employees){
         $scope.employees=employees;
     }
 
 	$scope.getDisplayNumber = function(){
-        return $scope.employees.length - $scope.getBegin() > $scope.limit ? $scope.limit:$scope.employees.length-$scope.getBegin();
+        return $scope.filteredEmployees.length - $scope.getBegin() > $scope.limit ? $scope.limit:$scope.filteredEmployees.length-$scope.getBegin();
     }
 
     $scope.getBegin = function(){
@@ -19,7 +20,11 @@ app.controller('employee_nav',function($scope,$rootScope){
     }
 
     $scope.getMaxPage = function(){
-        return $scope.numberToArray($scope.employees.length/$scope.limit).length;
+        var result = $scope.numberToArray($scope.filteredEmployees.length/$scope.limit).length;
+        if($scope.page>result){
+            $scope.page = result==0?1:result;
+        }
+        return result;
     }
 });
 
@@ -108,7 +113,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
 					var range = leave.date_ranges[j];
-					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) 
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month'))
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getDeductedCredits(leave.info.type,range)*1000;

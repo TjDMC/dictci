@@ -29,21 +29,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<input type="text" class="form-control" ng-model="searchTerm">
 			</div>
 			<div class="col row align-items-center justify-content-center">
-                <span class="col-3">Showing {{getDisplayNumber()}} of {{(employeeArray|filter:searchTerm).length}} results</span>
+                <span class="col-3">Showing {{getDisplayNumber()}} of {{filteredEmployees.length}} results {{getMaxPage()}} {{getBegin()}}</span>
 
                 <span class="col-4 row justify-content-center align-items-center">
-                    <span class="col-1 nav-button" ng-class="{disabled:(page==1)}" ng-click="page=1"><i class="fas fa-angle-double-left "></i></span>
-                    <span class="col-1 nav-button" ng-class="{disabled:(page==1)}"ng-click="page=page-1<1?1:page-1"><i class="fas fa-angle-left "></i></span>
+                    <span class="col-1 nav-button" ng-class="{disabled:(page<=1)}" ng-click="page=1"><i class="fas fa-angle-double-left "></i></span>
+                    <span class="col-1 nav-button" ng-class="{disabled:(page<=1)}"ng-click="page=page-1<1?1:page-1"><i class="fas fa-angle-left "></i></span>
 					<select class="col-3 custom-select" style="max-width:75px;min-width:75px" name="lim col" ng-model="page">
-						<option ng-repeat="number in numberToArray(employees.length/limit) track by $index" ng-value="$index+1">{{$index+1}}</option>
+						<option ng-repeat="number in numberToArray(filteredEmployees.length/limit) track by $index" ng-value="$index+1">{{$index+1}}</option>
+                        <option ng-if="filteredEmployees.length==0" ng-value="1">1</option>
 					</select>
-					<span class="col-1 nav-button" ng-class="{disabled:(page==getMaxPage())}" ng-click="page=page+1>getMaxPage()?getMax():page+1"><i class="fas fa-angle-right "></i></span>
-                    <span class="col-1 nav-button" ng-class="{disabled:(page==getMaxPage())}" ng-click="page=getMaxPage()"><i class="fas fa-angle-double-right "></i></span>
+					<span class="col-1 nav-button" ng-class="{disabled:(page>=getMaxPage())}" ng-click="page=page+1>getMaxPage()?(getMaxPage()==0?1:getMaxPage()):page+1"><i class="fas fa-angle-right "></i></span>
+                    <span class="col-1 nav-button" ng-class="{disabled:(page>=getMaxPage())}" ng-click="page=getMaxPage()"><i class="fas fa-angle-double-right "></i></span>
                 </span>
 
                 <span class="col-5 row align-items-center justify-content-end">
                     <span class="mr-3">Results Per Page:</span>
-                    <select class="col-2 custom-select" ng-model="limit" ng-change="page=1" style="max-width:75px;min-width:75px">
+                    <select class="col-2 custom-select" ng-model="limit" style="max-width:75px;min-width:75px">
                         <option ng-value="5">5</option>
                         <option ng-value="10">10</option>
                         <option ng-value="25">25</option>
@@ -54,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 		</div>
         <div class="list-group">
-            <a class="list-group-item list-group-item-action" ng-repeat='employee in employeeArray | filter:searchTerm | limitTo:limit:getBegin()'  href="<?=base_url()."employee/display/"?>{{employee.emp_no}}">
+            <a class="list-group-item list-group-item-action" ng-repeat='employee in (filteredEmployees = (employeeArray | filter:searchTerm | limitTo:limit:getBegin()) )'  href="<?=base_url()."employee/display/"?>{{employee.emp_no}}">
                 {{employee.string}}
             </a>
         </div>
