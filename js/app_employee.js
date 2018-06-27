@@ -54,14 +54,14 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 			var leave = $scope.leaves[i];
             for(var j = 0 ; j<leave.date_ranges.length ; j++){
 				var date_range = leave.date_ranges[j];
-				date_range.start_date = moment(date_range.start_date).format("MMMM DD, YYYY");
-				date_range.end_date = moment(date_range.end_date).format("MMMM DD, YYYY");
+				date_range.start_date = moment(date_range.start_date).format($rootScope.dateFormat);
+				date_range.end_date = moment(date_range.end_date).format($rootScope.dateFormat);
 			}
         }
 
         $scope.sick_bal_date = moment().endOf("month");
         $scope.vac_bal_date = moment().endOf("month");
-        $scope.employee.first_day = moment($scope.employee.first_day).format("MMMM DD, YYYY");
+        $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
     }
 
 	$scope.openModal = function(index){
@@ -93,13 +93,13 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		var currV = Number($scope.employee.vac_leave_bal);
 		var currS = Number($scope.employee.sick_leave_bal);
 		var dateEnd = moment($scope.bal_date).clone();
-		var dateStart = moment($scope.employee.first_day).clone();
+		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var fLeave = 0;
 		// First Month Computation
 		var firstMC=0;
-		if(moment($scope.employee.first_day).isSame(moment($scope.employee.first_day).clone().startOf('month'))  &&  currV==0){ }else{
+		if(dateStart.isSame(dateStart.startOf('month'))  &&  currV==0){ }else{
 			fLeave=5;
-			firstMC = Math.abs(moment($scope.employee.first_day).endOf('month').diff($scope.employee.first_day, 'days'))+1;
+			firstMC = Math.abs(dateStart.endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			firstMC = Number(firstMC.toFixed(3));
 			currV += firstMC; currS += firstMC;
@@ -114,7 +114,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
 					var range = leave.date_ranges[j];
-					if( moment(range.end_date).isBefore(moment(dateStart).startOf('month'))  ||  moment(range.start_date).isAfter(moment(dateStart).endOf('month')) )
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.startOf('month'))  ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.endOf('month')) )
 						continue;
 					var creditUsed = $scope.getDeductedCredits(leave.info.type,range);
 					if(leave.info.type=="Vacation"||leave.info.type.toLowerCase()=='forced'||leave.info.type.toLowerCase()=='forced leave'){
@@ -200,7 +200,6 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		hours:0,
 		minutes:0
 	};
-	$scope.dateFormat = 'MMMM DD, YYYY';
 
     $scope.init = function(employees="",employee=null){
         $scope.employees = employees==""?$scope.employees:employees;
@@ -300,8 +299,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 
     $scope.startDateSet = function (index) {
 		if($scope.leave.date_ranges[index].end_date){
-			if(moment($scope.leave.date_ranges[index].end_date,$scope.dateFormat).diff(moment($scope.leave.date_ranges[index].start_date,$scope.dateFormat))<0
-                || moment($scope.leave.date_ranges[index].end_date,$scope.dateFormat).month()!=moment($scope.leave.date_ranges[index].start_date,$scope.dateFormat).month()){
+			if(moment($scope.leave.date_ranges[index].end_date,$rootScope.dateFormat).diff(moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat))<0
+                || moment($scope.leave.date_ranges[index].end_date,$rootScope.dateFormat).month()!=moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).month()){
 				$scope.leave.date_ranges[index].end_date = $scope.leave.date_ranges[index].start_date;
 			}
 		}else{
@@ -337,8 +336,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			data.action = "edit";
 		}
 		for(var i = 0 ; i<data.date_ranges.length ; i++){
-			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$scope.dateFormat).format("YYYY/MM/DD");
-			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$scope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
