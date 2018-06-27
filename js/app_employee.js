@@ -97,10 +97,10 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var fLeave = 0;
 		// First Month Computation
-		var firstMC=0;
-		if(dateStart.isSame(dateStart.startOf('month'))  &&  currV==0){ }else{
+		var firstMC = 0;
+		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
 			fLeave=5000;
-			firstMC = Math.abs(dateStart.endOf('month').diff(dateStart, 'days'))+1;
+			firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
 			dateStart.add(1,'month');
@@ -114,10 +114,11 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
 					var range = leave.date_ranges[j];
-					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.startOf('month'))  ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.endOf('month')) )
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) 
+							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getDeductedCredits(leave.info.type,range)*1000;
-					if(leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')){
+					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 					}
