@@ -16,6 +16,30 @@ if(!isset($employee)){
  $('body') .on('show.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "visible"); }) .on('hide.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "auto"); });
 </script>
 
+<style>
+#search-results {
+    max-width: 500px;
+    max-height: 200px;
+    border: 1px solid #dedede;
+    border-radius: 3px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.search-result {
+    background: white;
+    padding: 10px;
+}
+
+.search-result:nth-child(even) {
+    background: #fafafa;
+}
+
+.search-result.selected{
+    background: gray;
+}
+</style>
+
 <div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)'>
     <div>
         <?php if (!$isModal) :?>
@@ -23,6 +47,29 @@ if(!isset($employee)){
         <?php endif ?>
         <form ng-submit="submit(<?=$isModal?'true':'false'?>)" autocomplete="off">
             <?php if(!$isModal) :?>
+
+                <div class="form-group row justify-content-start" >
+                    <div class="col-sm-3 ">
+                        <label>Employee No:</label>
+                        <input  class="form-control" ng-keydown="onKeyDown($event,'emp_no')" type="text" ng-model="employee.emp_no" ng-blur="searchFocusEmpNo=false" ng-focus="searchFocusEmpNo=true" required>
+                        <div id="search-results" ng-show="searchFocusEmpNo">
+                            <div class="search-result" ng-class="{selected:focusedEmployeeIndex===$index}" ng-mouseover="onMouseOver($index)" ng-repeat="employee in employees | employeeSearch:'emp_no':employee.emp_no" ng-mousedown="setEmployee(employee.emp_no)">
+                                <span>{{employee.emp_no}} - {{employee.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <label>Employee Name: </label>
+                        <input  class="form-control" ng-keydown="onKeyDown($event,'name')" type="text" ng-model="employee.name" ng-blur="searchFocusName=false" ng-focus="searchFocusName=true" required>
+                        <div id="search-results" ng-show="searchFocusName">
+                            <div class="search-result" ng-class="{selected:focusedEmployeeIndex===$index}" ng-mouseover="onMouseOver($index)" ng-repeat="employee in employees | employeeSearch:'name':employee.name" ng-mousedown="setEmployee(employee.emp_no)">
+                                <span>{{employee.emp_no}} - {{employee.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--DEPRECATED
     			<div class="form-group autocomplete" >
                     <label>Employee No: </label>
                     <input id="empNo" class="form-control" type="text" ng-model="employee.emp_no" ng-blur="fillName()" pattern="[0-9]{7}" maxlength="7" required>
@@ -30,7 +77,7 @@ if(!isset($employee)){
                 <div class="form-group autocomplete">
                     <label>Employee Name: </label>
                     <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
-                </div>
+                </div>-->
             <?php endif ?>
 			<div class="form-group">
                 <p>Leave Type:</p>
@@ -99,7 +146,7 @@ if(!isset($employee)){
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day' }" data-on-set-time="endDateSet($index)"></datetimepicker>
+                                <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day',renderOn:'startDateSet' }" data-on-set-time="endDateSet($index)"></datetimepicker>
                             </ul>
                         </div></td>
                         <td style="max-width:200px">
@@ -137,9 +184,10 @@ if(!isset($employee)){
             </p>
         </form>
         <?php if(!$isModal):?>
+            <!-- DEPRECATED
     		<a hidden>
     			{{autocomplete()}}
-    		</a>
+    		</a>-->
         <?php endif ?>
     </div>
 </div>

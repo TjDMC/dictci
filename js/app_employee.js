@@ -6,17 +6,17 @@ app.controller('employee_nav',function($scope,$rootScope){
     $scope.init=function(employees){
         $scope.employees=employees;
     }
-	
+
 	$scope.prev = function(){
 		if($scope.begin<=0) return;
 		$scope.begin -= $scope.limit;
 	}
-	
+
 	$scope.next = function(){
 		if(($scope.begin+$scope.limit)>=$scope.res.length) return;
 		$scope.begin += $scope.limit;
 	}
-	
+
 	$scope.reBegin = function(){
 		var begin = 0;
 		while(true){
@@ -185,7 +185,7 @@ app.controller('employee_add',function($scope,$rootScope,$window){
     }
 })
 
-app.controller('leave_application',function($scope,$rootScope,$window){
+app.controller('leave_application',function($scope,$rootScope,$window,$filter,employeeSearchFilter){
     $scope.employees = [];
     $scope.employee = {};
     $scope.leave = {
@@ -203,15 +203,42 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.init = function(employees="",employee=null){
         $scope.employees = employees==""?$scope.employees:employees;
+        for(var i = 0 ; i<$scope.employees.length ; i++){
+            var currEmployee = $scope.employees[i];
+            currEmployee.name = currEmployee.last_name+", "+currEmployee.first_name+" "+currEmployee.middle_name;
+        }
         if(employee!=null){
             $scope.employee = employee;
-			$scope.leave.info.emp_no = employee.emp_no;
             $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
         }else{
             employee={};
         }
         $scope.rangeAction(0);
     }
+    /*Employee Live Search*/
+    $scope.focusedEmployeeIndex = 0;
+    $scope.onMouseOver = function(index){
+        $scope.focusedEmployeeIndex = index;
+    }
+    $scope.onKeyDown = function($event,filterArg){
+        if ($event.keyCode == 38)
+            $scope.focusedEmployeeIndex=$scope.focusedEmployeeIndex-1<0?0:$scope.focusedEmployeeIndex-1;
+        else if ($event.keyCode == 40)
+            $scope.focusedEmployeeIndex=$scope.focusedEmployeeIndex+1>=$scope.employees.length?$scope.employees.length-1:$scope.focusedEmployeeIndex+1;
+        else if($event.keyCode == 13){
+            $scope.setEmployee($filter('employeeSearch')($scope.employees,filterArg,$scope.employee[filterArg])[$scope.focusedEmployeeIndex].emp_no);
+        }
+
+    }
+    $scope.setEmployee = function(emp_no){
+        for(var i = 0 ; i<$scope.employees.length ; i++){
+            if(emp_no==$scope.employees[i].emp_no){
+                $scope.employee = angular.copy($scope.employees[i]);
+            }
+        }
+        $scope.searchFocus = false;
+    }
+    /*end Employee Live Search*/
 
 	$scope.$on('openLeaveModal',function(event, leave){
         angular.element('#leaveType'+leave.info.type).addClass('active');
@@ -279,6 +306,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		}else{
 			$scope.leave.date_ranges[index].end_date = $scope.leave.date_ranges[index].start_date;
 		}
+        $scope.$broadcast('startDateSet');
 		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
     }
 
@@ -303,6 +331,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 
     $scope.submit = function(isModal = false){
         var data = angular.copy($scope.leave);
+        data.info.emp_no = $scope.employee.emp_no;
 		if(isModal){
 			data.action = "edit";
 		}
@@ -335,7 +364,7 @@ app.controller('leave_application',function($scope,$rootScope,$window){
             }
         );
     }
-
+    /*DEPRECATED
     $scope.autocomplete = function(){
 		// Script taken from: https://www.w3schools.com/howto/howto_js_autocomplete.asp
 
@@ -362,18 +391,6 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 						closeList();
 						$scope.fillName();
 					});
-					/*item.addEventListener("mouseenter", function(){
-						var x = document.getElementById(inp.id + "autocomplete-list");
-						if(x) x = x.getElementsByTagName("div");
-						if(x==null || x.length==0) return;
-						for(var i=0; i<x.length;i++){
-							if(x[i].innerHTML==this.innerHTML){
-								currFocus=i;
-								addActive(x);
-								break;
-							}
-						}
-					});*/
 					divList.appendChild(item);
 					if(divList.children.length==5) break;
 				}
@@ -438,5 +455,5 @@ app.controller('leave_application',function($scope,$rootScope,$window){
 		$scope.employee = angular.copy($scope.employees[i]);
 		$scope.employee.name = $scope.employee.last_name+", "+$scope.employee.first_name+" "+$scope.employee.middle_name;
 		$scope.$apply();
-	}
+	}*/
 });
