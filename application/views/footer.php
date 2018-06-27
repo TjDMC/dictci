@@ -6,8 +6,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 
 		<footer style="background-color:#1a1a1a">
-			<div style="color:#a6a6a6;" class="p-2">
-				<span>© 2018. All Rights Reserved</span>
+			<div style="color:#a6a6a6;float:right" class="p-2" >
+				© 2018. All Rights Reserved
 			</div>
 		</footer>
 	</div>
