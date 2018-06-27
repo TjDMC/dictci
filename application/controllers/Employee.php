@@ -82,7 +82,7 @@ class Employee extends MY_Controller{
                 if(!isset($data['info']['type_others'])){
                     custom_response(false,"Please specify the leave type.");
                 }
-                $invalidSpecialTypes = array('Maternity','Maternity','Vacation','Sick');
+                $invalidSpecialTypes = array('Maternity','Paternity','Vacation','Sick');
                 if(in_array($data['info']["type_others"],$invalidSpecialTypes)){
                     custom_response(false,"Invalid leave type.");
                 }
