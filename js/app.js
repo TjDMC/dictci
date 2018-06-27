@@ -93,3 +93,19 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 		});
 	}
 });
+
+app.filter('employeeSearch', function() {
+	return function(arr,field,query) {
+		if (!query) {
+			return arr;
+		}
+		var results = [];
+		query = query.toLowerCase();
+		angular.forEach(arr, function(item) {
+			if (item[field].toLowerCase().indexOf(query) !== -1) {
+				results.push(item);
+			}
+		});
+		return results;
+	};
+});
