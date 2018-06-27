@@ -226,8 +226,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
             $scope.focusedEmployeeIndex=$scope.focusedEmployeeIndex+1>=$scope.employees.length?$scope.employees.length-1:$scope.focusedEmployeeIndex+1;
         else if($event.keyCode == 13){
             $scope.setEmployee($filter('employeeSearch')($scope.employees,filterArg,$scope.employee[filterArg])[$scope.focusedEmployeeIndex].emp_no);
+            $event.preventDefault();
         }
-
     }
     $scope.setEmployee = function(emp_no){
         for(var i = 0 ; i<$scope.employees.length ; i++){
@@ -235,7 +235,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
                 $scope.employee = angular.copy($scope.employees[i]);
             }
         }
-        $scope.searchFocus = false;
+        $scope.searchFocusName = false;
+        $scope.searchFocusEmpNo = false;
     }
     /*end Employee Live Search*/
 
