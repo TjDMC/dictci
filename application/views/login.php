@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="input-group-prepend">
                     <span class="input-group-text">Password&nbsp</span>
                 </div>
-                <input id="pass" class="form-control" type="password" ng-model="password" required>
+                <input id="pass" class="form-control" type="password" ng-model="password" required>&nbsp;
 				<div style="font-size:25px" ng-mousedown="mouseDown()" ng-mouseup="mouseUp()"><i class="fas fa-eye"></i></div>
             </div>
         </div>
