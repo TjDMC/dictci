@@ -84,24 +84,24 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 	}
 
 	$scope.computeBal = function(){
+		/*
+				The numbers are converted to integer for computational accuracy. Display and saved values are converted back to three(3) decimal places
+		*/
 		// As per MC No. 14, s. 1999
-		var dayCredits = [0.042,0.083,0.125,0.167,0.208,0.250,0.292,0.333,0.375,0.417,0.458,0.500,0.542,0.583,0.625,0.667,0.708,0.750,0.792,0.833,0.875,0.917,0.958,1.000,1.042,1.083,1.125,1.167,1.208,1.250];
+		var creditByHalfDay = [0,21,42,62,83,104,125,146,167,187,208,229,250,271,292,312,333,354,375,396,417,437,458,479,500,521,542,562,583,604,
+		625,646,667,687,708,729,750,771,792,813,833,854,875,896,917,938,958,979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
-		var creditByHalfDay = [0.000,0.021,0.042,0.062,0.083,0.104,0.125,0.146,0.167,0.187,0.208,0.229,0.250,0.271,0.292,0.312,0.333,0.354,0.375,0.396,417,0.437,0.458,0.479,0.500,0.521,0.542,0.562,0.583,
-		0.604,0.625,0.646,0.667,0.687,0.708,0.729,0.750,0.771,0.792,0.813,0.833,0.854,0.875,0.896,0.917,0.938,0.958,0.979,1.000,1.021,1.042,1.063,1.083,1.104,1.125,1.146,1.167,1.188,1.208,1.229,1.250];
-
-		var currV = Number($scope.employee.vac_leave_bal);
-		var currS = Number($scope.employee.sick_leave_bal);
+		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
+		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 		var dateEnd = moment($scope.bal_date).clone();
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var fLeave = 0;
 		// First Month Computation
 		var firstMC=0;
 		if(dateStart.isSame(dateStart.startOf('month'))  &&  currV==0){ }else{
-			fLeave=5;
+			fLeave=5000;
 			firstMC = Math.abs(dateStart.endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
-			firstMC = Number(firstMC.toFixed(3));
 			currV += firstMC; currS += firstMC;
 			dateStart.add(1,'month');
 		}
@@ -116,8 +116,8 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.startOf('month'))  ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.endOf('month')) )
 						continue;
-					var creditUsed = $scope.getDeductedCredits(leave.info.type,range);
-					if(leave.info.type=="Vacation"||leave.info.type.toLowerCase()=='forced'||leave.info.type.toLowerCase()=='forced leave'){
+					var creditUsed = $scope.getDeductedCredits(leave.info.type,range)*1000;
+					if(leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 					}
@@ -129,21 +129,20 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				currS = 0;
 			}
 			if(currV<0){// Employee incurring absence without pay
-				var absent = Math.floor(2*Math.abs(currV));
-				var rem = 2*Math.abs(currV)%1;
-				rem = Math.round(1000*rem)/2000;
-				currV = 0;
-				currV = creditByHalfDay[60-absent]-(Math.round(420*rem)/1000);
+				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
+				var absent = Math.floor(Math.abs(currV)/500);
+				var rem = Math.floor(Math.abs(currV)%500);
+				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 			}else{
-				currV = Number((currV + 1.25).toFixed(3));
+				currV += 1250;
 			}
-			currS+=1.25;
+			currS+=1250;
 			dateStart.add(1,'month');
-			if(moment(dateStart).month()==12 && fLeave>0 && currV>fLeave) currV = Number((currV-fLeave).toFixed(3));
+			if(moment(dateStart).month()==12 && fLeave>0 && currV>fLeave) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
 
-        return "Vacation: " + currV + " Sick: " + currS;
+        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);
     }
 
     var enumerateDaysBetweenDates = function(startDate, endDate) {
@@ -161,7 +160,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
     }
 
     $scope.getDeductedCredits = function(type,date_range){
-		if(type=='Vacation'||type=='Sick'||type.toLowerCase()=='forced'){
+		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')){
 			return (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
 		}else{
 			return 0;
@@ -338,6 +337,19 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		for(var i = 0 ; i<data.date_ranges.length ; i++){
 			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
+		}
+		var credits = $scope.getTotalCredits();
+		//	As per MC 41, s. 1998: Sec 20
+		//	On the assumption of one 'data' per delivery
+		if(data.info.type.toLowerCase()=="paternity" && credits>7){
+			alert("A married male employee is only entitled to leave of SEVEN(7) working days only per delivery/miscarriage of his legitimate spouse.");
+			return;
+		}
+		//	As per MC 41, s. 1998: Sec 11
+		//	On the assumption of one 'data' per delivery
+		if(data.info.type.toLowerCase()=="maternity" && credits>60){
+			alert("A married woman is only entitled to leave of SIXTY(60) calendar days.");
+			return;
 		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
