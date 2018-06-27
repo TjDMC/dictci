@@ -44,7 +44,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <span class="col-5 row align-items-center justify-content-end">
                     <span class="mr-3">Results Per Page:</span>
                     <select class="col-2 custom-select" ng-model="limit" ng-change="page=1" style="max-width:75px;min-width:75px">
-                        <option ng-value="1">1</option>
                         <option ng-value="5">5</option>
                         <option ng-value="10">10</option>
                         <option ng-value="25">25</option>
