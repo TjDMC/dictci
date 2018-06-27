@@ -92,4 +92,14 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 			alert("Logout Error");
 		});
 	}
+	
+	$scope.mouseDown = function(){
+		var pass = document.getElementById("pass");
+		pass.type="text";
+	}
+	
+	$scope.mouseUp = function(){
+		var pass = document.getElementById("pass");
+		pass.type="password";
+	}
 });
