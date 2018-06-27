@@ -1,32 +1,31 @@
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
-	$scope.limit = 2;
-	$scope.begin = 0;
-	$scope.res;
+	$scope.limit = 10;
+    $scope.page = 1;
+    $scope.filteredEmployees = [];
     $scope.init=function(employees){
         $scope.employees=employees;
     }
 
-	$scope.prev = function(){
-		if($scope.begin<=0) return;
-		$scope.begin -= $scope.limit;
-	}
+	$scope.getDisplayNumber = function(){
+        return $scope.filteredEmployees.length - $scope.getBegin() > $scope.limit ? $scope.limit:$scope.filteredEmployees.length-$scope.getBegin();
+    }
 
-	$scope.next = function(){
-		if(($scope.begin+$scope.limit)>=$scope.res.length) return;
-		$scope.begin += $scope.limit;
-	}
+    $scope.getBegin = function(){
+        return ($scope.page-1)*$scope.limit;
+    }
 
-	$scope.reBegin = function(){
-		var begin = 0;
-		while(true){
-			if(begin+$scope.limit>$scope.begin){
-				$scope.begin=begin;
-				return;
-			}
-			begin += $scope.limit;
-		}
-	}
+    $scope.numberToArray= function(num) {
+        return new Array(Math.ceil(num));
+    }
+
+    $scope.getMaxPage = function(){
+        var result = $scope.numberToArray($scope.filteredEmployees.length/$scope.limit).length;
+        if($scope.page>result){
+            $scope.page = result==0?1:result;
+        }
+        return result;
+    }
 });
 
 app.controller('employee_search',function($scope,$rootScope){
@@ -114,7 +113,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
 					var range = leave.date_ranges[j];
-					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) 
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month'))
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getDeductedCredits(leave.info.type,range)*1000;

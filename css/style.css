@@ -19,7 +19,7 @@ footer{
     bottom: 0;
 	padding: 2px;
     width: 100%;
-	background-color: lightgray;
+	background-color: black;
 	-webkit-transition: all var(--transition-duration);
 	-moz-transition: all var(--transition-duration);
 	-o-transition: all var(--transition-duration);
