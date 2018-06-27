@@ -146,7 +146,7 @@ if(!isset($employee)){
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day' }" data-on-set-time="endDateSet($index)"></datetimepicker>
+                                <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day',renderOn:'startDateSet' }" data-on-set-time="endDateSet($index)"></datetimepicker>
                             </ul>
                         </div></td>
                         <td style="max-width:200px">

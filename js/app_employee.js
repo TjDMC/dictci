@@ -307,6 +307,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		}else{
 			$scope.leave.date_ranges[index].end_date = $scope.leave.date_ranges[index].start_date;
 		}
+        $scope.$broadcast('startDateSet');
 		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
     }
 
