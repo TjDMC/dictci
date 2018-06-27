@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div class="row">
+<div class="container row justify-content-center">
 <div class="col-md-12">
 
 <button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
