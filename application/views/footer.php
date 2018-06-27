@@ -5,9 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		</div>
 
-		<footer>
-			<div style="float:right; padding:5px">
-				All Rights Reserved. © 2018 YEEAA BOIII!!!
+		<footer style="background-color:#1a1a1a">
+			<div style="color:#a6a6a6;" class="p-2">
+				<span>© 2018. All Rights Reserved</span>
 			</div>
 		</footer>
 	</div>

@@ -1,32 +1,26 @@
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
-	$scope.limit = 2;
-	$scope.begin = 0;
-	$scope.res;
+	$scope.limit = 10;
+    $scope.page = 1;
     $scope.init=function(employees){
         $scope.employees=employees;
     }
 
-	$scope.prev = function(){
-		if($scope.begin<=0) return;
-		$scope.begin -= $scope.limit;
-	}
+	$scope.getDisplayNumber = function(){
+        return $scope.employees.length - $scope.getBegin() > $scope.limit ? $scope.limit:$scope.employees.length-$scope.getBegin();
+    }
 
-	$scope.next = function(){
-		if(($scope.begin+$scope.limit)>=$scope.res.length) return;
-		$scope.begin += $scope.limit;
-	}
+    $scope.getBegin = function(){
+        return ($scope.page-1)*$scope.limit;
+    }
 
-	$scope.reBegin = function(){
-		var begin = 0;
-		while(true){
-			if(begin+$scope.limit>$scope.begin){
-				$scope.begin=begin;
-				return;
-			}
-			begin += $scope.limit;
-		}
-	}
+    $scope.numberToArray= function(num) {
+        return new Array(Math.ceil(num));
+    }
+
+    $scope.getMaxPage = function(){
+        return $scope.numberToArray($scope.employees.length/$scope.limit).length;
+    }
 });
 
 app.controller('employee_search',function($scope,$rootScope){
