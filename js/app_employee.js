@@ -109,7 +109,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 
 		// Computation For Other Months
 		while(dateStart<dateEnd){
-			if(moment(dateStart).month()==0){fLeave=5;}
+			if(moment(dateStart).month()==1){fLeave=5000;}
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
@@ -138,7 +138,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 			}
 			currS+=1250;
 			dateStart.add(1,'month');
-			if(moment(dateStart).month()==12 && fLeave>0 && currV>fLeave) currV = currV-fLeave;
+			if(moment(dateStart).month()==0 && fLeave>0 && currV>=fLeave) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
 
