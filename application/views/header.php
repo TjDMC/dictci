@@ -39,7 +39,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color:black">
-		<a class="navbar-brand" href="<?=base_url()?>">DICT Leave Credit Computation</a>
+		<a class="navbar-brand" href="<?=base_url()?>">
+			<span><img src="<?=base_url()?>/favicon.png" width="25" height="25" alt="DICT Logo" /></span>
+			DICT Leave Credit Computation
+		</a>
 		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 		</button>
