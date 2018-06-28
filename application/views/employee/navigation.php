@@ -32,7 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     				<input type="text" class="form-control" ng-model="searchTerm">
     			</div>
     			<div class="col row align-items-center justify-content-center">
-                    <span class="col-sm-2 col-md-5 col-xl-2">Showing {{getDisplayNumber()}} of {{filteredEmployees.length}} results</span>
+                    <span class="col-sm-2 col-md-5 col-xl-2">Showing {{(page-1)*limit+1}} to {{(page-1)*limit+getDisplayNumber()}} of {{filteredEmployees.length}} results</span>
 
                     <span class="col-sm-5 col-md-7 col-xl-5 row justify-content-center align-items-center">
                         <span class="col-1 col-md-1 nav-button" ng-class="{disabled:(page<=1)}" ng-click="page=1"><i class="fas fa-angle-double-left "></i></span>
