@@ -38,15 +38,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-		<a class="navbar-brand" href="index.html">DICT Leave Credit Computation</a>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color:black">
+		<a class="navbar-brand" href="<?=base_url()?>">DICT Leave Credit Computation</a>
 		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarResponsive">
-			<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+		<div class="collapse navbar-collapse" id="navbarResponsive" >
+			<ul class="navbar-nav navbar-sidenav" id="exampleAccordion" >
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
-					<a class="nav-link" href="#">
+					<a class="nav-link" href="<?=base_url()?>">
 						<i class="fas fa-fw fa-home"></i>
 						<span class="nav-link-text">Home</span>
 					</a>
@@ -58,54 +58,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 					<ul class="sidenav-second-level collapse" id="collapseComponents">
 						<li>
-							<a href="navbar.html">Navbar</a>
+							<a href="<?= base_url()?>employee">View List</a>
 						</li>
 						<li>
-							<a href="cards.html">Cards</a>
+							<a href="<?= base_url()?>employee/add">Add Employee</a>
+						</li>
+						<li>
+							<a href="<?= base_url()?>employee/leaveapplication">Application For Leave</a>
+						</li>
+						<li>
+							<a href="#">Resignation Benefits</a>
 						</li>
 					</ul>
 				</li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
 					<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
 						<i class="fas fa-fw fa-calendar-alt"></i>
-						<span class="nav-link-text">Example Pages</span>
+						<span class="nav-link-text">Calendar</span>
 					</a>
 					<ul class="sidenav-second-level collapse" id="collapseExamplePages">
 						<li>
-							<a href="login.html">Login Page</a>
+							<a href="<?= base_url().'calendar' ?>">View Calendar</a>
 						</li>
 						<li>
-							<a href="register.html">Registration Page</a>
+							<a href="#">Add Holiday</a>
 						</li>
 						<li>
-							<a href="forgot-password.html">Forgot Password Page</a>
-						</li>
-						<li>
-							<a href="blank.html">Blank Page</a>
+							<a href="#">Suspended Work</a>
 						</li>
 					</ul>
 				</li>
-				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-					<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
-						<i class="fa fa-fw fa-sitemap"></i>
-						<span class="nav-link-text">Menu Levels</span>
-					</a>
-					<ul class="sidenav-second-level collapse" id="collapseMulti">
-						<li>
-							<a href="#">Second Level Item</a>
-						</li>
-						<li>
-							<a href="#">Second Level Item</a>
-						</li>
-						<li>
-							<a href="#">Second Level Item</a>
-						</li>
-					</ul>
-				</li>
-				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-					<a class="nav-link" href="#">
-						<i class="fa fa-fw fa-link"></i>
-						<span class="nav-link-text">Link</span>
+				<li ng-controller="login" class="nav-item" data-toggle="tooltip" data-placement="right" title="Logout" ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">
+					<a class="nav-link"  href="#">
+						<i class="fas fa-fw fa-sign-out-alt"></i>
+						<span class="nav-link-text">Logout</span>
 					</a>
 				</li>
 			</ul>
@@ -116,6 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 				</li>
 			</ul>
-			
+
 		</div>
 	</nav>
+	<div class="content-wrapper p-5">
