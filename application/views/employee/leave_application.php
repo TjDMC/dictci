@@ -40,11 +40,15 @@ if(!isset($employee)){
 }
 </style>
 
-<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)'>
-    <div>
-        <?php if (!$isModal) :?>
+<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)' <?=!$isModal?'class="card"':''?>>
+
+    <?php if (!$isModal) :?>
+        <div class="card-header">
             <h1>Application for Leave</h1>
-        <?php endif ?>
+        </div>
+    <?php endif ?>
+
+    <div <?=!$isModal?'class="card-body p-4"':''?>>
         <form ng-submit="submit(<?=$isModal?'true':'false'?>)" autocomplete="off">
             <?php if(!$isModal) :?>
 
@@ -79,47 +83,47 @@ if(!isset($employee)){
                     <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
                 </div>-->
             <?php endif ?>
-			<div class="form-group">
+    		<div class="form-group">
                 <p>Leave Type:</p>
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-				    <label id="leaveTypeVacation" class="btn btn-outline-info" >
-					    <input type="radio" name="type" ng-value="'Vacation'" ng-model="leave.info.type" autocomplete="off" required> Vacation
-				    </label>
-					<label id="leaveTypeSick" class="btn btn-outline-info" >
-					    <input type="radio" name="type" ng-value="'Sick'" ng-model="leave.info.type" autocomplete="off" required> Sick
-				    </label>
-					<label id="leaveTypeMaternity" class="btn btn-outline-info" >
-					    <input type="radio" name="type" ng-value="'Maternity'" ng-model="leave.info.type" autocomplete="off" required> Maternity
-				    </label>
-					<label id="leaveTypePaternity" class="btn btn-outline-info" >
-					    <input type="radio" name="type" ng-value="'Paternity'" ng-model="leave.info.type" autocomplete="off" required> Paternity
-				    </label>
-					<label id="leaveTypeOthers" class="btn btn-outline-info">
-					    <input type="radio" name="type" ng-value="'Others'" ng-model="leave.info.type" autocomplete="off" required> Others
-				    </label>
-				</div>
-				<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:400px">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text">
-								Specify:
-							</span>
-						</div>
-						<input class="form-control" type="text" ng-model="leave.info.type_others" ng-required="leave.info.type=='Others'"/>
-					</div>
-				</div>
+    			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    			    <label id="leaveTypeVacation" class="btn btn-outline-info" >
+    				    <input type="radio" name="type" ng-value="'Vacation'" ng-model="leave.info.type" autocomplete="off" required> Vacation
+    			    </label>
+    				<label id="leaveTypeSick" class="btn btn-outline-info" >
+    				    <input type="radio" name="type" ng-value="'Sick'" ng-model="leave.info.type" autocomplete="off" required> Sick
+    			    </label>
+    				<label id="leaveTypeMaternity" class="btn btn-outline-info" >
+    				    <input type="radio" name="type" ng-value="'Maternity'" ng-model="leave.info.type" autocomplete="off" required> Maternity
+    			    </label>
+    				<label id="leaveTypePaternity" class="btn btn-outline-info" >
+    				    <input type="radio" name="type" ng-value="'Paternity'" ng-model="leave.info.type" autocomplete="off" required> Paternity
+    			    </label>
+    				<label id="leaveTypeOthers" class="btn btn-outline-info">
+    				    <input type="radio" name="type" ng-value="'Others'" ng-model="leave.info.type" autocomplete="off" required> Others
+    			    </label>
+    			</div>
+    			<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:400px">
+    				<div class="input-group">
+    					<div class="input-group-prepend">
+    						<span class="input-group-text">
+    							Specify:
+    						</span>
+    					</div>
+    					<input class="form-control" type="text" ng-model="leave.info.type_others" ng-required="leave.info.type=='Others'"/>
+    				</div>
+    			</div>
             </div>
             <div class="table-responsive">
                 <label>Date Ranges: </label>
                 <table class="table table-bordered">
-					<tr>
-						<th></th>
-						<th>From</th>
-						<th>To</th>
-						<th>Hours</th>
-						<th>Minutes</th>
-						<th>Credits Equivalent</th>
-					</tr>
+    				<tr>
+    					<th></th>
+    					<th>From</th>
+    					<th>To</th>
+    					<th>Hours</th>
+    					<th>Minutes</th>
+    					<th>Credits Equivalent</th>
+    				</tr>
                     <tr ng-repeat="date_range in leave.date_ranges track by $index">
                         <td style="width:40px"><button class="btn btn-light" type="button" ng-click="rangeAction(1,$index)"><i class="fas fa-times"></i></button></td>
                         <td><div class="dropdown" style="min-width:200px;max-width:400px">
@@ -159,35 +163,29 @@ if(!isset($employee)){
                                 <input class="form-control" min="0" step="1" type="number" ng-model="date_range.minutes" ng-disabled="!date_range.start_date" required>
                             </div>
                         </td>
-						<td>
-							<span>{{date_range.hours/8+date_range.minutes/(60*8) | number:3}}</span>
-						</td>
+    					<td>
+    						<span>{{date_range.hours/8+date_range.minutes/(60*8) | number:3}}</span>
+    					</td>
                     </tr>
                     <tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>Total Credits: {{getTotalCredits()|number:3}}</td>
-					</tr>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td></td>
+    					<td>Total Credits: {{getTotalCredits()|number:3}}</td>
+    				</tr>
                 </table>
-				<button class="btn btn-secondary form-group" type="button" ng-click="rangeAction(0)"><span>Add Range</span></button>
+    			<button class="btn btn-secondary form-group" type="button" ng-click="rangeAction(0)"><span>Add Range</span></button>
             </div>
 
-			<div class="form-group">
-				<label>Remarks: </label>
+    		<div class="form-group">
+    			<label>Remarks: </label>
                 <input class="form-control" type="textarea" ng-model="leave.info.remarks"/>
-			</div>
+    		</div>
             <p>
-				<button type="submit" class="btn btn-primary"/>Submit</button>
+    			<button type="submit" class="btn btn-primary"/>Submit</button>
             </p>
         </form>
-        <?php if(!$isModal):?>
-            <!-- DEPRECATED
-    		<a hidden>
-    			{{autocomplete()}}
-    		</a>-->
-        <?php endif ?>
     </div>
 </div>
