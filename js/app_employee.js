@@ -336,18 +336,17 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			data.action = "edit";
 		}
 		for(var i = 0 ; i<data.date_ranges.length ; i++){
-			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
-			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].start_date = moment(moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
+			data.date_ranges[i].end_date = moment(moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
 		}
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
-				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){
+				if( data.date_ranges[i].start_date.isSameOrBefore(data.date_ranges[j].end_date) && data.date_ranges[i].end_date.isSameOrAfter(data.date_ranges[j].start_date) ){
 					alert("Conflict in date range.");
 					return;
 				}
 			}
 		}
-		return;
 		var credits = $scope.getTotalCredits();
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
