@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
+
 <div class="card">
 	<div class="card-body p-5">
 		<div style="text-align:center"><img class="mx-auto" src="<?=base_url()?>dict_home.png"/></div>
