@@ -49,9 +49,9 @@ if(!isset($employee)){
             <?php if(!$isModal) :?>
 
                 <div class="form-group row justify-content-start" >
-                    <div class="col-sm-3 ">
+                    <div class="col-12 col-sm-4 col-lg-3 col-xl-2">
                         <label>Employee No:</label>
-                        <input  class="form-control" ng-keydown="onKeyDown($event,'emp_no')" type="text" ng-model="employee.emp_no" ng-blur="searchFocusEmpNo=false" ng-focus="searchFocusEmpNo=true" required>
+                        <input  class="form-control" ng-keydown="onKeyDown($event,'emp_no')" type="text" ng-model="employee.emp_no" ng-blur="searchFocusEmpNo=false" ng-focus="searchFocusEmpNo=true" pattern="[0-9]{7}" maxlength="7" required>
                         <div id="search-results" ng-show="searchFocusEmpNo">
                             <div class="search-result" ng-class="{selected:focusedEmployeeIndex===$index}" ng-mouseover="onMouseOver($index)" ng-repeat="employee in employees | employeeSearch:'emp_no':employee.emp_no" ng-mousedown="setEmployee(employee.emp_no)">
                                 <span>{{employee.emp_no}} - {{employee.name}}</span>
@@ -59,7 +59,7 @@ if(!isset($employee)){
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-12 col-sm-7 col-lg-5 col-xl-3">
                         <label>Employee Name: </label>
                         <input  class="form-control" ng-keydown="onKeyDown($event,'name')" type="text" ng-model="employee.name" ng-blur="searchFocusName=false" ng-focus="searchFocusName=true" required>
                         <div id="search-results" ng-show="searchFocusName">

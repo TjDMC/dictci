@@ -351,7 +351,6 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		var credits = $scope.getTotalCredits();
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
-		console.log(data.info);
 		if(data.info.type.toLowerCase()=="others" && (data.info.type_others.toLowerCase().includes("force") || data.info.type_others.toLowerCase().includes("mandat")) && credits>5){
 			alert("An employee is only entitled to FIVE(5) forced/mandatory leaves. \n Record the excess as vacation leave.");
 			return;

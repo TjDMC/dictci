@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 	<div class="row" style="padding: 5%; padding-top: 7%; padding-bottom: 7%">
-		<div class="col-sm-6" style="text-align: center">
+		<div class="col-12 col-sm-12 col-lg-6" style="text-align: center">
 			<div class="myLargeIcon">
 				<a href="<?= base_url()?>employee" style="text-decoration:none; color:#2abe91;">
 					<div class="thumbnail">
@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</a>
 			</div>
 		</div>
-		<div class="col-sm-6" style="text-align: center">
+		<div class="col-12 col-sm-12 col-lg-6" style="text-align: center">
 			<div class="myLargeIcon">
 				<a href="<?= base_url()?>calendar" style="text-decoration:none; color:#23969d;">
 					<div class="thumbnail">
