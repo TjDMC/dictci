@@ -18,12 +18,17 @@ if(!isset($employee)){
 
 <style>
 #search-results {
+	position: absolute;
     max-width: 500px;
     max-height: 200px;
     border: 1px solid #dedede;
     border-radius: 3px;
     box-sizing: border-box;
     overflow-y: auto;
+	top:100%;
+	left:15px;
+	right:15px;
+	z-index: 99;
 }
 
 .search-result {
@@ -79,7 +84,7 @@ if(!isset($employee)){
                     <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
                 </div>-->
             <?php endif ?>
-			<div class="form-group">
+			<div class="form-group" style="overflow-x: auto">
                 <p>Leave Type:</p>
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 				    <label id="leaveTypeVacation" class="btn btn-outline-info" >
