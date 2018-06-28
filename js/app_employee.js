@@ -20,6 +20,7 @@ app.controller('employee_nav',function($scope,$rootScope){
     }
 
     $scope.getMaxPage = function(){
+        console.log($scope.filteredEmployees.length+" "+$scope.limit);
         var result = $scope.numberToArray($scope.filteredEmployees.length/$scope.limit).length;
         if($scope.page>result){
             $scope.page = result==0?1:result;
