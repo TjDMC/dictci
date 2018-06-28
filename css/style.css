@@ -77,11 +77,13 @@ body.fixed-nav {
 #mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse:after {
   float: right;
   content: '\f107';
-  font-family: 'FontAwesome';
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .nav-link-collapse.collapsed:after {
   content: '\f105';
+  font-weight: 900;
 }
 
 #mainNav .navbar-collapse .navbar-sidenav .sidenav-second-level,
