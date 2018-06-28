@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div class="card mx-auto m-5" ng-controller="login" style="max-width:25em">
+<div class="card mx-auto my-auto h-100" ng-controller="login" style="max-width:25em">
     <div class="card-header" >
         <h3>Login</h3>
     </div>

@@ -1,58 +1,61 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-
-
-		</div>
-
-		<footer style="background-color:#1a1a1a">
-			<div style="color:#a6a6a6;float:right" class="p-2" >
-				© 2018. All Rights Reserved
-			</div>
-		</footer>
-	</div>
-
-	<!-- SideBar -->
-	<div id="sidebar-wrapper">
-		<ul class="sidebar-nav">
-			<li class="sidebar-brand">
-				<a href="<?= base_url() ?>">DICT</a>
-			</li>
-			<li style="margin-top: 2px; margin-bottom: 5px">
-				<a href="<?= base_url() ?>">Home</a>
-			</li>
-			<li>
-				<a data-toggle="collapse" data-target="#employee" aria-expanded="false">Employee</a>
-				<div id="employee" class="collapse smaller">
-					<a href="<?= base_url()?>employee/add">&nbsp;&nbsp;&nbsp;&nbsp;Add New</a></br>
-					<a href="<?= base_url()?>employee/leaveapplication">&nbsp;&nbsp;&nbsp;&nbsp;Application for Leave</a></br>
-					<a href="<?= base_url()?>employee">&nbsp;&nbsp;&nbsp;&nbsp;View List</a></br>
-					<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;Resignation</a>
-				</div>
-			</li>
-			<li>
-				<a data-toggle="collapse" data-target="#choice_calendar" aria-expanded="false">Calendar</a>
-				<div id="choice_calendar" class="collapse smaller">
-					<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;Add Holiday</a></br>
-					<a href="<?= base_url().'calendar' ?>">&nbsp;&nbsp;&nbsp;&nbsp;View Calendar</a></br>
-					<a href="#">&nbsp;&nbsp;&nbsp;&nbsp;Suspended Work</a>
-				</div>
-			</li>
-			<li ng-controller="login">
-				<a ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">Logout</a>
-			</li>
-		</ul>
-	</div>
-	<!-- /#sidebar -->
-
+    <footer class="sticky-footer">
+        <div class="container">
+            <div class="text-center">
+                <small>Copyright © 2018. All Rights Reserved</small>
+            </div>
+        </div>
+    </footer>
 </div>
-
+</body>
 <script>
-	$("#menu-toggle").click(function(e) {
-		e.preventDefault();
-		$("#wrapper").toggleClass("active");
-	});
+(function($) {
+  "use strict"; // Start of use strict
+  // Configure tooltips for collapsed side navigation
+  $('.navbar-sidenav [data-toggle="tooltip"]').tooltip({
+    template: '<div class="tooltip navbar-sidenav-tooltip" role="tooltip" style="pointer-events: none;"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
+  })
+  // Toggle the side navigation
+  $("#sidenavToggler").click(function(e) {
+    e.preventDefault();
+    $("body").toggleClass("sidenav-toggled");
+    $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
+    $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
+  });
+  // Force the toggled class to be removed when a collapsible nav link is clicked
+  $(".navbar-sidenav .nav-link-collapse").click(function(e) {
+    e.preventDefault();
+    $("body").removeClass("sidenav-toggled");
+  });
+  // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+  $('body.fixed-nav .navbar-sidenav, body.fixed-nav .sidenav-toggler, body.fixed-nav .navbar-collapse').on('mousewheel DOMMouseScroll', function(e) {
+    var e0 = e.originalEvent,
+      delta = e0.wheelDelta || -e0.detail;
+    this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+    e.preventDefault();
+  });
+  // Scroll to top button appear
+  $(document).scroll(function() {
+    var scrollDistance = $(this).scrollTop();
+    if (scrollDistance > 100) {
+      $('.scroll-to-top').fadeIn();
+    } else {
+      $('.scroll-to-top').fadeOut();
+    }
+  });
+  // Configure tooltips globally
+  $('[data-toggle="tooltip"]').tooltip()
+  // Smooth scrolling using jQuery easing
+  $(document).on('click', 'a.scroll-to-top', function(event) {
+    var $anchor = $(this);
+    $('html, body').stop().animate({
+      scrollTop: ($($anchor.attr('href')).offset().top)
+    }, 1000, 'easeInOutExpo');
+    event.preventDefault();
+  });
+})(jQuery); // End of use strict
 </script>
 
-</body>
 </html>
