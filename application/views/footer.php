@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </footer>
 </div>
 
-<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true" ng-blur="customModalData.action.close()">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">

@@ -94,11 +94,11 @@ app.controller('employee_display',function($scope,$rootScope,$window){
                         $window.location.reload();
                     },
                     function(){
-
                     }
                 );
             },
-            function(){},
+            function(){
+            },
             'Yes',
             'No'
         );
@@ -221,11 +221,25 @@ app.controller('employee_add',function($scope,$rootScope,$window){
             $rootScope.baseURL+"employee/add/",
             $scope.employee,
             function (response){
-                alert("Success: "+response.msg);
-                $window.location.reload();
+                $rootScope.showCustomModal(
+                    'Success',
+                    response.msg,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                        $window.location.reload();
+                    },
+                    'OK'
+                );
             },
             function(response){
-                alert("Error: "+response.msg);
+                $rootScope.showCustomModal(
+                    'Error',
+                    response.msg,
+                    function(){},
+                    function(){}
+                );
             }
         );
     }
@@ -335,7 +349,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 				return;
 			case 1://delete
 				if($scope.leave.date_ranges.length<=1){
-					alert("Date ranges must have at least 1 range.");
+                    $rootScope.showCustomModal('Error','Date ranges must have at least 1 range.',function(){},function(){});
 					return;
 				}
 				$scope.leave.date_ranges.splice(index==-1?$scope.leave.date_ranges.length-1:index,1);
@@ -385,7 +399,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
 				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){
-					alert("Conflict in date range.");
+                    $rootScope.showCustomModal('Error','Conflict in date range',function(){},function(){});
 					return;
 				}
 			}
@@ -394,19 +408,19 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="others" && (data.info.type_others.toLowerCase().includes("force") || data.info.type_others.toLowerCase().includes("mandat")) && credits>5){
-			alert("An employee is only entitled to FIVE(5) forced/mandatory leaves. \n Record the excess as vacation leave.");
+            $rootScope.showCustomModal('Error','An employee is only entitled to FIVE(5) forced/mandatory leaves. \n Record the excess as vacation leave.',function(){},function(){});
 			return;
 		}
 		//	As per MC 41, s. 1998: Sec 20
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="paternity" && credits>7){
-			alert("A married male employee is only entitled to leave of SEVEN(7) working days only per delivery/miscarriage of his legitimate spouse.");
+            $rootScope.showCustomModal('Error','A married male employee is only entitled to leave of SEVEN(7) working days only per delivery/miscarriage of his legitimate spouse.',function(){},function(){});
 			return;
 		}
 		//	As per MC 41, s. 1998: Sec 11
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
-			alert("A married woman is only entitled to leave of SIXTY(60) calendar days.");
+            $rootScope.showCustomModal('Error','A married woman is only entitled to leave of SIXTY(60) calendar days.',function(){},function(){});
 			return;
 		}
 
@@ -419,11 +433,22 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
             $rootScope.baseURL+"/employee/leaveApplication",
             data,
             function(response){
-                alert("Success: "+response.msg);
-                $window.location.reload();
+                $rootScope.showCustomModal('Success',response.msg,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                        $window.location.reload();
+                    }
+                );
             },
             function(response){
-                alert("Error: "+response.msg);
+                $rootScope.showCustomModal('Error',response.msg,
+                    function(){
+                    },
+                    function(){
+                    }
+                );
             }
         );
     }
