@@ -29,4 +29,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </form>
     </div>
+	<script>
+	var pageTitle = document.getElementsByTagName("title");
+	pageTitle[0].innerHTML = "Login";
+	</script>
 </div>
