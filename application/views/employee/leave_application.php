@@ -60,7 +60,7 @@ if(!isset($employee)){
                 <div class="form-group row justify-content-start" >
                     <div class="col-12 col-sm-4 col-lg-3 col-xl-2">
                         <label>Employee No:</label>
-                        <input  class="form-control" ng-keydown="onKeyDown($event,'emp_no')" type="text" ng-model="employee.emp_no" ng-blur="searchFocusEmpNo=false" ng-focus="searchFocusEmpNo=true" pattern="[0-9]{7}" maxlength="7" required>
+                        <input  class="form-control" ng-keydown="onKeyDown($event,'emp_no')" type="text" ng-model="employee.emp_no" ng-blur="searchFocusEmpNo=false" ng-focus="searchFocusEmpNo=true" maxlength="7" required>
                         <div id="search-results" ng-show="searchFocusEmpNo">
                             <div class="search-result" ng-class="{selected:focusedEmployeeIndex===$index}" ng-mouseover="onMouseOver($index)" ng-repeat="employee in employees | employeeSearch:'emp_no':employee.emp_no" ng-mousedown="setEmployee(employee.emp_no)">
                                 <span>{{employee.emp_no}} - {{employee.name}}</span>
