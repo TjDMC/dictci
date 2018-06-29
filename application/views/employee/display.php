@@ -39,23 +39,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <h3>Leave History</h3>
 			<div class="form-group" style="overflow-x:auto">
 				<div >
-					<!--<label >
-						<input type="checkbox" name="filt" ng-checked="true" ng-model="All"></input>All
-					</label>-->
 					<label >
-						<input type="checkbox" name="filt" ng-checked="All" ng-model="Vacation"></input>Vacation
+						<input type="checkbox" name="filt" ng-checked="filter.every" ng-model="All" ng-init="All=true" ng-click="reFilter('Every')"></input>All
 					</label>
 					<label >
-						<input type="checkbox" name="filt" ng-checked="All" ng-model="Sick"></input>Sick
+						<input type="checkbox" name="filt" ng-checked="filter.vacation" ng-click="reFilter('Vacation')"></input>Vacation
 					</label>
 					<label >
-						<input type="checkbox" name="filt" ng-checked="All" ng-model="Maternity"></input>Maternity
+						<input type="checkbox" name="filt" ng-checked="filter.sick" ng-click="reFilter('Sick')"></input>Sick
 					</label>
 					<label >
-						<input type="checkbox" name="filt" ng-checked="All" ng-model="Paternity"></input>Paternity
+						<input type="checkbox" name="filt" ng-checked="filter.maternity" ng-click="reFilter('Maternity')"></input>Maternity
 					</label>
 					<label >
-						<input type="checkbox" name="filt" ng-checked="All" ng-model="Others"></input>Others
+						<input type="checkbox" name="filt" ng-checked="filter.paternity" ng-click="reFilter('Paternity')"></input>Paternity
+					</label>
+					<label >
+						<input type="checkbox" name="filt" ng-checked="filter.others" ng-click="reFilter('Others')"></input>Others
 					</label>
 				</div>
 			</div>
@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <th>Minutes</th>
                         <th>Deducted Credits</th>
                     </tr>
-    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& Vacation ? true:false ) || ( leave.info.type=='Sick'&& Sick ? true:false ) || ( leave.info.type=='Maternity'&& Maternity ? true:false ) || ( leave.info.type=='Paternity'&& Paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && Others ? true:false ) || All">
+    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& filter.vacation ? true:false ) || ( leave.info.type=='Sick'&& filter.sick ? true:false ) || ( leave.info.type=='Maternity'&& filter.maternity ? true:false ) || ( leave.info.type=='Paternity'&& filter.paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && filter.others ? true:false )">
     					<tr style="background-color:lightgray" >
                             <td>
     							{{leave.info.type}}
