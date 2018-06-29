@@ -191,15 +191,6 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
 	}
-	
-	$scope.checkButton = function(leave){
-		console.log(leave.info.type)
-		if(leave.info.type="Vacation"){
-			console.log("true");
-			return false;
-		}
-		return true;
-	}
 });
 
 app.controller('employee_add',function($scope,$rootScope,$window){

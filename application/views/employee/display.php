@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <th>Minutes</th>
                         <th>Deducted Credits</th>
                     </tr>
-    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& Vacation ? true:false ) || ( leave.info.type=='Sick'&& Sick ? true:false ) || ( leave.info.type=='Maternity'&& Maternity ? true:false ) || ( leave.info.type=='Paternity'&& Paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && Others ? true:false )">
+    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& Vacation ? true:false ) || ( leave.info.type=='Sick'&& Sick ? true:false ) || ( leave.info.type=='Maternity'&& Maternity ? true:false ) || ( leave.info.type=='Paternity'&& Paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && Others ? true:false ) || All">
     					<tr style="background-color:lightgray" >
                             <td>
     							{{leave.info.type}}
