@@ -37,6 +37,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
+	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
         $scope.leaves = leaves;
@@ -211,6 +212,68 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		}
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
+	}
+	
+	$scope.reFilter = function(filter){
+		switch(filter){
+			case 'Every':
+				if($scope.filter.every){
+					$scope.filter.every = false;
+					$scope.filter.vacation = false;
+					$scope.filter.sick = false;
+					$scope.filter.maternity = false;
+					$scope.filter.paternity = false;
+					$scope.filter.others = false;
+				}else{
+					$scope.filter.every = true;
+					$scope.filter.vacation = true;
+					$scope.filter.sick = true;
+					$scope.filter.maternity = true;
+					$scope.filter.paternity = true;
+					$scope.filter.others = true;
+				}
+				break;
+				
+			case 'Vacation':
+				if($scope.filter.vacation)
+					$scope.filter.every=false;
+				$scope.filter.vacation = !$scope.filter.vacation;
+				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
+					$scope.filter.every=true;
+				break;
+			
+			case 'Sick':
+				if($scope.filter.sick)
+					$scope.filter.every=false;
+				$scope.filter.sick = !$scope.filter.sick;
+				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
+					$scope.filter.every=true;
+				break;
+			
+			case 'Maternity':
+				if($scope.filter.maternity)
+					$scope.filter.every=false;
+				$scope.filter.maternity = !$scope.filter.maternity;
+				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
+					$scope.filter.every=true;
+				break;
+			
+			case 'Paternity':
+				if($scope.filter.paternity)
+					$scope.filter.every=false;
+				$scope.filter.paternity = !$scope.filter.paternity;
+				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
+					$scope.filter.every=true;
+				break;
+			
+			default: console.log("Others");
+				if($scope.filter.others)
+					$scope.filter.every=false;
+				$scope.filter.others = !$scope.filter.others;
+				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
+					$scope.filter.every=true;
+				break;
+		}
 	}
 });
 
