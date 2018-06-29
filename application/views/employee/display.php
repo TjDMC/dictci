@@ -38,23 +38,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div>
             <h3>Leave History</h3>
 			<div class="form-group" style="overflow-x:auto">
-				<div >
-					<label >
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+					<label class="btn btn-outline-info">
 						<input type="checkbox" name="filt" ng-checked="filter.every" ng-model="All" ng-init="All=true" ng-click="reFilter('Every')"></input>All
 					</label>
-					<label >
+					<label class="btn btn-outline-info" ng-class="{active:filter.vacation}">
 						<input type="checkbox" name="filt" ng-checked="filter.vacation" ng-click="reFilter('Vacation')"></input>Vacation
 					</label>
-					<label >
+					<label class="btn btn-outline-info" ng-class="{active:filter.sick}">
 						<input type="checkbox" name="filt" ng-checked="filter.sick" ng-click="reFilter('Sick')"></input>Sick
 					</label>
-					<label >
+					<label class="btn btn-outline-info" ng-class="{active:filter.maternity}">
 						<input type="checkbox" name="filt" ng-checked="filter.maternity" ng-click="reFilter('Maternity')"></input>Maternity
 					</label>
-					<label >
+					<label class="btn btn-outline-info" ng-class="{active:filter.paternity}">
 						<input type="checkbox" name="filt" ng-checked="filter.paternity" ng-click="reFilter('Paternity')"></input>Paternity
 					</label>
-					<label >
+					<label class="btn btn-outline-info" ng-class="{active:filter.others}">
 						<input type="checkbox" name="filt" ng-checked="filter.others" ng-click="reFilter('Others')"></input>Others
 					</label>
 				</div>

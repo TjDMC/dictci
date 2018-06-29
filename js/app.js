@@ -107,7 +107,7 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 				$window.location.reload();
 			},
 			function(response){
-				alert("Login Failed: "+response.msg);
+				$rootScope.showCustomModal('Error','Login failed. Please make sure you input the correct login credentials.',function(){},function(){});
 			}
 		);
 	}
@@ -121,6 +121,54 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 		},function(){
 			alert("Logout Error");
 		});
+	}
+});
+
+app.controller('admin',function($scope,$rootScope,$window){
+	$scope.credential = '';
+	$scope.username = '';
+	$scope.newPassword1 = '';
+	$scope.newPassword2 = '';
+	$scope.password = '';
+
+	$scope.confirmPassword = function(credential){
+		if(credential == 'password'&&$scope.newPassword1!=$scope.newPassword2){
+			$rootScope.showCustomModal(
+				'Error',
+				'Passwords do not match',
+				function(){},
+				function(){},
+				'OK'
+			);
+			return;
+		}
+		angular.element('#confirmPasswordModal').modal('show');
+		$scope.credential = credential;
+	}
+
+	$scope.submit = function(){
+		$rootScope.post(
+			$rootScope.baseURL+'admin/changeLoginCredentials/'+$scope.credential,
+			{
+				password:$scope.password,
+				username:$scope.username,
+				new_password1:$scope.newPassword1,
+				new_password2:$scope.newPassword2
+			},
+			function(response){
+				$rootScope.showCustomModal('Success',response.msg,
+					function(){
+						$window.location.reload();
+					},
+					function(){
+						$window.location.reload();
+					}
+				);
+			},
+			function(response){
+				$rootScope.showCustomModal('Error',response.msg,function(){},function(){});
+			}
+		);
 	}
 });
 
