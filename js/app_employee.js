@@ -266,7 +266,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					$scope.filter.every=true;
 				break;
 
-			default: console.log("Others");
+			default:
 				if($scope.filter.others)
 					$scope.filter.every=false;
 				$scope.filter.others = !$scope.filter.others;
