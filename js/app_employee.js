@@ -172,17 +172,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
         return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);
     }
 
-    var enumerateDaysBetweenDates = function(startDate, endDate) {
-        var now = startDate.clone(), dates = [];
-
-        while (now.isSameOrBefore(endDate,'day')) {
-            dates.push(now.format('YYYY-MM-DD'));
-            now.add(1, 'days');
-        }
-        return dates;
-    };
-
-    $scope.formatDate = function(){
+    $scope.formatBalDate = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
     }
 
@@ -366,6 +356,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
+		
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
 				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){
@@ -393,7 +384,9 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			alert("A married woman is only entitled to leave of SIXTY(60) calendar days.");
 			return;
 		}
-		for(var i = 0 ; i<data.date_ranges.length ; i++){
+
+        //format ranges for posting
+        for(var i = 0 ; i<data.date_ranges.length ; i++){
 			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 		}
