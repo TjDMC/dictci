@@ -205,11 +205,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		if(credits<7){
 			if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()<moment(date_range.start_date,$rootScope.dateFormat).clone().day())
 				credits -= 2;
-			else if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()==6)
-				credits -= 1;
-			else if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==0)
-				credits -= 1;
-		}
+			else{
+				if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()==6)
+					credits -= 1;
+				if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==0)
+					credits -= 1;
+			}
+		}else if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==1 && moment(date_range.end_date,$rootScope.dateFormat).clone().day()==5)
+			credits+=2;
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
 	}
