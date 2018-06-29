@@ -15,7 +15,7 @@ class Employee extends MY_Controller{
     }
 
     public function display($employeeNo=null){
-        
+
         if($employeeNo == null){
             $this->index();
             return;
@@ -89,7 +89,6 @@ class Employee extends MY_Controller{
                 }
                 $data['info']["type"] = $data['info']['type_others'];
             }
-
             if(isset($data['action'])&&$data['action']=='edit'){
                 $response = $this->employee_model->editLeave($data);
             }else{

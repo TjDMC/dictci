@@ -326,10 +326,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
-		for(var i = 0 ; i<data.date_ranges.length ; i++){
-			data.date_ranges[i].start_date = moment(moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
-			data.date_ranges[i].end_date = moment(moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
-		}
+
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
 				if( data.date_ranges[i].start_date.isSameOrBefore(data.date_ranges[j].end_date) && data.date_ranges[i].end_date.isSameOrAfter(data.date_ranges[j].start_date) ){
@@ -356,6 +353,12 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
 			alert("A married woman is only entitled to leave of SIXTY(60) calendar days.");
 			return;
+		}
+
+        //format ranges for posting
+        for(var i = 0 ; i<data.date_ranges.length ; i++){
+			data.date_ranges[i].start_date =moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
