@@ -107,7 +107,7 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 				$window.location.reload();
 			},
 			function(response){
-				alert("Login Failed: "+response.msg);
+				$rootScope.showCustomModal('Error','Login failed. Please make sure you input the correct login credentials.',function(){},function(){});
 			}
 		);
 	}
