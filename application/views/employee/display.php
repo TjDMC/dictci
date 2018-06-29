@@ -38,25 +38,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div>
             <h3>Leave History</h3>
 			<div class="form-group" style="overflow-x:auto">
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-					<label class="btn btn-outline-info">
-						<input type="checkbox" name="filt" ng-checked="filter.every" ng-model="All" ng-init="All=true" ng-click="reFilter('Every')"></input>All
-					</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.vacation}">
-						<input type="checkbox" name="filt" ng-checked="filter.vacation" ng-click="reFilter('Vacation')"></input>Vacation
-					</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.sick}">
-						<input type="checkbox" name="filt" ng-checked="filter.sick" ng-click="reFilter('Sick')"></input>Sick
-					</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.maternity}">
-						<input type="checkbox" name="filt" ng-checked="filter.maternity" ng-click="reFilter('Maternity')"></input>Maternity
-					</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.paternity}">
-						<input type="checkbox" name="filt" ng-checked="filter.paternity" ng-click="reFilter('Paternity')"></input>Paternity
-					</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.others}">
-						<input type="checkbox" name="filt" ng-checked="filter.others" ng-click="reFilter('Others')"></input>Others
-					</label>
+				<div class="btn-group btn-group-toggle">
+					<label class="btn btn-outline-info" ng-class="{active:filter.every}" ng-click="reFilter('Every')">All</label>
+					<label class="btn btn-outline-info" ng-class="{active:filter.vacation}" ng-click="reFilter('Vacation')">Vacation</label>
+					<label class="btn btn-outline-info" ng-class="{active:filter.sick}" ng-click="reFilter('Sick')">Sick</label>
+					<label class="btn btn-outline-info" ng-class="{active:filter.maternity}" ng-click="reFilter('Maternity')">Maternity</label>
+					<label class="btn btn-outline-info" ng-class="{active:filter.paternity}" ng-click="reFilter('Paternity')">Paternity</label>
+					<label class="btn btn-outline-info" ng-class="{active:filter.others}" ng-click="reFilter('Others')">Others</label>
 				</div>
 			</div>
             <div class="table-responsive">
