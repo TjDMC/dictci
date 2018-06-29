@@ -16,9 +16,15 @@ class MY_Controller extends CI_Controller{
 
     protected function checkLogin(){
         //Check if user is logged in and is admin, if not, display login page
-        if(!$this->ion_auth->logged_in()||!$this->ion_auth->is_admin()){
+        if(!$this->ion_auth->logged_in()){
             $this->html(function(){
                 $this->load->view("login");
+            });
+            die($this->output->get_output());
+        }
+        if(!$this->ion_auth->is_admin()){
+            $this->html(function(){
+                $this->load->view("permission_error");
             });
             die($this->output->get_output());
         }

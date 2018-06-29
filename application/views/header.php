@@ -91,6 +91,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</li>
 					</ul>
 				</li>
+				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Admin Settings" ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true">
+					<a class="nav-link"  href="<?=base_url()?>admin">
+						<i class="fas fw-fw fa-user-cog"></i>
+						<span class="nav-link-text">Admin</span>
+					</a>
+				</li>
 				<li ng-controller="login" class="nav-item" data-toggle="tooltip" data-placement="right" title="Logout" ng-if="<?=$this->ion_auth->logged_in()?1:0?>==true" ng-click="logout()">
 					<a class="nav-link"  href="#">
 						<i class="fas fa-fw fa-sign-out-alt"></i>
