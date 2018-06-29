@@ -37,6 +37,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div>
             <h3>Leave History</h3>
+			<div class="form-group" style="overflow-x:auto">
+				<div >
+					<!--<label >
+						<input type="checkbox" name="filt" ng-checked="true" ng-model="All"></input>All
+					</label>-->
+					<label >
+						<input type="checkbox" name="filt" ng-checked="All" ng-model="Vacation"></input>Vacation
+					</label>
+					<label >
+						<input type="checkbox" name="filt" ng-checked="All" ng-model="Sick"></input>Sick
+					</label>
+					<label >
+						<input type="checkbox" name="filt" ng-checked="All" ng-model="Maternity"></input>Maternity
+					</label>
+					<label >
+						<input type="checkbox" name="filt" ng-checked="All" ng-model="Paternity"></input>Paternity
+					</label>
+					<label >
+						<input type="checkbox" name="filt" ng-checked="All" ng-model="Others"></input>Others
+					</label>
+				</div>
+			</div>
             <div class="table-responsive">
     			<table class="table" >
     				<tr>
@@ -48,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <th>Minutes</th>
                         <th>Deducted Credits</th>
                     </tr>
-    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true">
+    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& Vacation ? true:false ) || ( leave.info.type=='Sick'&& Sick ? true:false ) || ( leave.info.type=='Maternity'&& Maternity ? true:false ) || ( leave.info.type=='Paternity'&& Paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && Others ? true:false )">
     					<tr style="background-color:lightgray" >
                             <td>
     							{{leave.info.type}}
