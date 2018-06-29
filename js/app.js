@@ -6,6 +6,35 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 
 	$rootScope.dateFormat = 'MMMM DD, YYYY';
 	$rootScope.busy = false;
+
+	$rootScope.customModalData = {
+		content:{
+			header:'',
+			body:'',
+			confirmName:'',
+			closeName:''
+		},
+		action:{
+			confirm:function(){},
+			close:function(){}
+		}
+	}
+
+	$rootScope.showCustomModal = function(header,body,onConfirm,onClose,confirmName='Confirm',closeName='Close'){
+		$rootScope.customModalData={
+			content:{
+				header:header,
+				body:body,
+				confirmName:confirmName,
+				closeName:closeName
+			},
+			action:{
+				confirm:onConfirm,
+				close:onClose
+			}
+		}
+		angular.element('#customModal').modal('show');
+	}
 	$rootScope.post = function(url,inputData,onSuccess,onFailure){
 
 		var data = {

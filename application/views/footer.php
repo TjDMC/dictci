@@ -9,6 +9,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </footer>
 </div>
+
+<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customModalLabel">{{customModalData.content.header}}</h5>
+                <button type="button" class="close" data-dismiss="modal" ng-click="customModalData.action.close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{customModalData.content.body}}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" ng-click="customModalData.action.confirm()">{{customModalData.content.confirmName}}</button>
+                <button type="button" class="btn btn-secondary" ng-click="customModalData.action.close()" data-dismiss="modal">{{customModalData.content.closeName}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script>
 (function($) {

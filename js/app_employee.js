@@ -33,7 +33,7 @@ app.controller('employee_search',function($scope,$rootScope){
 
 });
 
-app.controller('employee_display',function($scope,$rootScope,$timeout){
+app.controller('employee_display',function($scope,$rootScope,$window){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
@@ -69,8 +69,8 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
         var leave = angular.copy($scope.leaves[index]);
         for(var i = 0 ; i<leave.date_ranges.length ; i++){
             var date_range =  leave.date_ranges[i];
-            date_range.start_date = moment(date_range.start_date);
-            date_range.end_date = moment(date_range.end_date);
+            date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
+            date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
             date_range.hours = parseInt(date_range.hours);
             date_range.minutes = parseInt(date_range.minutes);
         }
@@ -79,9 +79,30 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
             leave.info.type_others = leave.info.type;
             leave.info.type = 'Others';
         }
-        console.log(leave);
 		$scope.$broadcast('openLeaveModal',leave);
 	}
+
+    $scope.deleteLeave = function(leaveID){
+        $rootScope.showCustomModal(
+            'Warning',
+            'Are you sure you want to delete this leave record?',
+            function(){
+                $rootScope.post(
+                    $rootScope.baseURL+'employee/deleteLeave',
+                    leaveID,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+
+                    }
+                );
+            },
+            function(){},
+            'Yes',
+            'No'
+        );
+    }
 
 	$scope.computeBal = function(){
 		/*
@@ -122,7 +143,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getCreditEquivalent(range)*1000;
-					
+
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
@@ -176,10 +197,10 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 			return 0;
 		}
     }
-	
+
 	$scope.getCreditEquivalent = function(date_range){
 		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
-		
+
 		if(credits<7){
 			if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()<moment(date_range.start_date,$rootScope.dateFormat).clone().day())
 				credits -= 2;
@@ -360,7 +381,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
-		
+
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
 				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){

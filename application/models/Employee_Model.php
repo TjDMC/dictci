@@ -366,4 +366,9 @@ class Employee_Model extends MY_Model{
         $this->db->insert(DB_PREFIX.'leaves',$leaveInfoChecker);
         $this->db->insert_batch(DB_PREFIX.'leave_date_range',$dateRangeChecker);
     }
+
+    public function deleteLeave($leaveID){
+        $this->db->where('leave_id',$leaveID);
+        $this->db->delete(DB_PREFIX.'leaves');
+    }
 }

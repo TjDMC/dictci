@@ -6,13 +6,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="card-header">
 		<h1>Calendar</h1>
 	</div>
-	<div class="card-body p-5 row justify-content-center" style="max-width:1000px">
-		<div class="col-md-12">
+	<div class="card-body p-5 mx-auto" style="max-width:1200px">
+		<div>
 
 			<button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
-
-
-
 			<div id="calendar">
 
 			</div>

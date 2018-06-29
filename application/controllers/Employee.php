@@ -104,4 +104,10 @@ class Employee extends MY_Controller{
 
     }
 
+    public function deleteLeave(){
+        $data = parse_custom_post($this->input->post('data'));
+        $this->employee_model->deleteLeave($data);
+        custom_response(true,'Leave record deleted');
+    }
+
 }

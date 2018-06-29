@@ -43,6 +43,10 @@ if(!isset($employee)){
 .search-result.selected{
     background: gray;
 }
+
+.search-result:hover{
+    cursor:pointer;
+}
 </style>
 
 <div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)' <?=!$isModal?'class="card"':''?>>
@@ -108,7 +112,7 @@ if(!isset($employee)){
     			    </label>
     			</div>
     			<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:400px">
-    				<div class="input-group">
+    				<div class="input-group mt-2">
     					<div class="input-group-prepend">
     						<span class="input-group-text">
     							Specify:
@@ -189,7 +193,10 @@ if(!isset($employee)){
                 <input class="form-control" type="textarea" ng-model="leave.info.remarks"/>
     		</div>
             <p>
-    			<button type="submit" class="btn btn-primary"/>Submit</button>
+    			<button type="submit" class="btn btn-primary">Submit</button>
+                <?php if ($isModal) :?>
+                    <button type="button" ng-click="deleteLeave(leave.info.leave_id)" class="btn btn-danger">Delete Leave</button>
+                <?php endif?>
             </p>
         </form>
     </div>
