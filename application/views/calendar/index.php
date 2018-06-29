@@ -2,18 +2,23 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div class="container row justify-content-center">
-<div class="col-md-12">
+<div class="card">
+	<div class="card-header">
+		<h1>Calendar</h1>
+	</div>
+	<div class="card-body p-5 row justify-content-center" style="max-width:1000px">
+		<div class="col-md-12">
 
-<button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
+			<button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
 
-<h1>Calendar</h1>
 
-<div id="calendar">
 
-</div>
+			<div id="calendar">
 
-</div>
+			</div>
+
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
