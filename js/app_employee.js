@@ -121,7 +121,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		// First Month Computation
 		var firstMC = 0;
 		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
-			fLeave=5000;
+			fLeave=5000; spLeave=3000; pLeave=7000;
 			firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
@@ -129,7 +129,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		}
 		// #first_month_computation
 
-		// Computation For Other Months
+		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
 			if(moment(dateStart).month()==1){
 				fLeave=5000;
@@ -201,8 +201,9 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 	$scope.getCreditEquivalent = function(date_range){
 		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
-
-		if(credits<7){
+		
+		// Temporarily removed; to confirm: MC No. 14, s. 1999
+		/*if(credits<7){
 			if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()<moment(date_range.start_date,$rootScope.dateFormat).clone().day())
 				credits -= 2;
 			else{
@@ -213,7 +214,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			}
 		}else if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==1 && moment(date_range.end_date,$rootScope.dateFormat).clone().day()==5)
 			credits+=2;
-		if(typeof credits =='number') credits = credits.toFixed(3);
+		if(typeof credits =='number') credits = credits.toFixed(3);*/
 		return credits;
 	}
 
@@ -471,6 +472,11 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			}
 		}
 		var credits = $scope.getTotalCredits();
+		//	As per MC 41, s. 1998: Sec 55
+		//	On the assumption of one 'data' per rahabilitation
+		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase.includes("rehab")) && credits>5{
+			$rootScope.showCustomModal('Error','An employee who incured injuries or wounds in the performance of duty is only entitled up to SIX(6) MONTHS of rehabilitation leave. \n Record the excess as vacation leave.',function(){angular.element('#customModal').modal('hide');},function(){});
+		}
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="others" && (data.info.type_others.toLowerCase().includes("force") || data.info.type_others.toLowerCase().includes("mandat")) && credits>5){
