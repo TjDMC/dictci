@@ -3,17 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $segments = $this->uri->segment_array();
 
+//custom url names
 $urlnames = array(
     'leaveapplication'=>'Leave Application'
 );
 
-$breadcrumbs = '';
-if(count($segments)==0){
-    $breadcrumbs.='<a href="'.base_url().'">Home</a>';
-}else{
+$breadcrumbs = '<a href="'.base_url().'">Home</a>';
+if(count($segments)>0){
     $ci = get_instance($this);
     $className = get_class($ci);
-    $breadcrumbs ='<a href="'.base_url().$segments[1].'">'.$className.'</a>';
+    $breadcrumbs .=' / <a href="'.base_url().$segments[1].'">'.$className.'</a>';
     $rc = new ReflectionClass($className);
     //Remove class from segments
     array_splice($segments,0,1);
