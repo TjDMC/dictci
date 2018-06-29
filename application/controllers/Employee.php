@@ -15,9 +15,10 @@ class Employee extends MY_Controller{
     }
 
     public function display($employeeNo=null){
-
+        
         if($employeeNo == null){
-            show_404();
+            $this->index();
+            return;
         }
         $employee = $this->employee_model->getEmployee($employeeNo);
         if($employee==null){

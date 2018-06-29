@@ -9,7 +9,7 @@ class MY_Controller extends CI_Controller{
         $this->load->model('ion_auth_init');
         $this->load->library('ion_auth');
 
-        $this->load->helper('custom_routing');
+        $this->load->helper('angular_communication');
 
         $this->checkLogin();
     }
@@ -27,12 +27,14 @@ class MY_Controller extends CI_Controller{
 
     public function index(){
         $this->load->view("header");
+        $this->load->view("breadcrumbs");
         $this->body();
         $this->load->view("footer");
     }
 
     protected function html($lambda){
         $this->load->view("header");
+        $this->load->view("breadcrumbs");
         $lambda();
         $this->load->view("footer");
     }

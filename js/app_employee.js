@@ -146,17 +146,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
         return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);
     }
 
-    var enumerateDaysBetweenDates = function(startDate, endDate) {
-        var now = startDate.clone(), dates = [];
-
-        while (now.isSameOrBefore(endDate,'day')) {
-            dates.push(now.format('YYYY-MM-DD'));
-            now.add(1, 'days');
-        }
-        return dates;
-    };
-
-    $scope.formatDate = function(){
+    $scope.formatBalDate = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
     }
 
