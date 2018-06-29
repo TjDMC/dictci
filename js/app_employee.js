@@ -122,14 +122,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getCreditEquivalent(range)*1000;
-					if(creditUsed<7000){
-						if(moment(range.end_date,$rootScope.dateFormat).clone().day()==6)
-							creditUsed -= 1000;
-						if(moment(range.start_date,$rootScope.dateFormat).clone().day()==0)
-							creditUsed -= 1000;
-						if(moment(range.end_date,$rootScope.dateFormat).clone().day()<moment(range.start_date,$rootScope.dateFormat).clone().day())
-							creditUsed -= 2000;
-					}
+					
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
@@ -185,7 +178,18 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
     }
 	
 	$scope.getCreditEquivalent = function(date_range){
-		return (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+		
+		if(credits<7){
+			if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()<moment(date_range.start_date,$rootScope.dateFormat).clone().day())
+				credits -= 2;
+			else if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()==6)
+				credits -= 1;
+			else if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==0)
+				credits -= 1;
+		}
+		if(typeof credits =='number') credits = credits.toFixed(3);
+		return credits;
 	}
 });
 
