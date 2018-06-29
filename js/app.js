@@ -107,7 +107,10 @@ app.controller('login',function($scope,$rootScope,$http,$window){
 				$window.location.reload();
 			},
 			function(response){
-				$rootScope.showCustomModal('Error','Login failed. Please make sure you input the correct login credentials.',function(){},function(){});
+				$rootScope.showCustomModal('Error','Login failed. Please make sure you input the correct login credentials.',
+				function(){
+					angular.element('#customModal').modal('hide');
+				},function(){});
 			}
 		);
 	}

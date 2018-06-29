@@ -213,7 +213,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
 	}
-	
+
 	$scope.reFilter = function(filter){
 		switch(filter){
 			case 'Every':
@@ -233,7 +233,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					$scope.filter.others = true;
 				}
 				break;
-				
+
 			case 'Vacation':
 				if($scope.filter.vacation)
 					$scope.filter.every=false;
@@ -241,7 +241,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
 					$scope.filter.every=true;
 				break;
-			
+
 			case 'Sick':
 				if($scope.filter.sick)
 					$scope.filter.every=false;
@@ -249,7 +249,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
 					$scope.filter.every=true;
 				break;
-			
+
 			case 'Maternity':
 				if($scope.filter.maternity)
 					$scope.filter.every=false;
@@ -257,7 +257,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
 					$scope.filter.every=true;
 				break;
-			
+
 			case 'Paternity':
 				if($scope.filter.paternity)
 					$scope.filter.every=false;
@@ -265,7 +265,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
 					$scope.filter.every=true;
 				break;
-			
+
 			default:
 				if($scope.filter.others)
 					$scope.filter.every=false;
@@ -300,7 +300,7 @@ app.controller('employee_add',function($scope,$rootScope,$window){
                 $rootScope.showCustomModal(
                     'Error',
                     response.msg,
-                    function(){},
+                    function(){angular.element('#customModal').modal('hide');},
                     function(){}
                 );
             }
@@ -412,7 +412,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 				return;
 			case 1://delete
 				if($scope.leave.date_ranges.length<=1){
-                    $rootScope.showCustomModal('Error','Date ranges must have at least 1 range.',function(){},function(){});
+                    $rootScope.showCustomModal('Error','Date ranges must have at least 1 range.',function(){angular.element('#customModal').modal('hide');},function(){});
 					return;
 				}
 				$scope.leave.date_ranges.splice(index==-1?$scope.leave.date_ranges.length-1:index,1);
@@ -462,7 +462,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
 				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){
-                    $rootScope.showCustomModal('Error','Conflict in date range',function(){},function(){});
+                    $rootScope.showCustomModal('Error','Conflict in date range',function(){angular.element('#customModal').modal('hide');},function(){});
 					return;
 				}
 			}
@@ -471,19 +471,19 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="others" && (data.info.type_others.toLowerCase().includes("force") || data.info.type_others.toLowerCase().includes("mandat")) && credits>5){
-            $rootScope.showCustomModal('Error','An employee is only entitled to FIVE(5) forced/mandatory leaves. \n Record the excess as vacation leave.',function(){},function(){});
+            $rootScope.showCustomModal('Error','An employee is only entitled to FIVE(5) forced/mandatory leaves. \n Record the excess as vacation leave.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
 		//	As per MC 41, s. 1998: Sec 20
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="paternity" && credits>7){
-            $rootScope.showCustomModal('Error','A married male employee is only entitled to leave of SEVEN(7) working days only per delivery/miscarriage of his legitimate spouse.',function(){},function(){});
+            $rootScope.showCustomModal('Error','A married male employee is only entitled to leave of SEVEN(7) working days only per delivery/miscarriage of his legitimate spouse.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
 		//	As per MC 41, s. 1998: Sec 11
 		//	On the assumption of one 'data' per delivery
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
-            $rootScope.showCustomModal('Error','A married woman is only entitled to leave of SIXTY(60) calendar days.',function(){},function(){});
+            $rootScope.showCustomModal('Error','A married woman is only entitled to leave of SIXTY(60) calendar days.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
 
@@ -508,6 +508,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
             function(response){
                 $rootScope.showCustomModal('Error',response.msg,
                     function(){
+                        angular.element('#customModal').modal('hide');
                     },
                     function(){
                     }
