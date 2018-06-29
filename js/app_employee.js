@@ -95,7 +95,7 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 		var dateEnd = moment($scope.bal_date).clone();
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
-		var fLeave = 0;
+		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		// First Month Computation
 		var firstMC = 0;
 		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
@@ -109,7 +109,11 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 
 		// Computation For Other Months
 		while(dateStart<dateEnd){
-			if(moment(dateStart).month()==1){fLeave=5000;}
+			if(moment(dateStart).month()==1){
+				fLeave=5000;
+				spLeave=3000;
+				pLeave=7000;
+			}
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
@@ -117,12 +121,34 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month'))
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
-					var creditUsed = $scope.getDeductedCredits(leave.info.type,range)*1000;
+					var creditUsed = $scope.getCreditEquivalent(range)*1000;
+					if(creditUsed<7000){
+						if(moment(range.end_date,$rootScope.dateFormat).clone().day()==6)
+							creditUsed -= 1000;
+						if(moment(range.start_date,$rootScope.dateFormat).clone().day()==0)
+							creditUsed -= 1000;
+						if(moment(range.end_date,$rootScope.dateFormat).clone().day()<moment(range.start_date,$rootScope.dateFormat).clone().day())
+							creditUsed -= 2000;
+					}
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 					}
 					if(leave.info.type=="Sick") currS -= creditUsed;
+					if(leave.info.type.toLowerCase().includes('spl')||leave.info.type.toLowerCase().includes('special')){
+						spLeave -= creditsUsed;
+						if(spLeave<0){
+							currV+=spLeave;
+							spLeave=0;
+						}
+					}
+					if(leave.info.type.toLowerCase().includes('paternal')){
+						pLeave -= creditsUsed;
+						if(pLeave<0){
+							currV+=pLeave;
+							pLeave=0;
+						}
+					}
 				}
 			}
 			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
@@ -162,11 +188,15 @@ app.controller('employee_display',function($scope,$rootScope,$timeout){
 
     $scope.getDeductedCredits = function(type,date_range){
 		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')){
-			return (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+			return $scope.getCreditEquivalent(date_range);
 		}else{
 			return 0;
 		}
     }
+	
+	$scope.getCreditEquivalent = function(date_range){
+		return (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+	}
 });
 
 app.controller('employee_add',function($scope,$rootScope,$window){
@@ -336,13 +366,9 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
-		for(var i = 0 ; i<data.date_ranges.length ; i++){
-			data.date_ranges[i].start_date = moment(moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
-			data.date_ranges[i].end_date = moment(moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD"),"YYYY/MM/DD");
-		}
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
-				if( data.date_ranges[i].start_date.isSameOrBefore(data.date_ranges[j].end_date) && data.date_ranges[i].end_date.isSameOrAfter(data.date_ranges[j].start_date) ){
+				if( moment(data.date_ranges[i].start_date,$rootScope.dateFormat).isSameOrBefore(moment(data.date_ranges[j].end_date,$rootScope.dateFormat)) && moment(data.date_ranges[i].end_date,$rootScope.dateFormat).isSameOrAfter(moment(data.date_ranges[j].start_date,$rootScope.dateFormat)) ){
 					alert("Conflict in date range.");
 					return;
 				}
@@ -366,6 +392,10 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
 			alert("A married woman is only entitled to leave of SIXTY(60) calendar days.");
 			return;
+		}
+		for(var i = 0 ; i<data.date_ranges.length ; i++){
+			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
+			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 		}
         $rootScope.post(
             $rootScope.baseURL+"/employee/leaveApplication",
