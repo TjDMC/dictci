@@ -157,8 +157,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 							spLeave=0;
 						}
 					}
-					if(leave.info.type.toLowerCase().includes('paternal')){
-						pLeave -= creditsUsed;
+					if(leave.info.type.toLowerCase().includes('parental')){
+						pLeave -= creditUsed;
 						if(pLeave<0){
 							currV+=pLeave;
 							pLeave=0;
@@ -474,8 +474,9 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		var credits = $scope.getTotalCredits();
 		//	As per MC 41, s. 1998: Sec 55
 		//	On the assumption of one 'data' per rahabilitation
-		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase.includes("rehab") && credits>5){
+		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase().includes("rehab") && credits>5){
 			$rootScope.showCustomModal('Error','An employee who incured injuries or wounds in the performance of duty is only entitled up to SIX(6) MONTHS of rehabilitation leave. \n Record the excess as vacation leave.',function(){angular.element('#customModal').modal('hide');},function(){});
+			return;
 		}
 		//	As per MC 41, s. 1998: Sec 25
 		//	On the assumption of one 'data' per delivery
