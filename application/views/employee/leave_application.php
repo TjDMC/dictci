@@ -82,15 +82,6 @@ if(!isset($employee)){
                         </div>
                     </div>
                 </div>
-                <!--DEPRECATED
-    			<div class="form-group autocomplete" >
-                    <label>Employee No: </label>
-                    <input id="empNo" class="form-control" type="text" ng-model="employee.emp_no" ng-blur="fillName()" pattern="[0-9]{7}" maxlength="7" required>
-                </div>
-                <div class="form-group autocomplete">
-                    <label>Employee Name: </label>
-                    <input id="empName" class="form-control" type="text" ng-model="employee.name" required>
-                </div>-->
             <?php endif ?>
 			<div class="form-group" style="overflow-x: auto">
                 <p>Leave Type:</p>

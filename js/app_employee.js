@@ -37,6 +37,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
+	$scope.creditBalance = {vac:0,sick:0};
 	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
@@ -117,6 +118,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 		var dateEnd = moment($scope.bal_date).clone();
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
+		var lwop = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		// First Month Computation
 		var firstMC = 0;
@@ -131,6 +133,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
+			lwop = 0;
 			if(moment(dateStart).month()==1){
 				fLeave=5000;
 				spLeave=3000;
@@ -171,6 +174,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				currS = 0;
 			}
 			if(currV<0){// Employee incurring absence without pay
+				lwop = Math.floor(Math.abs(currV)/1000);
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var absent = Math.floor(Math.abs(currV)/500);
 				var rem = Math.floor(Math.abs(currV)%500);
@@ -183,8 +187,11 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			if(moment(dateStart).month()==0 && fLeave>0 && currV>=fLeave) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
-
-        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);
+		
+		$scope.creditBalance.vac = (currV/1000).toFixed(3);
+		$scope.creditBalance.sick = (currS/1000).toFixed(3);
+		
+        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3) + ( lwop>0 ? " LWOP: "+lwop:"" );
     }
 
     $scope.formatBalDate = function(){
@@ -202,20 +209,24 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	$scope.getCreditEquivalent = function(date_range){
 		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
 		
-		// Temporarily removed; to confirm: MC No. 14, s. 1999
-		/*if(credits<7){
-			if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()<moment(date_range.start_date,$rootScope.dateFormat).clone().day())
-				credits -= 2;
-			else{
-				if(moment(date_range.end_date,$rootScope.dateFormat).clone().day()==6)
-					credits -= 1;
-				if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==0)
-					credits -= 1;
-			}
-		}else if(moment(date_range.start_date,$rootScope.dateFormat).clone().day()==1 && moment(date_range.end_date,$rootScope.dateFormat).clone().day()==5)
-			credits+=2;
-		if(typeof credits =='number') credits = credits.toFixed(3);*/
+		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
+		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
+		
+		while(start<=end){
+			if(start.day()==0 || start.day()==6)
+				credits--;
+			else if($scope.isHoliday(start))
+				credits--;
+			start = start.add(1,'day');
+		}
+		
+		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
+	}
+	
+	$scope.isHoliday = function(date){
+		// Need a set of holidays
+		return false;
 	}
 
 	$scope.reFilter = function(filter){
@@ -278,6 +289,16 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					$scope.filter.every=true;
 				break;
 		}
+	}
+	
+	$scope.terminalBenefit = function(){
+		var salary = $scope.employee.salary;
+		var credits = Number($scope.creditBalance.vac) + Number($scope.creditBalance.sick);
+		var constantFactor = 4.81927; // multiplied by 100
+		
+		var tlb = salary * credits * constantFactor;
+		
+		return (tlb/100).toFixed(2);
 	}
 });
 
@@ -462,6 +483,13 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
+		
+		for(var i=0; i<data.date_ranges.length; i++){
+			if( data.date_ranges[i].start_date=="" || data.date_ranges[i].start_date==null || data.date_ranges[i].end_date=="" || data.date_ranges[i].end_date==null ){
+				$rootScope.showCustomModal('Error','Please fill up date range',function(){angular.element('#customModal').modal('hide');},function(){});
+				return;
+			}
+		}
 
 		for(var i=0; i<data.date_ranges.length-1; i++){
 			for(var j=i+1; j<data.date_ranges.length; j++){
@@ -471,10 +499,11 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 				}
 			}
 		}
+		
 		var credits = $scope.getTotalCredits();
 		//	As per MC 41, s. 1998: Sec 55
 		//	On the assumption of one 'data' per rahabilitation
-		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase().includes("rehab") && credits>5){
+		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase().includes("rehab") && ( credits>184 || data.date_ranges.length>7 ) ){
 			$rootScope.showCustomModal('Error','An employee who incured injuries or wounds in the performance of duty is only entitled up to SIX(6) MONTHS of rehabilitation leave. \n Record the excess as vacation leave.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
