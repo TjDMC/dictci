@@ -216,7 +216,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		$scope.creditBalance.vac = (currV/1000).toFixed(3);
 		$scope.creditBalance.sick = (currS/1000).toFixed(3);
 		
-        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3) + ( false ? " LWOP: "+lwop:"" );
+        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);// + ( false ? " LWOP: "+lwop:"" );
     }
 
     $scope.formatBalDate = function(){
@@ -549,11 +549,6 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
             $rootScope.showCustomModal('Error','A married woman is only entitled to leave of SIXTY(60) calendar days.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
-		}
-		
-		// Monetization of leaves
-		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase().includes("monetiz")){
-			
 		}
 
         //format ranges for posting
