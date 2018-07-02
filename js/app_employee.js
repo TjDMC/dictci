@@ -122,8 +122,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		// First Month Computation
 		var firstMC = 0;
+		var monetized = false;
 		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
+			monetized=false;
 			firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
@@ -138,6 +140,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				fLeave=5000;
 				spLeave=3000;
 				pLeave=7000;
+				monetized=false;
 			}
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
@@ -167,10 +170,32 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 							pLeave=0;
 						}
 					}
+					
+					// Temporal Solution for Monetization of Leaves
+					if(leave.info.type.toLowerCase().includes('monet') && !leave.info.type.toLowerCase().includes('special')){
+						monetized=true;
+						currV -= creditUsed;
+						if(currV<5000){
+							$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
+							currV=5000;
+						}else{console.log("safe");}
+					}
+					if(leave.info.type.toLowerCase().includes('monet') && leave.info.type.toLowerCase().includes('special')){
+						monetized=true;
+						vacation -= creditUsed;
+						if(currV<5000){
+							currV -= 5000;
+							currS += currV;
+							currV=5000;
+							if(currS<0) $rootScope.showCustomModal('Error','Limit for special leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
+						}
+					}
+					// #temporal_solution_for_monetization_of_leaves
 				}
 			}
 			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
 				currV += currS;
+				fLeave += currS;
 				currS = 0;
 			}
 			if(currV<0){// Employee incurring absence without pay
@@ -184,14 +209,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			}
 			currS+=1250;
 			dateStart.add(1,'month');
-			if(moment(dateStart).month()==0 && fLeave>0 && currV>=fLeave) currV = currV-fLeave;
+			if(moment(dateStart).month()==0 && fLeave>0 && ( (!monetized && currV>10000) || (monetized && currV>5000) ) ) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
 		
 		$scope.creditBalance.vac = (currV/1000).toFixed(3);
 		$scope.creditBalance.sick = (currS/1000).toFixed(3);
 		
-        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3) + ( lwop>0 ? " LWOP: "+lwop:"" );
+        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3) + ( false ? " LWOP: "+lwop:"" );
     }
 
     $scope.formatBalDate = function(){
@@ -199,7 +224,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 
     $scope.getDeductedCredits = function(type,date_range){
-		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')){
+		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')){
 			return $scope.getCreditEquivalent(date_range);
 		}else{
 			return 0;
@@ -524,6 +549,11 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(data.info.type.toLowerCase()=="maternity" && credits>60){
             $rootScope.showCustomModal('Error','A married woman is only entitled to leave of SIXTY(60) calendar days.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
+		}
+		
+		// Monetization of leaves
+		if(data.info.type.toLowerCase()=="others" && data.info.type_others.toLowerCase().includes("monetiz")){
+			
 		}
 
         //format ranges for posting
