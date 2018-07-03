@@ -29,7 +29,7 @@ fieldset.icon-buttons {
 	<div class="card-body p-5">
 		<div style="text-align:center"><img class="mx-auto" src="<?=base_url()?>dict_home.png"/></div>
 		<div class="row m-5 justify-content-center">
-			<div class="col-md-3 col-sm-8 col-xs-12 text-center">
+			<div class="col-md-3 col-sm-8 col-12 text-center">
 				<a href="<?= base_url()?>employee">
 					<fieldset class="btn btn-outline-success p-4 text-center icon-buttons">
 						<legend class="icon-buttons-success">Employees</legend>
@@ -38,7 +38,7 @@ fieldset.icon-buttons {
 				</a>
 			</div>
 
-			<div class="col-md-3 col-sm-8 col-xs-12 text-center">
+			<div class="col-md-3 col-sm-8 col-12 text-center">
 				<a href="<?= base_url()?>calendar">
 					<fieldset class="btn btn-outline-primary p-4 text-center icon-buttons">
 						<legend class="icon-buttons-primary">Calendar</legend>

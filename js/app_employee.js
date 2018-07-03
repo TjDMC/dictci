@@ -317,9 +317,9 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	}
 	
 	$scope.terminalBenefit = function(){
-		var salary = $scope.employee.salary;
+		var salary = 100*$scope.employee.salary;
 		var credits = Number($scope.creditBalance.vac) + Number($scope.creditBalance.sick);
-		var constantFactor = 4.81927; // multiplied by 100
+		var constantFactor = 0.0481927;
 		
 		var tlb = salary * credits * constantFactor;
 		
