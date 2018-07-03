@@ -158,8 +158,13 @@ app.controller('employee_display',function($scope,$rootScope,$window){
             'No'
         );
     }
+	
+	$scope.getBalance = function(){
+		var hold = $scope.computeBal($scope.bal_date);
+		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
+	}
 
-	$scope.computeBal = function(){
+	$scope.computeBal = function(enDate){
 		/*
 				The numbers are converted to integer for computational accuracy. Display and saved values are converted back to three(3) decimal places
 		*/
@@ -169,7 +174,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
-		var dateEnd = moment($scope.bal_date).clone();
+		var dateEnd = moment(enDate).clone();
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var lwop = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
@@ -178,7 +183,6 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var monetized = false;
 		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
-			monetized=false;
 			firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
@@ -202,7 +206,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month'))
 							||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
-					var creditUsed = $scope.getCreditEquivalent(range)*1000;
+					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range)*1000;
 
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
@@ -262,14 +266,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			}
 			currS+=1250;
 			dateStart.add(1,'month');
-			if(moment(dateStart).month()==0 && fLeave>0 && ( (!monetized && currV>10000) || (monetized && currV>5000) ) ) currV = currV-fLeave;
+			if(moment(dateStart).month()==0 && fLeave>0 && ( (!monetized && currV>10000) || monetized ) ) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
 
 		$scope.creditBalance.vac = (currV/1000).toFixed(3);
 		$scope.creditBalance.sick = (currS/1000).toFixed(3);
 
-        return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);// + ( false ? " LWOP: "+lwop:"" );
+        return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
 
     $scope.formatBalDate = function(){
@@ -278,24 +282,26 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
     $scope.getDeductedCredits = function(type,date_range){
 		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')){
-			return $scope.getCreditEquivalent(date_range);
+			return $scope.getCreditEquivalent(type,date_range);
 		}else{
 			return 0;
 		}
     }
 
-	$scope.getCreditEquivalent = function(date_range){
+	$scope.getCreditEquivalent = function(type,date_range){
 		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
 
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
-
-		while(start<=end){
-			if(start.day()==0 || start.day()==6)
-				credits--;
-			else if($scope.isHoliday(start))
-				credits--;
-			start = start.add(1,'day');
+		
+		if(!type.toLowerCase().includes("monet")){
+			while(start<=end){
+				if(start.day()==0 || start.day()==6)
+					credits--;
+				else if($scope.isHoliday(start))
+					credits--;
+				start = start.add(1,'day');
+			}
 		}
 
 		if(typeof credits =='number') credits = credits.toFixed(3);

@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p>First Day: {{employee.first_day}}</p>
 
         <div class="dropdown form-group" style="max-width:400px">
-            <label>Leave Credits Balance: {{computeBal()}}</label>
+            <label>Leave Credits Balance: {{getBalance()}}</label>
             <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -86,8 +86,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     						<td></td>
     						<td>{{date_range.start_date}}</td>
     						<td>{{date_range.end_date}}</td>
-    						<td>{{date_range.hours}}</td>
-    						<td>{{date_range.minutes}}</td>
+    						<td>{{leave.info.type.toLowerCase().includes('monet') ? '':date_range.hours}}</td>
+    						<td>{{leave.info.type.toLowerCase().includes('monet') ? '':date_range.minutes}}</td>
     						<td>{{getDeductedCredits(leave.info.type,date_range)}}</td>
     					</tr>
     				</tbody>
