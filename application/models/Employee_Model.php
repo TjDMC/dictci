@@ -225,16 +225,19 @@ class Employee_Model extends MY_Model{
 				return $checker;
 			}
 
-            //Check for date conflicts
-            $this->db->select("*");
-            $this->db->from(DB_PREFIX.'leaves');
-            $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
-            $this->db->where("start_date <=",$checker['end_date']);
-            $this->db->where("end_date >=",$checker['start_date']);
-            $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
-            $res = $this->db->get()->result_array();
-            if(count($res)>0){
-                return "Conflicting dates found: ".print_r($res,true);
+            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false){
+                //Check for date conflicts
+                $this->db->select("*");
+                $this->db->from(DB_PREFIX.'leaves');
+                $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
+                $this->db->not_like(DB_PREFIX.'leaves.type','Monetization'); //don't include monetization leaves
+                $this->db->where("start_date <=",$checker['end_date']);
+                $this->db->where("end_date >=",$checker['start_date']);
+                $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
+                $res = $this->db->get()->result_array();
+                if(count($res)>0){
+                    return "Conflicting dates found: ".print_r($res,true);
+                }
             }
 
             $checker['leave_id']=$nextID;
@@ -330,17 +333,20 @@ class Employee_Model extends MY_Model{
                 return $checker;
             }
 
-            //Check for conflicting dates
-            $this->db->select("*");
-            $this->db->from(DB_PREFIX.'leaves');
-            $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
-            $this->db->where(DB_PREFIX."leaves.leave_id !=",intval($leaveInfoChecker['leave_id']));
-            $this->db->where("start_date <=",$checker['end_date']);
-            $this->db->where("end_date >=",$checker['start_date']);
-            $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
-            $res = $this->db->get()->result_array();
-            if(count($res)>0){
-                return "Conflicting dates found: ".print_r($res,true);
+            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false){
+                //Check for conflicting dates
+                $this->db->select("*");
+                $this->db->from(DB_PREFIX.'leaves');
+                $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
+                $this->db->where(DB_PREFIX."leaves.leave_id !=",intval($leaveInfoChecker['leave_id']));
+                $this->db->not_like(DB_PREFIX.'leaves.type','Monetization'); //don't include monetization leaves
+                $this->db->where("start_date <=",$checker['end_date']);
+                $this->db->where("end_date >=",$checker['start_date']);
+                $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
+                $res = $this->db->get()->result_array();
+                if(count($res)>0){
+                    return "Conflicting dates found: ".print_r($res,true);
+                }
             }
 
             $checker['leave_id']=intval($leaveInfoChecker['leave_id']);
