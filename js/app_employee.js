@@ -97,7 +97,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
         var data = {
             info:{
-                type:($scope.monetize.special?'Special ':'')+'Monetization: '+$scope.monetize.type,
+                type:($scope.monetize.special?'Special ':'')+'Monetization',
                 remarks:$scope.monetize.remarks ? $scope.monetize.remarks:'',
                 emp_no:$scope.employee.emp_no
             },
@@ -373,7 +373,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var salary = 100*$scope.employee.salary;
 		var credits = Number($scope.creditBalance.vac) + Number($scope.creditBalance.sick);
 		var constantFactor = 0.0481927;
-		
+
 		var tlb = salary * credits * constantFactor;
 
 		return (tlb/100).toFixed(2);

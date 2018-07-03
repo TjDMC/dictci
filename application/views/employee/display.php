@@ -146,17 +146,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <datetimepicker  data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
                             </ul>
                         </div>
-                        <div class="form-group" style="overflow-x: auto">
-                            <p>Leave Type:</p>
-                			<div class="btn-group btn-group-toggle" data-toggle="buttons">
-                			    <label class="btn btn-outline-info" >
-                				    <input type="radio" name="type" ng-value="'Vacation'" autocomplete="off" ng-model="monetize.type" required> Vacation
-                			    </label>
-                				<label class="btn btn-outline-info" >
-                				    <input type="radio" name="type" ng-value="'Sick'" autocomplete="off" ng-model="monetize.type" required> Sick
-                			    </label>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label>Credits:</label>
                             <div class="input-group">
