@@ -24,8 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <a href="<?=base_url()."employee/add"?>" class="btn btn-primary">Add Employee</a>
         </div>
         <div ng-init='employeeArray =employeesToArray(<?=$employees?>)'>
-    		<div class="row justify-content-between" style="width:100%">
-    			<div class="input-group input-group-lg col-12 col-md-5 col-lg-4 mb-2">
+    		<div class="row justify-content-between">
+    			<div class="input-group input-group-lg col-12 col-md-5 col-lg-4 mb-2" style="max-height:50px">
     				<div class="input-group-prepend">
     					<span class="input-group-text">Search</span>
     				</div>
