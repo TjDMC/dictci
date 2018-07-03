@@ -84,6 +84,59 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		$scope.$broadcast('openLeaveModal',leave);
 	}
 
+    // Monetization
+    $scope.monetize = {
+        date:moment(),
+        credits:0,
+        special:false
+    }
+
+    $scope.submitMonetization = function(){
+        //Validation code goes here
+
+        $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
+        var data = {
+            info:{
+                type:($scope.monetize.special?'Special ':'')+'Monetization: '+$scope.monetize.type,
+                remarks:$scope.monetize.remarks ? $scope.monetize.remarks:'',
+                emp_no:$scope.employee.emp_no
+            },
+            date_ranges:[
+                {
+                    start_date:moment($scope.monetize.date,$rootScope.dateFormat),
+                    end_date:moment($scope.monetize.date,$rootScope.dateFormat),
+                    hours:parseInt($scope.monetize.credits)*8,
+                    minutes:($scope.monetize.credits - parseInt($scope.monetize.credits))*60*8
+                }
+            ]
+        }
+
+        $rootScope.post(
+            $rootScope.baseURL+"/employee/leaveApplication",
+            data,
+            function(response){
+                $rootScope.showCustomModal('Success',response.msg,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                        $window.location.reload();
+                    }
+                );
+            },
+            function(response){
+                $rootScope.showCustomModal('Error',response.msg,
+                    function(){
+                        angular.element('#customModal').modal('hide');
+                    },
+                    function(){
+                    }
+                );
+            }
+        );
+    }
+    // end Monetization
+
     $scope.deleteLeave = function(leaveID){
         $rootScope.showCustomModal(
             'Warning',
@@ -170,7 +223,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 							pLeave=0;
 						}
 					}
-					
+
 					// Temporal Solution for Monetization of Leaves
 					if(leave.info.type.toLowerCase().includes('monet') && !leave.info.type.toLowerCase().includes('special')){
 						monetized=true;
@@ -212,10 +265,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			if(moment(dateStart).month()==0 && fLeave>0 && ( (!monetized && currV>10000) || (monetized && currV>5000) ) ) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
-		
+
 		$scope.creditBalance.vac = (currV/1000).toFixed(3);
 		$scope.creditBalance.sick = (currS/1000).toFixed(3);
-		
+
         return "Vacation: " + (currV/1000).toFixed(3) + " Sick: " + (currS/1000).toFixed(3);// + ( false ? " LWOP: "+lwop:"" );
     }
 
@@ -233,10 +286,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 	$scope.getCreditEquivalent = function(date_range){
 		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
-		
+
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
-		
+
 		while(start<=end){
 			if(start.day()==0 || start.day()==6)
 				credits--;
@@ -244,11 +297,11 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				credits--;
 			start = start.add(1,'day');
 		}
-		
+
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
 	}
-	
+
 	$scope.isHoliday = function(date){
 		// Need a set of holidays
 		return false;
@@ -315,14 +368,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				break;
 		}
 	}
-	
+
 	$scope.terminalBenefit = function(){
 		var salary = $scope.employee.salary;
 		var credits = Number($scope.creditBalance.vac) + Number($scope.creditBalance.sick);
 		var constantFactor = 4.81927; // multiplied by 100
-		
+
 		var tlb = salary * credits * constantFactor;
-		
+
 		return (tlb/100).toFixed(2);
 	}
 });
@@ -508,7 +561,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		if(isModal){
 			data.action = "edit";
 		}
-		
+
 		for(var i=0; i<data.date_ranges.length; i++){
 			if( data.date_ranges[i].start_date=="" || data.date_ranges[i].start_date==null || data.date_ranges[i].end_date=="" || data.date_ranges[i].end_date==null ){
 				$rootScope.showCustomModal('Error','Please fill up date range',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -524,7 +577,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 				}
 			}
 		}
-		
+
 		var credits = $scope.getTotalCredits();
 		//	As per MC 41, s. 1998: Sec 55
 		//	On the assumption of one 'data' per rahabilitation

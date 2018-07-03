@@ -118,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
     <div class="modal fade" id="monetizeLeaveModal" tabindex="-1" role="dialog" aria-labelledby="monetizeLeaveLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="monetizeLeaveLabel">Monetize Leave</h5>
@@ -127,10 +127,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            
+                    <form ng-submit="submitMonetization()">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="specialMonetization" ng-model="monetize.special">
+                            <label class="form-check-label" for="specialMonetization">Special</label>
                         </div>
+                        <div class="dropdown form-group">
+                            <label>Monetization Date:</label>
+                            <a id="monetizationDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                <div class="input-group">
+                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="monetize.date" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <datetimepicker  data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
+                            </ul>
+                        </div>
+                        <div class="form-group" style="overflow-x: auto">
+                            <p>Leave Type:</p>
+                			<div class="btn-group btn-group-toggle" data-toggle="buttons">
+                			    <label class="btn btn-outline-info" >
+                				    <input type="radio" name="type" ng-value="'Vacation'" autocomplete="off" ng-model="monetize.type" required> Vacation
+                			    </label>
+                				<label class="btn btn-outline-info" >
+                				    <input type="radio" name="type" ng-value="'Sick'" autocomplete="off" ng-model="monetize.type" required> Sick
+                			    </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Credits:</label>
+                            <div class="input-group">
+                                <input class="form-control" ng-model="monetize.credits" type="number" min="0" required></input>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Remarks:</label>
+                            <div class="input-group">
+                                <input class="form-control" ng-model="monetize.remarks" type="text"></input>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">

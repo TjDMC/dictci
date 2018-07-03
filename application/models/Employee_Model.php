@@ -124,7 +124,7 @@ class Employee_Model extends MY_Model{
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
             $this->dbforge->add_field("flag int not null default 0");
             $this->dbforge->add_field("leave_id int unsigned not null auto_increment unique");
-            $this->dbforge->add_field("type varchar(20) not null");
+            $this->dbforge->add_field("type varchar(50) not null");
             $this->dbforge->add_field("date_added date not null");
             $this->dbforge->add_field("date_last_edited date not null");
             $this->dbforge->add_field("emp_no char(7) not null");
