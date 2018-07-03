@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<a href="<?= base_url().'calendar' ?>">View Calendar</a>
 						</li>
 						<li>
-							<a href="#">Add Holiday</a>
+							<a href="<?= base_url().'calendar' ?>">Add Holiday</a>
 						</li>
 						<li>
 							<a href="#">Suspended Work</a>
@@ -116,4 +116,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		</div>
 	</nav>
-	<div class="content-wrapper p-5">
+	<div class="content-wrapper p-5" ng-cloak>
