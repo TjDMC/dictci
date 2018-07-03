@@ -6,8 +6,7 @@ class DB extends MY_Controller {
 	//Override
 	public function body()
 	{
-		echo '<p><a href="'.base_url().'/db/initDB"> Initialize Database </a></p>';
-		echo '<p><a href="'.base_url().'/db/populate"> Populate Database </a></p>';
+		$this->load->view('db_init');
 	}
 
 	public function initDB(){

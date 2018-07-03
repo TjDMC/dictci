@@ -53,7 +53,7 @@ if(!isset($employee)){
 
     <?php if (!$isModal) :?>
         <div class="card-header">
-            <h1>Application for Leave</h1>
+            <h2>Application for Leave</h2>
         </div>
     <?php endif ?>
 
@@ -102,7 +102,7 @@ if(!isset($employee)){
     				    <input type="radio" name="type" ng-value="'Others'" ng-model="leave.info.type" autocomplete="off" required> Others
     			    </label>
     			</div>
-    			<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:400px">
+    			<div class="form-group" ng-if="leave.info.type=='Others'" style="max-width:700px">
     				<div class="input-group mt-2">
     					<div class="input-group-prepend">
     						<span class="input-group-text">
@@ -110,6 +110,10 @@ if(!isset($employee)){
     						</span>
     					</div>
     					<input class="form-control" type="text" ng-model="leave.info.type_others" ng-required="leave.info.type=='Others'"/>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Forced Leave'">Forced Leave</button>
+                            <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Special Leave'">Special Leave</button>
+                        </div>
     				</div>
     			</div>
             </div>

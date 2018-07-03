@@ -125,6 +125,8 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("flag int not null default 0");
             $this->dbforge->add_field("leave_id int unsigned not null auto_increment unique");
             $this->dbforge->add_field("type varchar(20) not null");
+            $this->dbforge->add_field("date_added date not null");
+            $this->dbforge->add_field("date_last_edited date not null");
             $this->dbforge->add_field("emp_no char(7) not null");
             $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (leave_id)");
@@ -240,29 +242,11 @@ class Employee_Model extends MY_Model{
 		}
 
 		//Inserting leaves to tables
+        $leaveInfoChecker['date_added']=date('Y-m-d');
+        $leaveInfoChecker['date_last_edited']=date('Y-m-d');
 		$this->db->insert(DB_PREFIX."leaves",$leaveInfoChecker);
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
 	}
-
-    public function addLeave($leaveData){
-        $checker = $this->checkFields($this->leaveFields,$leaveData);
-        if(!is_array($checker)){
-            return $checker;
-        }
-
-        $this->db->where("emp_no",$leaveData["emp_no"]);
-        $res = $this->db->get(DB_PREFIX."employee")->result_array();
-
-        if(count($res)<1){
-            return "Employee does not exist.";
-        }
-
-        $this->db->insert(DB_PREFIX."leaves",$leaveData);
-
-        //TODO check if leave overlaps with other leaves
-
-        return null;
-    }
 
     protected function checkFields($checker,$checkee){
         $result = array();
@@ -327,6 +311,11 @@ class Employee_Model extends MY_Model{
             'field_title'=>'Leave ID',
             'required'=>true
         );
+        $leaveInfoFields['date_added']=array(
+            'field_name'=>'date_added',
+            'field_title'=>'Date Added',
+            'required'=>true
+        );
         $leaveInfoChecker = $this->checkFields($leaveInfoFields,$leaveChecker['info']);
         if(!is_array($leaveInfoChecker)){
             return $leaveInfoChecker;
@@ -363,6 +352,7 @@ class Employee_Model extends MY_Model{
         $this->db->delete(DB_PREFIX.'leaves');
 
         //Insert new records
+        $leaveInfoChecker['date_last_edited']=date('Y-m-d');
         $this->db->insert(DB_PREFIX.'leaves',$leaveInfoChecker);
         $this->db->insert_batch(DB_PREFIX.'leave_date_range',$dateRangeChecker);
     }

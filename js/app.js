@@ -175,6 +175,63 @@ app.controller('admin',function($scope,$rootScope,$window){
 	}
 });
 
+app.controller('init_db',function($http,$scope,$rootScope,$window){
+	$scope.initialize = function(){
+		$http({
+			method: 'GET',
+			url: $rootScope.baseURL+'db/initdb'
+		}).then(function(response){
+			$rootScope.showCustomModal(
+				'Success',
+				'Database initialized Successfully',
+				function(){
+					$window.location.reload();
+				},
+				function(){
+					$window.location.reload();
+				}
+			);
+		},function(response){
+			$rootScope.showCustomModal(
+				'Error',
+				response.msg,
+				function(){
+				},
+				function(){
+				}
+			);
+		});
+	}
+
+	$scope.populate = function(){
+		$http({
+			method: 'GET',
+			url:  $rootScope.baseURL+'db/populate',
+		}).then(function(response){
+			$rootScope.showCustomModal(
+				'Success',
+				'Database populated Successfully',
+				function(){
+					$window.location.reload();
+				},
+				function(){
+					$window.location.reload();
+				}
+			);
+		},function(response){
+			$rootScope.showCustomModal(
+				'Error',
+				response.msg,
+				function(){
+				},
+				function(){
+				}
+			);
+		});
+	}
+});
+
+
 app.filter('employeeSearch', function() {
 	return function(arr,field,query) {
 		if (!query) {
