@@ -92,11 +92,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
 		console.log($scope.monetize.credits);
 		var balance = $scope.computeBal($scope.monetize.date);
-		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 ) ){
-			$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
+		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>balance[0]+balance[1]-5 ) ){
+			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
-		console.log(moment($scope.monetize.date,$rootScope.dateFormat));
         var data = {
             info:{
                 type:($scope.monetize.special?'Special ':'')+'Monetization',

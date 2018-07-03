@@ -48,11 +48,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="form-group" ng-init="employee.vac_leave_bal=0">
                 <label>Vacation Leave Balance: </label>
-                <input class="form-control" type="number" ng-model="employee.vac_leave_bal" required>
+                <input class="form-control" type="number" min=0 step=0.001 ng-model="employee.vac_leave_bal" required>
             </div>
             <div class="form-group" ng-init="employee.sick_leave_bal=0">
                 <label>Sick Leave Balance: </label>
-                <input class="form-control" type="number" ng-model="employee.sick_leave_bal" required>
+                <input class="form-control" type="number" min=0 step=0.001 ng-model="employee.sick_leave_bal" required>
             </div>
             <p>
                 <button class="btn btn-primary" type="Submit">Add</button>
