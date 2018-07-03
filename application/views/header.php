@@ -116,4 +116,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		</div>
 	</nav>
-	<div class="content-wrapper p-5">
+	<div class="content-wrapper p-5" ng-cloak>
