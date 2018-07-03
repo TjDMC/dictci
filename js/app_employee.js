@@ -89,8 +89,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
     $scope.submitMonetization = function(){
         //Validation code goes here
-
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
+		console.log($scope.monetize.credits);
+		var balance = $scope.computeBal($scope.monetize.date);
+		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 ) ){
+			$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
+			return;
+		}
+		console.log(moment($scope.monetize.date,$rootScope.dateFormat));
         var data = {
             info:{
                 type:($scope.monetize.special?'Special ':'')+'Monetization',
@@ -99,8 +105,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
             },
             date_ranges:[
                 {
-                    start_date:moment($scope.monetize.date,$rootScope.dateFormat),
-                    end_date:moment($scope.monetize.date,$rootScope.dateFormat),
+                    start_date:moment($scope.monetize.date,$rootScope.dateFormat).format('YYYY/MM/DD'),
+                    end_date:moment($scope.monetize.date,$rootScope.dateFormat).format('YYYY/MM/DD'),
                     hours:parseInt($scope.monetize.credits)*8,
                     minutes:($scope.monetize.credits - parseInt($scope.monetize.credits))*60*8
                 }
@@ -170,7 +176,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
-		var dateEnd = moment(enDate).clone();
+		var dateEnd = moment(enDate,$rootScope.dateFormat).clone();
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var lwop = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
@@ -290,7 +296,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
 		
-		if(!type.toLowerCase().includes("monet")){
+		if(!type.toLowerCase().includes("monetization")){
 			while(start<=end){
 				if(start.day()==0 || start.day()==6)
 					credits--;
