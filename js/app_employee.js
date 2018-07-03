@@ -161,7 +161,12 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 	
 	$scope.getBalance = function(){
+		var t1 = performance.now();
 		var hold = $scope.computeBal($scope.bal_date);
+		
+		var t2 = performance.now();
+		console.log("Computation took "+(t2-t1)+" milliseconds.")
+		
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
 
@@ -209,11 +214,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 						continue;
 					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range)*1000;
 
+					//	Vacation and Forced Leaves
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 					}
+					//	Sick Leaves
 					if(leave.info.type=="Sick") currS -= creditUsed;
+					//	Special Priviledge Leaves
 					if(leave.info.type.toLowerCase().includes('spl')||leave.info.type.toLowerCase().includes('special')){
 						spLeave -= creditsUsed;
 						if(spLeave<0){
@@ -221,6 +229,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 							spLeave=0;
 						}
 					}
+					//	Parental Leaves	(For Solo Parents)
 					if(leave.info.type.toLowerCase().includes('parental')){
 						pLeave -= creditUsed;
 						if(pLeave<0){
@@ -236,7 +245,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 						if(currV<5000){
 							$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
 							currV=5000;
-						}else{console.log("safe");}
+						}
 					}
 					if(leave.info.type.toLowerCase().includes('monet') && leave.info.type.toLowerCase().includes('special')){
 						monetized=true;
