@@ -317,9 +317,9 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		if(!type.toLowerCase().includes("monetization")){
 			while(start<=end){
-				if(start.day()==0 || start.day()==6)
+				/*if(start.day()==0 || start.day()==6)
 					credits--;
-				else if($scope.isHoliday(start))
+				else*/ if($scope.isHoliday(start))
 					credits--;
 				start = start.add(1,'day');
 			}
