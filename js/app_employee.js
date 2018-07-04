@@ -7,6 +7,18 @@ app.controller('employee_nav',function($scope,$rootScope){
         $scope.employees=employees;
     }
 
+	$scope.employeesToArray = function(employees){
+		var result = [];
+		for(var i = 0 ; i<employees.length ; i++){
+			result.push({
+				emp_no:employees[i].emp_no,
+				emp_name:employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
+				string:employees[i].emp_no+" - "+employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name
+			});
+		}
+		return result;
+	}
+
 	$scope.getDisplayNumber = function(){
         return $scope.filteredEmployees.length - $scope.getBegin() > $scope.limit ? $scope.limit:$scope.filteredEmployees.length-$scope.getBegin();
     }
@@ -20,7 +32,6 @@ app.controller('employee_nav',function($scope,$rootScope){
     }
 
     $scope.getMaxPage = function(){
-        console.log($scope.filteredEmployees.length+" "+$scope.limit);
         var result = $scope.numberToArray($scope.filteredEmployees.length/$scope.limit).length;
         if($scope.page>result){
             $scope.page = result==0?1:result;
@@ -80,7 +91,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		$scope.$broadcast('openLeaveModal',leave);
 	}
 
-    // Monetization
+    /* Monetization */
     $scope.monetize = {
         date:moment(),
         credits:0,
@@ -136,7 +147,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
             }
         );
     }
-    // end Monetization
+    /* end Monetization */
 
     $scope.deleteLeave = function(leaveID){
         $rootScope.showCustomModal(
@@ -454,8 +465,9 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
         }else{
             employee={};
         }
-        $scope.rangeAction(0);
+        $scope.addOrDeleteRange(0);
     }
+
     /*Employee Live Search*/
     $scope.focusedEmployeeIndex = 0;
     $scope.onMouseOver = function(index){
@@ -484,6 +496,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 
 	$scope.$on('openLeaveModal',function(event, leave){
         angular.element('#leaveType'+leave.info.type).addClass('active');
+        //Set css styling for leaves (ng-class not working :c )
         var leaveTypes = ['Vacation','Sick','Maternity','Paternity','Others'];
         var index = leaveTypes.indexOf(leave.info.type);
         if(index>-1){
@@ -521,7 +534,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		return credits;
 	}
 
-	$scope.rangeAction = function(action,index=-1){
+	$scope.addOrDeleteRange = function(action,index=-1){
 		switch(action){
 			case 0://add
 				$scope.leave.date_ranges.push(angular.copy($scope.leaveDateRangeTemplate));

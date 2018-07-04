@@ -129,7 +129,7 @@ if(!isset($employee)){
     					<th>Credits Equivalent</th>
     				</tr>
                     <tr ng-repeat="date_range in leave.date_ranges track by $index">
-                        <td style="width:40px"><button class="btn btn-light" type="button" ng-click="rangeAction(1,$index)"><i class="fas fa-times"></i></button></td>
+                        <td style="width:40px"><button class="btn btn-light" type="button" ng-click="addOrDeleteRange(1,$index)"><i class="fas fa-times"></i></button></td>
                         <td><div class="dropdown" style="min-width:200px;max-width:400px">
                             <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                 <div class="input-group">
@@ -180,7 +180,7 @@ if(!isset($employee)){
     					<td>Total Credits: {{getTotalCredits()|number:3}}</td>
     				</tr>
                 </table>
-    			<button class="btn btn-secondary form-group" type="button" ng-click="rangeAction(0)"><span>Add Range</span></button>
+    			<button class="btn btn-secondary form-group" type="button" ng-click="addOrDeleteRange(0)"><span>Add Range</span></button>
             </div>
 
     		<div class="form-group">
