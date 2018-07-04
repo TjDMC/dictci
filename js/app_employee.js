@@ -44,7 +44,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
-	$scope.creditBalance = {vac:0,sick:0};
+	$scope.terminal_date = '';
+	$scope.lwop
 	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
@@ -208,7 +209,6 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
-			lwop = 0;
 			if(moment(dateStart).month()==1){
 				fLeave=5000;
 				spLeave=3000;
@@ -276,23 +276,22 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				currS = 0;
 			}
 			if(currV<0){// Employee incurring absence without pay
-				console.log(currV);
-				lwop = Math.floor(Math.abs(currV)/1000);
+				lwop += Math.abs(currV)/1000;
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var absent = Math.floor(Math.abs(currV)/500);
 				var rem = Math.floor(Math.abs(currV)%500);
 				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
+				currS += Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 			}else{
 				currV += 1250;
+				currS += 1250;
 			}
-			currS+=1250;
 			dateStart.add(1,'month');
 			if(moment(dateStart).month()==0 && fLeave>0 && ( (!monetized && currV>10000) || monetized ) ) currV = currV-fLeave;
 		}
 		// #computation_for_other_months
-
-		$scope.creditBalance.vac = (currV/1000).toFixed(3);
-		$scope.creditBalance.sick = (currS/1000).toFixed(3);
+		
+		$scope.lwop = lwop;
 
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
@@ -396,13 +395,64 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		}
 	}
 
+	// Chacking difference between the two
 	$scope.terminalBenefit = function(){
+		var t1 = performance.now();
 		var salary = 100*$scope.employee.salary;
-		var credits = Number($scope.creditBalance.vac) + Number($scope.creditBalance.sick);
+		var balance = $scope.computeBal($scope.terminal_date);
+		var credits = Number(balance[0]) + Number(balance[1]);
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
 
+		var t2 = performance.now();
+		console.log(" 1: "+(t2-t1));
+		return (tlb/100).toFixed(2);
+	}
+	
+	$scope.terminalBenefit2 = function(){
+		var t1 = performance.now();
+		
+		//	Credits Earned
+		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
+		
+		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, 'days');
+		var dateEnd = moment($scope.terminal_date,$rootScope.dateFormat);
+		
+		var years = dateEnd.diff(dateStart, 'years');
+		dateEnd.subtract(years,'years');
+		
+		var months = dateEnd.diff(dateStart, 'months');
+		dateEnd.subtract(months,'months');
+		
+		var days = dateEnd.diff(dateStart, 'days');
+		
+		days -= Math.floor($scope.lwop);
+		
+		while(days<0){
+			months--;
+			days += 30;
+		}
+		while(months<0){
+			years--;
+			months += 12;
+		}
+		
+		var leaveEarned = 15*years + 1.25*months + (creditByHalfDay[2*days]/1000);
+		//	#credits_earned
+		
+		//	Credits Used
+		
+		//	#credits_used
+		
+		var credits = 2*leaveEarned;
+		var salary = 100*$scope.employee.salary;
+		var constantFactor = 0.0481927;
+		
+		var tlb = salary * credits * constantFactor;
+		
+		var t2 = performance.now();
+		console.log(" 2: "+(t2-t1));
 		return (tlb/100).toFixed(2);
 	}
 });

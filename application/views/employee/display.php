@@ -24,8 +24,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                 </div>
             </a>
-			<!-- Wala lang muna ito -->
-			<!--<label>Tearminal Leave Benefit: {{terminalBenefit()}}</label>-->
             <ul class="dropdown-menu">
                 <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatBalDate()"></datetimepicker>
             </ul>
@@ -219,7 +217,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </table>
 
                     <div>
-                        computations
+                        computations</br>
+						{{terminalBenefit()}}</br>
+						{{terminalBenefit2()}}
                     </div>
                 </div>
                 <div class="modal-footer">
