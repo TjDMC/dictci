@@ -159,14 +159,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
             'No'
         );
     }
-	
+
 	$scope.getBalance = function(){
 		var t1 = performance.now();
 		var hold = $scope.computeBal($scope.bal_date);
-		
+
 		var t2 = performance.now();
 		console.log("Computation took "+(t2-t1)+" milliseconds.")
-		
+
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
 
@@ -303,7 +303,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
-		
+
 		if(!type.toLowerCase().includes("monetization")){
 			while(start<=end){
 				if(start.day()==0 || start.day()==6)
@@ -495,21 +495,18 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		$scope.leave = leave;
 	});
 
-    var getTotalDays = function(index = -1){
-		if(index==-1){
-			var days = 0;
+    var getTotalDays = function(index){
+        var days =  Math.round(moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date,'days'))+1;
 
-			for(var i = 0 ; i<$scope.leave.date_ranges.length ; i++){
-				if($scope.leave.date_ranges[i].end_date=='' || $scope.leave.date_ranges[i].start_date==''){
-					continue;
-				}
-				days += Math.round((moment($scope.leave.date_ranges[i].end_date).diff($scope.leave.date_ranges[i].start_date))/86400000)+1;
-				days += $scope.leave.date_ranges[i].minutes/(8*60);
-			}
-			return days;
-		}else{
-			return Math.round((moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date))/86400000)+1;
-		}
+        //Removing weekends
+        var startDate = moment($scope.leave.date_ranges[index].start_date).clone();
+        while(startDate.isSameOrBefore($scope.leave.date_ranges[index].end_date,'days')){
+            if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
+                days--;
+            }
+            startDate.add(1,'days');
+        }
+        return days;
     }
 
 	$scope.getTotalCredits = function(){
