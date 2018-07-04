@@ -178,7 +178,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    computations
+                    <table class="table">
+                        <tr>
+                            <th>First Day</th>
+                            <th>Terminal Date</th>
+                            <th>Total Days</th>
+                            <th>Leave Without Pay</th>
+                        </tr>
+                        <tr>
+                            <td>{{employee.first_day}}</td>
+                            <td>
+                                <div class=" dropdown">
+                                    <a id="terminalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                        <div class="input-group">
+                                            <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="terminal_date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <datetimepicker  data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminalDate',minView:'day'}"></datetimepicker>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </table>
+
+                    <table class="table">
+                        <tr>
+                            <th>Credits Earned (Vac:Sick)</th>
+                            <th>Credits Enjoyed (Vac:Sick)</th>
+                        </tr>
+                        <tr>
+                            <td>0:0</td>
+                            <td>0:0</td>
+                        </tr>
+                    </table>
+
+                    <div>
+                        computations
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
