@@ -413,9 +413,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	$scope.terminalBenefit2 = function(){
 		var t1 = performance.now();
 		
+		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 		
-		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat);
+		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, 'days');
 		var dateEnd = moment($scope.terminal_date,$rootScope.dateFormat);
 		
 		var years = dateEnd.diff(dateStart, 'years');
@@ -437,9 +438,12 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			months += 12;
 		}
 		
-		console.log(days);
+		var leaveEarned = 15*years + 1.25*months + (creditByHalfDay[2*days]/1000);
+		//	#credits_earned
 		
-		var leaveEarned = 15*years + 1.25*months + (creditByHalfDay[days]/1000);
+		//	Credits Used
+		
+		//	#credits_used
 		
 		var credits = 2*leaveEarned;
 		var salary = 100*$scope.employee.salary;
