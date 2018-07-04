@@ -9,7 +9,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div class="card-body p-5 mx-auto" style="max-width:1200px">
 		<div>
 
-			<button id="addHoliday" class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Holiday</button>
 			<div id="calendar">
 
 			</div>
@@ -69,16 +68,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
 					<a id="dropdownStartAdd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStart" name="start_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStartAdd" name="start_date" id="fill_start_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-						<datetimepicker data-ng-model="dateRangeStart"
+						<datetimepicker data-ng-model="dateRangeStartAdd"
 										data-datetimepicker-config="{ dropdownSelector: '#dropdownStartAdd', minView:'day', renderOn: 'end-date-changed' }"
-										data-on-set-time="startDateSet()"
+										data-on-set-time="startDateOnSetTime()"
 										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
 					</ul>
 				</div>
@@ -87,23 +86,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<a id="dropdownEndAdd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
 					   href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEnd" name="end_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEndAdd" name="end_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-						<datetimepicker data-ng-model="dateRangeEnd"
+						<datetimepicker data-ng-model="dateRangeEndAdd"
 										data-datetimepicker-config="{ dropdownSelector: '#dropdownEndAdd', minView:'day', renderOn: 'start-date-changed' }"
-										data-on-set-time="endDateSet()"
+										data-on-set-time="endDateOnSetTime()"
 										data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
 					</ul>
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<input type="submit" class="btn btn-primary" value="Add Event">
+				<input type="submit" class="btn btn-primary" style="background-color:#209270" value="Add Event">
 				<?php echo form_close() ?>
 			</div>
 		</div>
@@ -145,36 +144,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>-->
 				<div class="dropdown form-group dropdown-start-parent">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
-					<a id="dropdownStart" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
+					<a id="dropdownStartEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStart" name="start_date" id="start_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStartEd" name="start_date" id="start_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-						<datetimepicker data-ng-model="dateRangeStart"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', minView:'day', renderOn: 'end-date-changed' }"
-										data-on-set-time="startDateSet()"
+						<datetimepicker data-ng-model="dateRangeStartEd"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownStartEdit', minView:'day', renderOn: 'end-date-changed' }"
+										data-on-set-time="startDateOnSetTime()"
 										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
 					</ul>
 				</div>
 				<div class="dropdown form-group dropdown-end-parent">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
-					<a id="dropdownEnd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
-					   href="#">
+					<a id="dropdownEndEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent" href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEnd" name="end_date" id="end_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEndEd" name="end_date" id="end_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
 						</div>
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-						<datetimepicker data-ng-model="dateRangeEnd"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', minView:'day', renderOn: 'start-date-changed' }"
-										data-on-set-time="endDateSet()"
+						<datetimepicker data-ng-model="dateRangeEndEd"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownEndEdit', minView:'day', renderOn: 'start-date-changed' }"
+										data-on-set-time="endDateOnSetTime()"
 										data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
 					</ul>
 				</div>
@@ -188,7 +186,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<input type="submit" class="btn btn-primary" value="Update Event">
+				<input type="submit" class="btn btn-primary" style="background-color:#209270" value="Update Event">
 				<?php echo form_close() ?>
 			</div>
 		</div>
@@ -201,6 +199,20 @@ $(document).ready(function() {
 	var date_last_clicked = null;
 
 	$('#calendar').fullCalendar({
+		header: {
+			left: 'title',
+			center: 'prevYear,nextYear',
+			right: 'today prev,next'
+		},
+		customButton: {
+			prevYear: {
+				
+			}
+		},
+		buttonText: {
+			prevYear: 'PrevYear',
+			nextYear: 'NextYear'
+		},
 		eventSources: [
 		   {
 			events: function(start, end, timezone, callback) {
@@ -221,18 +233,30 @@ $(document).ready(function() {
 			},
 		],
 		eventColor: '#209270',
-	   eventClick: function(event, jsEvent, view) {
-		  $('#name').val(event.title);
-		  $('#description').val(event.description);
-		  $('#start_date').val(moment(event.start).format('YYYY/MM/DD HH:mm'));
-		  if(event.end) {
-			$('#end_date').val(moment(event.end).format('YYYY/MM/DD HH:mm'));
-		  } else {
-			$('#end_date').val(moment(event.start).format('YYYY/MM/DD HH:mm'));
-		  }
-		  $('#event_id').val(event.id);
-		  $('#editModal').modal();
-	   },
+		eventTextColor: '#f6f6f6',
+		displayEventTime: false,
+		eventClick: function(event, jsEvent, view) {
+			$('#name').val(event.title);
+			$('#description').val(event.description);
+			$('#start_date').val(moment(event.start).format('YYYY/MM/DD'));
+			if(event.end) {
+				$('#end_date').val(moment(event.end).format('YYYY/MM/DD'));
+			} else {
+				$('#end_date').val(moment(event.start).format('YYYY/MM/DD'));
+			}
+			$('#event_id').val(event.id);
+			$('#editModal').modal();
+		},
+		eventRender: function (event, element, view) {
+			element.find('.fc-title').append(': '+event.description);
+		},
+		dayClick: function(date, allDay, jsEvent, view) {
+			$(this).css('background-color', '#acecd9');
+			$('#addModal').modal();
+			$('#fill_start_date').val(date.format('YYYY/MM/DD'));
+			$(date_last_clicked).css('background-color', '#f6f6f6');
+			date_last_clicked = this;
+		},
 	});
 });
 </script>

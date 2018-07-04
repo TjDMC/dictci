@@ -28,19 +28,19 @@ class Calendar extends MY_Controller
         $enddt->setTimestamp($end); // Set the date based on timestamp
         $format2 = $enddt->format('Y-m-d');
 
-        $events = $this->calendar_model->get_events($format, 
-            $format2);
+        $events = $this->calendar_model->get_events($format, $format2);
 
         $data_events = array();
 
-        foreach($events->result() as $r) { 
-
+        foreach($events->result() as $r) {
+			$end = date('Y-m-d H:i',strtotime($r->end.'+12 hour'));
+			$start = date('Y-m-d H:i',strtotime($r->start.'+12 hour'));
             $data_events[] = array(
                 "id" => $r->ID,
                 "title" => $r->title,
                 "description" => $r->description,
-                "end" => $r->end,
-                "start" => $r->start
+                "end" => $end,
+                "start" => $start
             );
         }
 

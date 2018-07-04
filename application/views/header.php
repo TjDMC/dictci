@@ -31,6 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <script src="<?= base_url().'js/app.js'?>"></script>
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>
+	<script src="<?= base_url().'js/app_calendar.js'?>"></script>
 
 	<link rel="stylesheet" href="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.css" />
 	<script src="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.js"></script>
