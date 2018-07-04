@@ -8,7 +8,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div class="card-body p-5 mx-auto" style="max-width:1200px">
 		<div>
-
+			
+			<div>
+				<input id="indate" type="text" data-date-time-input="YYYY/MM/DD">
+				<button id="nav">Navigate</button>
+			</div>
 			<div id="calendar">
 
 			</div>
@@ -142,9 +146,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<input type="text" class="form-control" name="end_date" id="end_date">
 					</div>
 				</div>-->
-				<div class="dropdown form-group dropdown-start-parent">
+				<div class="dropdown form-group dropdown-start-parent1">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
-					<a id="dropdownStartEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
+					<a id="dropdownStartEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent1" href="#">
 						<div class="input-group date">
 							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStartEd" name="start_date" id="start_date" autocomplete="off">
 							<div class="input-group-append">
@@ -159,9 +163,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
 					</ul>
 				</div>
-				<div class="dropdown form-group dropdown-end-parent">
+				<div class="dropdown form-group dropdown-end-parent1">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
-					<a id="dropdownEndEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent" href="#">
+					<a id="dropdownEndEdit" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent1" href="#">
 						<div class="input-group date">
 							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEndEd" name="end_date" id="end_date" autocomplete="off">
 							<div class="input-group-append">
@@ -197,24 +201,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $(document).ready(function() {
 
 	var date_last_clicked = null;
-
+	
 	$('#calendar').fullCalendar({
 		header: {
 			left: 'title',
-			center: 'prevYear,nextYear',
+			center: 'custView prevYear,nextYear',
 			right: 'today prev,next'
-		},
-		customButton: {
-			prevYear: {
-				
-			}
 		},
 		buttonText: {
 			prevYear: 'PrevYear',
 			nextYear: 'NextYear'
 		},
 		eventSources: [
-		   {
+		    {
 			events: function(start, end, timezone, callback) {
 				$.ajax({
 					url: '<?php echo base_url() ?>calendar/get_events',
@@ -254,9 +253,14 @@ $(document).ready(function() {
 			$(this).css('background-color', '#acecd9');
 			$('#addModal').modal();
 			$('#fill_start_date').val(date.format('YYYY/MM/DD'));
-			$(date_last_clicked).css('background-color', '#f6f6f6');
+			$(date_last_clicked).css('background-color', '#ffffff');
 			date_last_clicked = this;
 		},
 	});
+	$('#nav').click(function(){
+		$('#calendar').fullCalendar('gotoDate',$('#indate').val());
+		//alert($('#indate').val());
+	});
+	
 });
 </script>
