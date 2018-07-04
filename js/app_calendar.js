@@ -1,13 +1,22 @@
 app.controller('calendar_display',function($scope,$rootScope,$window){
 
-    $scope.view = 1; // 0=year, 1=month, 2=day
     $scope.currentDate = '';
     $scope.calendar;
     $scope.init = function(){
+        $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
     }
 
-    $scope.getCalendar = function(view=1,date = null){
+    $scope.formatCurrentDate = function(){
+        return $scope.currentDate.format('MMMM YYYY');
+    }
+
+    $scope.addMonth = function(x){
+        $scope.currentDate.add(x,'month');
+        $scope.calendar = $scope.getCalendar($scope.currentDate);
+    }
+
+    $scope.getCalendar = function(date = null){
         date = date? moment(date):moment();
 
         if(!date.isValid())
