@@ -186,8 +186,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				The numbers are converted to integer for computational accuracy. Display and saved values are converted back to three(3) decimal places
 		*/
 		// As per MC No. 14, s. 1999
-		var creditByHalfDay = [0,21,42,62,83,104,125,146,167,187,208,229,250,271,292,312,333,354,375,396,417,437,458,479,500,521,542,562,583,604,
-		625,646,667,687,708,729,750,771,792,813,833,854,875,896,917,938,958,979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
+		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
@@ -233,8 +232,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					//	Sick Leaves
 					if(leave.info.type=="Sick") currS -= creditUsed;
 					//	Special Priviledge Leaves
-					if(leave.info.type.toLowerCase().includes('spl')||leave.info.type.toLowerCase().includes('special')){
-						spLeave -= creditsUsed;
+					if( !leave.info.type.toLowerCase().includes('monetization') && (leave.info.type.toLowerCase().includes('spl')||leave.info.type.toLowerCase().includes('special')) ){
+						spLeave -= creditUsed;
 						if(spLeave<0){
 							currV+=spLeave;
 							spLeave=0;
@@ -260,7 +259,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					}
 					if(leave.info.type.toLowerCase().includes('monet') && leave.info.type.toLowerCase().includes('special')){
 						monetized=true;
-						vacation -= creditUsed;
+						currV -= creditUsed;
 						if(currV<5000){
 							currV -= 5000;
 							currS += currV;
@@ -277,6 +276,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				currS = 0;
 			}
 			if(currV<0){// Employee incurring absence without pay
+				console.log(currV);
 				lwop = Math.floor(Math.abs(currV)/1000);
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var absent = Math.floor(Math.abs(currV)/500);
