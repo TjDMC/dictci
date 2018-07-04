@@ -22,11 +22,11 @@ class Calendar extends MY_Controller
 
         $startdt = new DateTime('now'); // setup a local datetime
         $startdt->setTimestamp($start); // Set the date based on timestamp
-        $format = $startdt->format('Y-m-d H:i:s');
+        $format = $startdt->format('Y-m-d');
 
         $enddt = new DateTime('now'); // setup a local datetime
         $enddt->setTimestamp($end); // Set the date based on timestamp
-        $format2 = $enddt->format('Y-m-d H:i:s');
+        $format2 = $enddt->format('Y-m-d');
 
         $events = $this->calendar_model->get_events($format, 
             $format2);
@@ -57,20 +57,20 @@ class Calendar extends MY_Controller
         $end_date = $this->input->post("end_date");
 
         if(!empty($start_date)) {
-            $sd = DateTime::createFromFormat("Y/m/d H:i", $start_date);
-            $start_date = $sd->format('Y-m-d H:i:s');
+            $sd = DateTime::createFromFormat("Y/m/d", $start_date);
+            $start_date = $sd->format('Y-m-d');
             $start_date_timestamp = $sd->getTimestamp();
         } else {
-            $start_date = date("Y-m-d H:i:s", time());
+            $start_date = date("Y-m-d", time());
             $start_date_timestamp = time();
         }
 
         if(!empty($end_date)) {
-            $ed = DateTime::createFromFormat("Y/m/d H:i", $end_date);
-            $end_date = $ed->format('Y-m-d H:i:s');
+            $ed = DateTime::createFromFormat("Y/m/d", $end_date);
+            $end_date = $ed->format('Y-m-d');
             $end_date_timestamp = $ed->getTimestamp();
         } else {
-            $end_date = date("Y-m-d H:i:s", time());
+            $end_date = date("Y-m-d", time());
             $end_date_timestamp = time();
         }
 
@@ -106,20 +106,20 @@ class Calendar extends MY_Controller
         if(!$delete) {
 
             if(!empty($start_date)) {
-                $sd = DateTime::createFromFormat("Y/m/d H:i", $start_date);
-                $start_date = $sd->format('Y-m-d H:i:s');
+                $sd = DateTime::createFromFormat("Y/m/d", $start_date);
+                $start_date = $sd->format('Y-m-d');
                 $start_date_timestamp = $sd->getTimestamp();
             } else {
-                $start_date = date("Y-m-d H:i:s", time());
+                $start_date = date("Y-m-d", time());
                 $start_date_timestamp = time();
             }
 
             if(!empty($end_date)) {
-                $ed = DateTime::createFromFormat("Y/m/d H:i", $end_date);
-                $end_date = $ed->format('Y-m-d H:i:s');
+                $ed = DateTime::createFromFormat("Y/m/d", $end_date);
+                $end_date = $ed->format('Y-m-d');
                 $end_date_timestamp = $ed->getTimestamp();
             } else {
-                $end_date = date("Y-m-d H:i:s", time());
+                $end_date = date("Y-m-d", time());
                 $end_date_timestamp = time();
             }
 

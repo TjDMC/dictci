@@ -67,9 +67,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				</div>-->
 				<div class="dropdown form-group dropdown-start-parent">
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
-					<a id="dropdownStart" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
+					<a id="dropdownStartAdd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm a" data-ng-model="dateRangeStart" name="start_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStart" name="start_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
@@ -77,17 +77,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 						<datetimepicker data-ng-model="dateRangeStart"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-										data-on-set-time="startDateOnSetTime()"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownStartAdd', minView:'day', renderOn: 'end-date-changed' }"
+										data-on-set-time="startDateSet()"
 										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
 					</ul>
 				</div>
 				<div class="dropdown form-group dropdown-end-parent">
 					<label for="p-in" class="col-md-4 label-heading">End Date</label>
-					<a id="dropdownEnd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
+					<a id="dropdownEndAdd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
 					   href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm a" data-ng-model="dateRangeEnd" name="end_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEnd" name="end_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
@@ -95,8 +95,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 						<datetimepicker data-ng-model="dateRangeEnd"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-										data-on-set-time="endDateOnSetTime()"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownEndAdd', minView:'day', renderOn: 'start-date-changed' }"
+										data-on-set-time="endDateSet()"
 										data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
 					</ul>
 				</div>
@@ -147,7 +147,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<label for="p-in" class="col-md-4 label-heading">Start Date</label>
 					<a id="dropdownStart" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-start-parent" href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm a" data-ng-model="dateRangeStart" name="start_date" id="start_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeStart" name="start_date" id="start_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
@@ -155,8 +155,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 						<datetimepicker data-ng-model="dateRangeStart"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed' }"
-										data-on-set-time="startDateOnSetTime()"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownStart', minView:'day', renderOn: 'end-date-changed' }"
+										data-on-set-time="startDateSet()"
 										data-before-render="startDateBeforeRender($dates)"></datetimepicker>
 					</ul>
 				</div>
@@ -165,7 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<a id="dropdownEnd" style="text-decoration:none" role="button" data-toggle="dropdown" data-target=".dropdown-end-parent"
 					   href="#">
 						<div class="input-group date">
-							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD hh:mm a" data-ng-model="dateRangeEnd" name="end_date" id="end_date" autocomplete="off">
+							<input type="text" class="form-control" data-date-time-input="YYYY/MM/DD" data-ng-model="dateRangeEnd" name="end_date" id="end_date" autocomplete="off">
 							<div class="input-group-append">
 		                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 		                    </div>
@@ -173,8 +173,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 						<datetimepicker data-ng-model="dateRangeEnd"
-										data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed' }"
-										data-on-set-time="endDateOnSetTime()"
+										data-datetimepicker-config="{ dropdownSelector: '#dropdownEnd', minView:'day', renderOn: 'start-date-changed' }"
+										data-on-set-time="endDateSet()"
 										data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
 					</ul>
 				</div>

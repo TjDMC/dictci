@@ -13,8 +13,8 @@ class Calendar_Model extends CI_Model
 		$query = "CREATE TABLE IF NOT EXISTS `dict_leaves_calendar_events` (
 			 `ID` Integer PRIMARY KEY AUTO_INCREMENT,
 			 `title` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
-			 `start` datetime NOT NULL,
-			 `end` datetime NOT NULL,
+			 `start` date NOT NULL,
+			 `end` date NOT NULL,
 			 `description` varchar(1000) COLLATE utf8_unicode_ci NOT NULL
 			 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 		$this->db->query($query);
