@@ -42,17 +42,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <table class="table table-bordered calendar">
                 <tr>
-                    <th>Sunday</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
+                    <th class="text-center p-0">Sun</th>
+                    <th class="text-center p-0">Mon</th>
+                    <th class="text-center p-0">Tue</th>
+                    <th class="text-center p-0">Wed</th>
+                    <th class="text-center p-0">Thu</th>
+                    <th class="text-center p-0">Fri</th>
+                    <th class="text-center p-0">Sat</th>
                 </tr>
                 <tr ng-repeat="row in calendar">
-                    <td class="date-cells" ng-repeat="date in row" style="height:110px;width:14%" ng-click="showModal(date)">
-                        <span ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</span>
+                    <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%" ng-click="showModal(date)">
+                        <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</p>
                         <div>
                             <p class="font-italic" ng-repeat="event in date.events">{{event.title}}.</p>
                         </div>
