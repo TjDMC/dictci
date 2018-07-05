@@ -33,7 +33,7 @@ class Calendar_Model extends MY_Model
 		$this->dbforge->add_field("date datetime not null");
 		$this->dbforge->add_field("description varchar(300) not null");
 		$this->dbforge->add_field("is_suspension boolean not null default false");
-		$this->dbforge->create_table(DB_PREFIX.'calendar_events');
+		$this->dbforge->create_table(DB_PREFIX.'calendar_events',true);
 	}
 
 	public function getEvents(){
