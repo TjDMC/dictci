@@ -6,6 +6,7 @@ class Employee extends MY_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->model("employee_model");
+		$this->load->model("calendar_model");
     }
 
     public function body(){
@@ -67,12 +68,16 @@ class Employee extends MY_Controller{
                 $employee = $this->employee_model->getEmployee($employeeNo);
             }
             $employees = $this->employee_model->getEmployees();
+			
+			//	Calendar Events
+			$events = $this->calendar_model->get_all_events();
 
             $this->html(
-                function() use ($employees,$employee){
+                function() use ($employees,$employee,$events){
                     $this->load->view('employee/leave_application',array(
                         "employees"=>json_encode($employees,JSON_HEX_APOS|JSON_HEX_QUOT),
-                        "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT)
+                        "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
+						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT)
                     ));
                 }
             );

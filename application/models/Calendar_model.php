@@ -27,6 +27,10 @@ class Calendar_Model extends CI_Model
             ->where("end <=", $end)
             ->get("dict_leaves_calendar_events");
     }
+	
+	public function get_all_events(){
+		return $this->db->get("dict_leaves_calendar_events")->result_array();
+	}
 
     public function add_event($data) 
     {
