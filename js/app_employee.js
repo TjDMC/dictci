@@ -187,18 +187,19 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		// As per MC No. 14, s. 1999
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 		
-		
-		if(moment(enDate,$rootScope.dateFormat).isSame(moment(enDate,$rootScope.dateFormat).endOf('month'), 'day')) console.log("SAME");
+		var lastDay = moment(enDate,$rootScope.dateFormat);
+		var isDistinctEnd = true;
+		if(lastDay.isSame(lastDay.clone().endOf('month'), 'day')){ isDistinctEnd=false;}
 		
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
-		var dateEnd = moment(enDate,$rootScope.dateFormat).endOf('month').clone();
+		var dateEnd = lastDay.clone().endOf('month');
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 		var lwop = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		var monetized = false;
 		// First Month Computation
-		if(dateStart.isSame(dateStart.clone().startOf('month'))  &&  currV!=0){ }else{
+		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')  &&  currV!=0){ }else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
 			var firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
@@ -211,7 +212,6 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
 			if(moment(dateStart).month()==0){
-				console.log("in");
 				fLeave=5000;
 				spLeave=3000;
 				pLeave=7000;
@@ -274,8 +274,15 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var absent = Math.floor(Math.abs(currV)/500);
 				var rem = Math.floor(Math.abs(currV)%500);
+				if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
+					absent += Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'));
+				}
 				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 				currS += Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
+			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
+				var lastCredit = Math.floor(creditByHalfDay[60-Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
+				currV += lastCredit;
+				currS += lastCredit;
 			}else{
 				currV += 1250;
 				currS += 1250;
@@ -392,8 +399,10 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	// Chacking difference between the two
 	$scope.terminalBenefit = function(){
 		var salary = 100*$scope.employee.salary;
+		//console.log("\nStart\n");
 		var balance = $scope.computeBal($scope.terminal_date);
-		console.log(balance);
+		//console.log(balance);
+		//console.log("\nEnd\n");
 		var credits = Number(balance[0]) + Number(balance[1]);
 		var constantFactor = 0.0481927;
 
