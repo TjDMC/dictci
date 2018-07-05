@@ -55,7 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <input class="form-control" type="number" min=0 step=0.001 ng-model="employee.sick_leave_bal" required>
             </div>
             <p>
-                <button class="btn btn-primary" type="Submit">Add</button>
+                <button ng-disabled="busy" class="btn btn-primary" type="Submit">Add</button>
             </p>
         </form>
     </div>

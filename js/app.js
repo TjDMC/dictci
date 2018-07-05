@@ -36,7 +36,7 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 		angular.element('#customModal').modal('show');
 	}
 	$rootScope.post = function(url,inputData,onSuccess,onFailure){
-
+		$rootScope.busy = true;
 		var data = {
 			'data':inputData,
 			[$rootScope.csrf.tokenName]:$rootScope.csrf.hash
@@ -56,6 +56,7 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 			}else{
 				onFailure(responseData);
 			}
+			$rootScope.busy = false;
 		}
 
 		error = function(response){
