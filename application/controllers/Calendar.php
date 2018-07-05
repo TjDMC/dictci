@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Calendar extends MY_Controller 
+class Calendar extends MY_Controller
 {
 
     public function __construct() {
@@ -9,12 +9,13 @@ class Calendar extends MY_Controller
 		$this->load->helper('form');
     }
 
-    public function body() 
+    public function body()
     {
-        $this->load->view("calendar/index.php", array());
+        //$this->load->view("calendar/index.php", array());
+        $this->load->view("calendar/base.php");
     }
 
-    public function get_events() 
+    public function get_events()
     {
         // Our Stand and End Dates
         $start = $this->input->get("start");
@@ -48,7 +49,7 @@ class Calendar extends MY_Controller
         exit();
     }
 
-    public function add_event() 
+    public function add_event()
     {
         /* Our calendar data */
         $name = $this->input->post("name");
@@ -85,7 +86,7 @@ class Calendar extends MY_Controller
         redirect(site_url("calendar"));
     }
 
-    public function edit_event() 
+    public function edit_event()
     {
         $eventid = intval($this->input->post("eventid"));
         $event = $this->calendar_model->get_event($eventid);
@@ -130,7 +131,7 @@ class Calendar extends MY_Controller
                 "end" => $end_date,
                 )
             );
-            
+
         } else {
             $this->calendar_model->delete_event($eventid);
         }
