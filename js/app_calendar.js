@@ -5,34 +5,40 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         events:[
             {
                 date:date1,
-                events:[event1,event2,...]
-            },
-            {
-                date:date2,
-                events:[event1,event2,...]
-            }...
+                title:title1,
+                type:type1,
+                description:description1
+                id:id1 (optional)
+            },...
         ]
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
     */
     $scope.events = [
         {
             date:'2018-01-01',
-            events:['New Year']
+            title:'New Year',
+            description:'New Year',
+            is_suspension:false
         },
         {
             date:'2018-06-18',
-            events:['Intern boiis came to town','Oh yeah baby']
+            title:'Best day ever',
+            description:'Intern boiis came to town',
+            is_suspension:true
         }
     ];
+
     $scope.calendar;
-    $scope.selectedDate ={};
 
     $scope.init = function(events){
+        $scope.events = events;
         $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
-        //$scope.events = events;
+        console.log(events);
     }
 
+    $scope.modalDate = {};
+    $scope.modalEvent = {};
     $scope.moment = moment;
 
     $scope.formatCurrentDate = function(){
@@ -50,35 +56,33 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
     }
 
     $scope.showModal = function(dateEvent){ //dateEvent are moment objects that have their respective events associated to them
-        $scope.selectedDate = dateEvent;
-        if(!$scope.selectedDate.events){
-            $scope.selectedDate.events = [];
-        }
+        $scope.modalDate = dateEvent;
+
         angular.element('#eventModal').modal('show');
     }
 
-    $scope.addOrDeleteEvent = function(events,index=-1){
-
-        for(var i = 0 ; i<events.length ; i++){
-            for(var j = 0 ; j<events.length ; j++){
-                if(i!==j&&events[i]===events[j]){
-                    $rootScope.showCustomModal('Warning','Please make sure there are no duplicate events',function(){angular.element('#customModal').modal('hide');},function(){},'Ok');
-                    return;
-                }
+    $scope.addEvent = function(){
+        $scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
+        var url = $rootScope.baseURL+'calendar/actionevents/add';
+        if($scope.modalEvent.hasOwnProperty('id'))
+            url = $rootScope.baseURL+'calendar/actionevents/edit';
+        $rootScope.post(
+            url,
+            $scope.modalEvent,
+            function(response){
+                $rootScope.showCustomModal('Success','Added/Edited Successfully',function(){$window.location.reload();},function(){});
+            },
+            function(response){
+                $rootScope.showCustomModal('Error',response.msg,function(){angular.element('#customModal').modal('hide');});
             }
-        }
+        );
+    }
 
-        //delete if index is not -1
-        console.log(events);
+    $scope.showAddOrEditModal = function(dateEvent,index=-1){
         if(index>-1){
-            events.splice(index,1);
-        }else{
-            if(events.indexOf('')>-1){
-                $rootScope.showCustomModal('Warning','Please fill-in the events first before adding more.',function(){angular.element('#customModal').modal('hide');},function(){},'Ok');
-                return;
-            }
-            events.push('');
+            $scope.modalEvent = angular.copy(dateEvent.events[index]);
         }
+        angular.element('#addOrEditEventModal').modal('show');
     }
 
     $scope.getCalendar = function(date = null){
@@ -124,9 +128,10 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         //Associate events to dates
         for(var i = 0 ; i<calendar.length ; i++){
             for(var j = 0 ; j < calendar[i].length ; j++){
+                calendar[i][j].events = [];
                 for(var k = 0 ; k<$scope.events.length ; k++){
-                    if(calendar[i][j].isSame(moment($scope.events[k].date))){
-                        calendar[i][j].events = $scope.events[k].events;
+                    if(calendar[i][j].isSame(moment($scope.events[k].date),'day')){
+                        calendar[i][j].events.push($scope.events[k]);
                     }
                 }
             }
