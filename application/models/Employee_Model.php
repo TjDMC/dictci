@@ -251,24 +251,6 @@ class Employee_Model extends MY_Model{
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
 	}
 
-    protected function checkFields($checker,$checkee){
-        $result = array();
-        foreach($checker as $field){
-            if($field['required']){
-                if(!isset($checkee[$field['field_name']])){
-                    return "Please fill-in the required field ".$field['field_title'];
-                }else{
-                    $result[$field['field_name']]=$checkee[$field['field_name']];
-                }
-            }else{
-                if(isset($checkee[$field['field_name']])){
-                    $result[$field['field_name']]=$checkee[$field['field_name']];
-                }
-            }
-        }
-        return $result;
-    }
-
     public function getEmployee($employeeNo){
         $this->db->where("emp_no",$employeeNo);
         $res = $this->db->get(DB_PREFIX."employee")->result_array();

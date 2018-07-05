@@ -68,16 +68,15 @@ class Employee extends MY_Controller{
                 $employee = $this->employee_model->getEmployee($employeeNo);
             }
             $employees = $this->employee_model->getEmployees();
-			
-			//	Calendar Events
-			$events = $this->calendar_model->get_all_events();
 
+			//	Calendar Events
+			$events = $this->calendar_model->getEvents();
             $this->html(
                 function() use ($employees,$employee,$events){
                     $this->load->view('employee/leave_application',array(
                         "employees"=>json_encode($employees,JSON_HEX_APOS|JSON_HEX_QUOT),
                         "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
-						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT)
+						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
                     ));
                 }
             );

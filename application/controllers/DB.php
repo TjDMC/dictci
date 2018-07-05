@@ -15,6 +15,8 @@ class DB extends MY_Controller {
 			return;
 		}
 		$this->load->model("employee_model");
+		$this->load->model("calendar_model");
+		$this->calendar_model->createTable();
 		$this->employee_model->createTable();
 	}
 

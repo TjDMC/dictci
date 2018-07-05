@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </style>
 
-<div class="card" ng-controller="calendar_display" ng-init="init(null)">
+<div class="card" ng-controller="calendar_display" ng-init='init(<?=isset($events)?$events:''?>)'>
     <div class="card-header">
         <h2>Calendar</h2>
     </div>
@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <td class="date-cells" ng-repeat="date in row" style="height:110px;width:14%" ng-click="showModal(date)">
                         <span ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</span>
                         <div>
-                            <p class="font-italic" ng-repeat="event in date.events">{{event}}.</p>
+                            <p class="font-italic" ng-repeat="event in date.events">{{event.title}}.</p>
                         </div>
                     </td>
                 </tr>
@@ -63,34 +63,68 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
     <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="eventLabel">Add/Edit Event</h5>
+                    <h5 class="modal-title" id="eventLabel">Events for {{modalDate.format('MMMM DD, YYYY')}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+
+                    <div class='table-responsive'>
+                        <table class="table">
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Is Suspension</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="event in modalDate.events">
+                                <td>{{event.title}}</td>
+                                <td>{{event.description}}</td>
+                                <td>{{event.is_suspension}}</td>
+                                <td><button class="btn btn-info" type="button" ng-click="showAddOrEditModal(modalDate,$index)">Edit</button></td>
+                            </tr>
+                        </table>
+                        <p ng-if="modalDate.events.length===0" class="font-italic">
+                            No events here.
+                        </p>
+                    </div>
+                    <button class="btn btn-info" type="button" ng-click="showAddOrEditModal(modalDate)">Add Event</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addOrEditEventModal" tabindex="-1" role="dialog" aria-labelledby="addOrEditEventLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventLabel">Add/Edit event for {{modalDate.format('MMMM DD, YYYY')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="addEvent()">
                         <div class="form-group">
-                            <p>Date: <span class="font-weight-bold">{{selectedDate.format('MMMM DD, YYYY')}}</span></p>
+                            <input id="isSuspension" type="checkbox" ng-model="modalEvent.is_suspension"></input>
+                            <label for="isSuspension">Suspension</label>
                         </div>
                         <div class="form-group">
-                            <p>Events:</p>
-                            <div class="form-group" ng-repeat="event in selectedDate.events track by $index">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">#{{$index+1}}</span>
-                                    </div>
-                                    <input type="text" class="form-control" ng-model="selectedDate.events[$index]"></input>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-dark" ng-click="addOrDeleteEvent(selectedDate.events,$index)"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-info" type="button" ng-click="addOrDeleteEvent(selectedDate.events)">Add Event</button>
+                            <label>Title</label>
+                            <input class="form-control" type="text" ng-model="modalEvent.title"></input>
                         </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" ng-model="modalEvent.description"></textarea>
+                        </div>
+                        <button class="btn btn-info" type="submit">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">
