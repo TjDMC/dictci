@@ -78,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <tr>
                                 <th>Title</th>
                                 <th>Description</th>
-                                <th>Is Suspension</th>
+                                <th>Suspension</th>
                                 <th></th>
                             </tr>
                             <tr ng-repeat="event in modalDate.events">
@@ -111,7 +111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form ng-submit="addEvent()">
+                    <form ng-submit="actionEvent(modalEvent.hasOwnProperty('id')?'edit':'add')">
                         <div class="form-group">
                             <input id="isSuspension" type="checkbox" ng-model="modalEvent.is_suspension"></input>
                             <label for="isSuspension">Suspension</label>
@@ -125,6 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <textarea class="form-control" ng-model="modalEvent.description"></textarea>
                         </div>
                         <button class="btn btn-info" type="submit">Submit</button>
+                        <button class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
                     </form>
                 </div>
                 <div class="modal-footer">
