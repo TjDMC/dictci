@@ -125,7 +125,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <textarea class="form-control" ng-model="modalEvent.description"></textarea>
                         </div>
                         <button class="btn btn-info" type="submit">Submit</button>
-                        <button class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
+                        <button ng-if="modalEvent.hasOwnProperty('id')" class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
                     </form>
                 </div>
                 <div class="modal-footer">
