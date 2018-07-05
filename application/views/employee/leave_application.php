@@ -191,7 +191,7 @@ if(!isset($events)){
                 <input class="form-control" type="textarea" ng-model="leave.info.remarks"/>
     		</div>
             <p>
-    			<button type="submit" class="btn btn-primary">Submit</button>
+    			<button ng-disabled="busy" type="submit" class="btn btn-primary">Submit</button>
                 <?php if ($isModal) :?>
                     <button type="button" ng-click="deleteLeave(leave.info.leave_id)" class="btn btn-danger">Delete Leave</button>
                 <?php endif?>

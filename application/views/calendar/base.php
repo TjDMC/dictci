@@ -42,17 +42,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <table class="table table-bordered calendar">
                 <tr>
-                    <th>Sunday</th>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
+                    <th class="text-center p-0">Sun</th>
+                    <th class="text-center p-0">Mon</th>
+                    <th class="text-center p-0">Tue</th>
+                    <th class="text-center p-0">Wed</th>
+                    <th class="text-center p-0">Thu</th>
+                    <th class="text-center p-0">Fri</th>
+                    <th class="text-center p-0">Sat</th>
                 </tr>
                 <tr ng-repeat="row in calendar">
-                    <td class="date-cells" ng-repeat="date in row" style="height:110px;width:14%" ng-click="showModal(date)">
-                        <span ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</span>
+                    <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%" ng-click="showModal(date)">
+                        <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</p>
                         <div>
                             <p class="font-italic" ng-repeat="event in date.events">{{event.title}}.</p>
                         </div>
@@ -78,13 +78,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <tr>
                                 <th>Title</th>
                                 <th>Description</th>
-                                <th>Is Suspension</th>
+                                <th>Suspension</th>
                                 <th></th>
                             </tr>
                             <tr ng-repeat="event in modalDate.events">
                                 <td>{{event.title}}</td>
                                 <td>{{event.description}}</td>
-                                <td>{{event.is_suspension}}</td>
+                                <td>{{event.is_suspension?'true':'false'}}</td>
                                 <td><button class="btn btn-info" type="button" ng-click="showAddOrEditModal(modalDate,$index)">Edit</button></td>
                             </tr>
                         </table>
@@ -111,20 +111,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form ng-submit="addEvent()">
+                    <form ng-submit="actionEvent(modalEvent.hasOwnProperty('id')?'edit':'add')">
                         <div class="form-group">
                             <input id="isSuspension" type="checkbox" ng-model="modalEvent.is_suspension"></input>
                             <label for="isSuspension">Suspension</label>
                         </div>
                         <div class="form-group">
                             <label>Title</label>
-                            <input class="form-control" type="text" ng-model="modalEvent.title"></input>
+                            <input class="form-control" type="text" ng-model="modalEvent.title" required></input>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
                             <textarea class="form-control" ng-model="modalEvent.description"></textarea>
                         </div>
-                        <button class="btn btn-info" type="submit">Submit</button>
+                        <button ng-disabled="busy" class="btn btn-info" type="submit">Submit</button>
+                        <button ng-disabled="busy" ng-if="modalEvent.hasOwnProperty('id')" class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -10,10 +10,14 @@ function parse_custom_post($json)
     return $data;
 }
 
-function custom_response($isSuccessful,$msg){
-	echo json_encode(array(
+function custom_response($isSuccessful,$msg,$custom=array()){
+    $response = array(
 		'success'=>$isSuccessful,
 		'msg'=>$msg
-	));
+	);
+    foreach($custom as $key=>$c){
+        $response[$key]=$c;
+    }
+	echo json_encode($response);
 	die();
 }

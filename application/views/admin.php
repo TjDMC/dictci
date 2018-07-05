@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <label>New Username:</label>
                         <input ng-model="username" class="form-control" type="text" required>
                     </div>
-                    <button class="btn btn-primary btn-block" type="submit">Change Username</button>
+                    <button ng-disabled="busy" class="btn btn-primary btn-block" type="submit">Change Username</button>
                 </form>
                 <form class="col-md-3 col-xs-12" ng-submit="confirmPassword('password')">
                     <div class="form-group">
@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <label>Enter Password Again:</label>
                         <input ng-model="newPassword2" class="form-control" type="password" required>
                     </div>
-                    <button class="btn btn-primary btn-block" type="submit">Change Password</button>
+                    <button ng-disabled="busy" class="btn btn-primary btn-block" type="submit">Change Password</button>
                 </form>
             </div>
         </div>
@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <label>Please confirm by entering your old password:</label>
                             <input ng-model="password" class="form-control" type="password" required>
                         </div>
-                        <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                        <button ng-disabled="busy" class="btn btn-primary btn-block" type="submit">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">

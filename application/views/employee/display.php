@@ -156,7 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input class="form-control" ng-model="monetize.remarks" type="text"></input>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        <button ng-disabled="busy" type="submit" class="btn btn-primary btn-block">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">

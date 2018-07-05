@@ -118,7 +118,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("primary key (emp_no)");
-            $this->dbforge->create_table(DB_PREFIX."employee");
+            $this->dbforge->create_table(DB_PREFIX."employee",true);
         }
 
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
@@ -131,7 +131,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (leave_id)");
             $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
-            $this->dbforge->create_table(DB_PREFIX."leaves");
+            $this->dbforge->create_table(DB_PREFIX."leaves",true);
         }
 
 		if(!$this->db->table_exists(DB_PREFIX."leave_date_range")){
@@ -141,7 +141,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("hours int not null default 0");
             $this->dbforge->add_field("minutes int not null default 0");
             $this->dbforge->add_field("foreign key (leave_id) references ".DB_PREFIX."leaves(leave_id) on update cascade on delete cascade");
-            $this->dbforge->create_table(DB_PREFIX."leave_date_range");
+            $this->dbforge->create_table(DB_PREFIX."leave_date_range",true);
         }
     }
 
