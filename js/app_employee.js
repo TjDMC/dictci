@@ -561,7 +561,6 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 
     var getTotalDays = function(index){
         var days =  Math.round(moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date,'days'))+1;
-		console.log($scope.leave);
 		if($scope.leave.info.type=="Maternity") return days;
         //Removing weekends and holidays
         var startDate = moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).clone();
@@ -571,7 +570,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
             }else{
 				var events = $scope.events;
 				for(var i=0;i<events.length;i++){
-					if( startDate.isSameOrAfter(moment(new Date(events[i].start),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].end),$rootScope.dateFormat),'day') )
+					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') )
 						days--;
 				}
 			}
