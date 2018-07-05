@@ -70,19 +70,30 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         var url='';
         var succMsg='';
         var data = $scope.modalEvent;
+        var succFunction = function(response){};
         switch(action){
             case 'add':
                 url = $rootScope.baseURL+'calendar/actionevents/add';
                 succMsg = 'Added event successfully.';
+                succFunction = function(response){
+                    $scope.modalEvent.id = response.id;
+                    cache.date.events.push($scope.modalEvent);
+                }
                 break;
             case 'edit':
                 url = $rootScope.baseURL+'calendar/actionevents/edit';
                 succMsg = 'Edited event successfully.';
+                succFunction = function(response){
+                    cache.date.events[cache.index] = $scope.modalEvent;
+                }
                 break;
             case 'delete':
                 url = $rootScope.baseURL+'calendar/actionevents/delete';
                 succMsg = 'Event deleted.';
                 data = $scope.modalEvent.id;
+                succFunction = function(response){
+                    cache.date.events.splice(cache.index,1);
+                }
                 break;
             default:
                 return;
@@ -93,11 +104,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
             data,
             function(response){
                 $rootScope.showCustomModal('Success',succMsg,function(){
-                    if(action=='delete'){
-                        cache.date.events.splice([cache.index],1);
-                    }else{
-                        cache.date.events[cache.index] = $scope.modalEvent;
-                    }
+                    succFunction(response);
                     angular.element('#customModal').modal('hide');
                     angular.element('#addOrEditEventModal').modal('hide');
                 },function(){});
@@ -109,10 +116,14 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
     }
 
     $scope.showAddOrEditModal = function(dateEvent,index=-1){
+        $scope.modalEvent = {};
+        cache.date = dateEvent;
+        cache.index = index;
         if(index>-1){
             $scope.modalEvent = angular.copy(dateEvent.events[index]);
-            cache.date = dateEvent;
-            cache.index = index;
+        }
+        if(!$scope.modalEvent.hasOwnProperty('suspension')){
+            $scope.modalEvent.is_suspension = false;
         }
         angular.element('#addOrEditEventModal').modal('show');
     }

@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <tr ng-repeat="event in modalDate.events">
                                 <td>{{event.title}}</td>
                                 <td>{{event.description}}</td>
-                                <td>{{event.is_suspension}}</td>
+                                <td>{{event.is_suspension?'true':'false'}}</td>
                                 <td><button class="btn btn-info" type="button" ng-click="showAddOrEditModal(modalDate,$index)">Edit</button></td>
                             </tr>
                         </table>

@@ -41,8 +41,13 @@ class Calendar_Model extends MY_Model
 	}
 
 	public function addEvent($eventData){
+		//get next id
+		$nextID = $this->db->query("SHOW TABLE STATUS LIKE '".DB_PREFIX."calendar_events'")->result_array()[0]["Auto_increment"];
+
 		$checker = $this->checkFields($this->eventFields,$eventData);
 		$this->db->insert(DB_PREFIX.'calendar_events',$checker);
+
+		return $nextID;
 	}
 
 	public function editEvent($eventData){
