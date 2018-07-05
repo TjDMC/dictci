@@ -118,7 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="form-group">
                             <label>Title</label>
-                            <input class="form-control" type="text" ng-model="modalEvent.title"></input>
+                            <input class="form-control" type="text" ng-model="modalEvent.title" required></input>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
