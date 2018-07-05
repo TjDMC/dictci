@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 	<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="min-width:800px;max-width:1000px" role="document">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="leaveModelLabel">Edit Leave</h5>

@@ -57,7 +57,7 @@ if(!isset($employee)){
         </div>
     <?php endif ?>
 
-    <div <?=!$isModal?'class="card-body p-4"':''?> <?php if($isModal) :?> style="overflow-y:auto; overflow-x:auto" <?php endif ?>>
+    <div <?=!$isModal?'class="card-body p-4"':''?>>
         <form ng-submit="submit(<?=$isModal?'true':'false'?>)" autocomplete="off">
             <?php if(!$isModal) :?>
 
