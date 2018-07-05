@@ -10,6 +10,9 @@ if(!isset($employees)){
 if(!isset($employee)){
     $employee= '""';
 }
+if(!isset($events)){
+    $events= '""';
+}
 ?><!DOCTYPE html>
 
 <script>
@@ -49,7 +52,7 @@ if(!isset($employee)){
 }
 </style>
 
-<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>)' <?=!$isModal?'class="card"':''?>>
+<div ng-controller="leave_application" ng-init='init(<?=$employees?>,<?=$employee?>,<?=$events?>)' <?=!$isModal?'class="card"':''?>>
 
     <?php if (!$isModal) :?>
         <div class="card-header">

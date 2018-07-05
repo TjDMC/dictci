@@ -495,6 +495,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
         info:{},
         date_ranges:[]
     }
+	$scope.events = [];
 
 	$scope.leaveDateRangeTemplate = {
 		start_date:'',
@@ -503,7 +504,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		minutes:0
 	};
 
-    $scope.init = function(employees="",employee=null){
+    $scope.init = function(employees="",employee=null,events=""){
         $scope.employees = employees==""?$scope.employees:employees;
         for(var i = 0 ; i<$scope.employees.length ; i++){
             var currEmployee = $scope.employees[i];
@@ -516,6 +517,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
             employee={};
         }
         $scope.addOrDeleteRange(0);
+		$scope.events = events==""?$scope.events:events;
+		console.log(events);
     }
 
     /*Employee Live Search*/
@@ -560,13 +563,19 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 
     var getTotalDays = function(index){
         var days =  Math.round(moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date,'days'))+1;
-
-        //Removing weekends
-        var startDate = moment($scope.leave.date_ranges[index].start_date).clone();
+		
+        //Removing weekends and holidays
+        var startDate = moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).clone();
         while(startDate.isSameOrBefore($scope.leave.date_ranges[index].end_date,'days')){
             if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
                 days--;
-            }
+            }else{
+				var events = $scope.events;
+				for(var i=0;i<events.length;i++){
+					if( startDate.isSameOrAfter(moment(new Date(events[i].start),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].end),$rootScope.dateFormat),'day') )
+						days--;
+				}
+			}
             startDate.add(1,'days');
         }
         return days;
