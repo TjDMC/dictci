@@ -518,7 +518,6 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
         }
         $scope.addOrDeleteRange(0);
 		$scope.events = events==""?$scope.events:events;
-		console.log(events);
     }
 
     /*Employee Live Search*/
@@ -563,7 +562,8 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 
     var getTotalDays = function(index){
         var days =  Math.round(moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date,'days'))+1;
-		
+		console.log($scope.leave);
+		if($scope.leave.info.type=="Maternity") return days;
         //Removing weekends and holidays
         var startDate = moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).clone();
         while(startDate.isSameOrBefore($scope.leave.date_ranges[index].end_date,'days')){
