@@ -33,9 +33,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>
 	<script src="<?= base_url().'js/app_calendar.js'?>"></script>
 
-	<link rel="stylesheet" href="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.css" />
-	<script src="<?php echo base_url() ?>scripts/fullcalendar/fullcalendar.min.js"></script>
-	<script src="<?php echo base_url() ?>scripts/fullcalendar/gcal.js"></script>
 	<script>
 		console.log("%c STOP! ","color: red; background-color: black; font-size: 100px; font-weight: bold");
 		console.log("%cThis feature is meant for developers' use only.","font-size: 30px");

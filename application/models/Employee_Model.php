@@ -79,6 +79,11 @@ class Employee_Model extends MY_Model{
             "field_name"=>"remarks",
             "field_title"=>"Remarks",
             "required"=>false
+        ),
+        array(
+            "field_name"=>"is_without_pay",
+            "field_title"=>"Without Pay?",
+            "required"=>true
         )
     );
 
@@ -125,6 +130,7 @@ class Employee_Model extends MY_Model{
             $this->dbforge->add_field("flag int not null default 0");
             $this->dbforge->add_field("leave_id int unsigned not null auto_increment unique");
             $this->dbforge->add_field("type varchar(50) not null");
+            $this->dbforge->add_field("is_without_pay boolean not null default false");
             $this->dbforge->add_field("date_added date not null");
             $this->dbforge->add_field("date_last_edited date not null");
             $this->dbforge->add_field("emp_no char(7) not null");
@@ -231,6 +237,7 @@ class Employee_Model extends MY_Model{
                 $this->db->from(DB_PREFIX.'leaves');
                 $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
                 $this->db->not_like(DB_PREFIX.'leaves.type','Monetization'); //don't include monetization leaves
+                $this->db->not_like(DB_PREFIX.'leaves.type','Undertime'); //don't include undertime leaves
                 $this->db->where("start_date <=",$checker['end_date']);
                 $this->db->where("end_date >=",$checker['start_date']);
                 $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
@@ -322,6 +329,7 @@ class Employee_Model extends MY_Model{
                 $this->db->where("emp_no",$leaveInfoChecker['emp_no']);
                 $this->db->where(DB_PREFIX."leaves.leave_id !=",intval($leaveInfoChecker['leave_id']));
                 $this->db->not_like(DB_PREFIX.'leaves.type','Monetization'); //don't include monetization leaves
+                $this->db->not_like(DB_PREFIX.'leaves.type','Undertime'); //don't include undertime leaves
                 $this->db->where("start_date <=",$checker['end_date']);
                 $this->db->where("end_date >=",$checker['start_date']);
                 $this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');

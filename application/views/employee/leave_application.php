@@ -116,9 +116,16 @@ if(!isset($events)){
                         <div class="input-group-append">
                             <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Forced Leave'">Forced Leave</button>
                             <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Special Leave'">Special Leave</button>
+                            <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Undertime'">Undertime</button>
                         </div>
     				</div>
     			</div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input pull-right" type="checkbox" id="withoutPay" ng-model="leave.info.is_without_pay"></input>
+                    <label class="form-check-label" for="withoutPay">Without Pay</label>
+                </div>
             </div>
             <div class="table-responsive">
                 <label>Date Ranges: </label>
