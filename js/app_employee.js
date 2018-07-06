@@ -211,7 +211,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		var monetized = false;
 		// First Month Computation
-		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')  &&  currV!=0){ }else{
+		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')  &&  currV!=0 && currS!=0){ }else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
 			var firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
@@ -445,7 +445,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	}
 
 	$scope.terminalBenefit2 = function(){
-
+		console.log("Start");
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
@@ -453,10 +453,11 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var dateEnd = moment($scope.terminal_date,$rootScope.dateFormat);
 
 		var years = dateEnd.diff(dateStart, 'years');
-		dateEnd.subtract(years,'years');
+		dateStart.add(years,'years');
 
 		var months = dateEnd.diff(dateStart, 'months');
-		dateEnd.subtract(months,'months');
+		dateStart.add(months,'months');
+		console.log(months);
 
 		var days = dateEnd.diff(dateStart, 'days');
 
@@ -470,6 +471,9 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			years--;
 			months += 12;
 		}
+		
+		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
+		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
 		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[2*days];
 		//	#credits_earned
@@ -487,13 +491,13 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		}
 		//	#credits_used
 
-		var credits = 2*leaveEarned;
+		var credits = 2*leaveEarned + (currV + currS);
 		credits -= creditsUsed;
 		var salary = 100*$scope.employee.salary;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-
+		console.log("End");
 		return (tlb/100000).toFixed(2);
 	}
 });
