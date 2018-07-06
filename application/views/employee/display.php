@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.minutes}}</td>
-    						<td>{{getDeductedCredits(leave.info.type,date_range)}}</td>
+    						<td>{{getDeductedCredits(leave.info.type,date_range,leave.info.is_without_pay)}}</td>
     					</tr>
     				</tbody>
 

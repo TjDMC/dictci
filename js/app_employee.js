@@ -45,7 +45,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     $scope.leaves = [];
     $scope.bal_date = '';
 	$scope.terminal_date = '';
-	$scope.lwop
+	$scope.lwop = [];
 	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.computations = {
         vacation:[/*{amount:number,remarks:'',date:date}*/],
@@ -208,7 +208,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 		var dateEnd = lastDay.clone().endOf('month');
 		var dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
-		var lwop = 0; // Leave Without Pay
+		var lwop = 0, wopCtr = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		var monetized = false;
 		// First Month Computation
@@ -232,6 +232,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				pLeave=7000;
 				monetized=false;
 			}
+			var mLWOP = 0;
 			for(var i=0;i<$scope.leaves.length;i++){
 				var leave = $scope.leaves[i];
 				for(var j=0;j<leave.date_ranges.length;j++){
@@ -239,7 +240,15 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range)*1000;
-
+					
+					if(leave.info.is_without_pay){
+						if(leave.info.type=="Sick")
+							lwop += creditUsed;
+						else
+							mLWOP += creditUsed;
+						continue;
+					}
+					
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						//	Vacation and Forced Leaves
 						currV -= creditUsed;
@@ -299,20 +308,25 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				currS = 0;
 
 			}
-			if(currV<0){// Employee incurring absence without pay
-				lwop += Math.abs(currV)/1000;
+			if(currV<0 || mLWOP>0){// Employee incurring absence without pay
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
-				var absent = Math.floor(Math.abs(currV)/500);
-				var rem = Math.floor(Math.abs(currV)%500);
+				var notPresent = mLWOP;
+				if(currV<0){
+					notPresent += Math.abs(currV);
+					wopCtr += Math.abs(currV);
+				}
+				var absent = Math.floor(notPresent/500);
+				var rem = Math.floor(notPresent%500);
+				lwop += notPresent;
 				if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
-					absent += Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'));
+					absent += 2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'));
 				}
                 $scope.computations.vacation.push({amount:-currV+Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),remarks:'Absence without pay'});
                 $scope.computations.sick.push({amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),remarks:'Absence without pay'});
 				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 				currS += Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
-				var lastCredit = Math.floor(creditByHalfDay[60-Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
+				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
                 $scope.computations.vacation.push({amount:lastCredit,remarks:'Last Credit'});
                 $scope.computations.sick.push({amount:lastCredit,remarks:'Last Credit'});
 				currV += lastCredit;
@@ -330,7 +344,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			dateStart.add(1,'month');
 		}
 		// #computation_for_other_months
-		$scope.lwop = lwop;
+		$scope.lwop[0] = lwop/1000;
+		$scope.lwop[1] = wopCtr/1000;
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
 
@@ -339,8 +354,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         $scope.balance = $scope.getBalance();
     }
 
-    $scope.getDeductedCredits = function(type,date_range){
-		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
+    $scope.getDeductedCredits = function(type,date_range,withoutPay){
+		if(!withoutPay && (type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime')){
 			return $scope.getCreditEquivalent(type,date_range);
 		}else{
 			return 0;
@@ -356,7 +371,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		minutes = minutes%60;
 		var credits = Math.floor(hours/8);
 		hours = hours%8;
-		credits = (HDayEquiv[hours] + MDayEquiv[minutes]).toFixed(3);
+		credits += Number((HDayEquiv[hours] + MDayEquiv[minutes]).toFixed(3));
 
 		// +date_range.minutes/(60*8)
 
@@ -453,6 +468,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
+		console.log(credits);
+		console.log("huhu");
 
 		return (tlb/100).toFixed(2);
 	}
@@ -474,7 +491,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
 		var days = dateEnd.diff(dateStart, 'days');
 
-		days -= Math.floor($scope.lwop);
+		days -= Math.floor($scope.lwop[0]);
 
 		while(days<0){
 			months--;
@@ -497,11 +514,12 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			var leave = $scope.leaves[i];
 			for(var j=0;j<leave.date_ranges.length;j++){
 				var range = leave.date_ranges[j];
-				if(moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
+				if(moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat)) && !leave.info.is_without_pay){
 					creditsUsed += range.hours*125 + range.minutes*125/60;		// Nasasama sa bilang yung mga without pay: dapat hindi
 				}
 			}
 		}
+		creditsUsed -= $scope.lwop[1]*1000;
 		//	#credits_used
 
 		var credits = 2*leaveEarned + (currV + currS);
@@ -510,6 +528,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
+		console.log(credits);
 		console.log("End");
 		return (tlb/100000).toFixed(2);
 	}
