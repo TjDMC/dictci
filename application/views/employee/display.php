@@ -12,21 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p>First Day: {{employee.first_day}}</p>
 
         <div class="dropdown form-group" style="max-width:400px">
-            <p>Leave Credits Balance: {{getBalance()}} <button class="btn btn-light" type="button" ng-click="showComputationsModal()"><i class="fas fa-calculator"></i></button></p>
-            <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">As of: </span>
-                    </div>
-                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="bal_date">
-                    <div class="input-group-append">
-                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                    </div>
-                </div>
-            </a>
-            <ul class="dropdown-menu">
-                <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="formatBalDate()"></datetimepicker>
-            </ul>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="balance=getBalance()">Leave Credits Balance</button>
         </div>
 
 
@@ -134,6 +120,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <td>{{com.date}}</td>
                             </tr>
                         </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="computeBalModal" tabindex="-1" role="dialog" aria-labelledby="computeBalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="computeBalModalLabel">Credits</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="dropdown form-group"  style="max-width:500px">
+                        <p>Leave Credits Balance: {{balance}}</p>
+                        <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">As of: </span>
+                                </div>
+                                <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="bal_date">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
+                        </ul>
                     </div>
                 </div>
                 <div class="modal-footer">

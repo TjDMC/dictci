@@ -71,6 +71,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				var date_range = leave.date_ranges[j];
 				date_range.start_date = moment(date_range.start_date).format($rootScope.dateFormat);
 				date_range.end_date = moment(date_range.end_date).format($rootScope.dateFormat);
+                date_range.credits = parseFloat((date_range.hours/8+  (date_range.minutes==30?0.062:date_range.minutes/(60*8))  ).toFixed(3));
 			}
         }
 
@@ -333,8 +334,9 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
 
-    $scope.formatBalDate = function(){
+    $scope.balDateSet = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
+        $scope.balance = $scope.getBalance();
     }
 
     $scope.getDeductedCredits = function(type,date_range){
@@ -355,7 +357,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var credits = Math.floor(hours/8);
 		hours = hours%8;
 		credits = (HDayEquiv[hours] + MDayEquiv[minutes]).toFixed(3);
-		
+
 		// +date_range.minutes/(60*8)
 
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
@@ -642,8 +644,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			if($scope.leave.date_ranges[i].end_date=='' || $scope.leave.date_ranges[i].start_date==''){
 				continue;
 			}
-			credits += $scope.leave.date_ranges[i].hours/8;
-			credits += $scope.leave.date_ranges[i].minutes/(8*60);
+			credits += $scope.leave.date_ranges[i].credits;
 		}
 		return credits;
 	}
@@ -659,7 +660,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
                 break;
             case 'time':
                 credits = date_range.hours/8;
-                credits += date_range.minutes/(8*60);
+                credits = date_range.minutes == 30 ? credits+0.062:credits+date_range.minutes/(8*60);
                 break;
             default:
                 return;

@@ -169,7 +169,8 @@ if(!isset($events)){
                         </div></td>
                         <td>
                             <div class="input-group">
-                                <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-init="date_range.credits = date_range.hours/8+date_range.minutes/(60*8) | number:3" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
+
+                                <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
                             </div>
     					</td>
                         <td style="max-width:200px">
