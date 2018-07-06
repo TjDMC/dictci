@@ -13,20 +13,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         ]
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
     */
-    $scope.events = [
-        {
-            date:'2018-01-01',
-            title:'New Year',
-            description:'New Year',
-            is_suspension:false
-        },
-        {
-            date:'2018-06-18',
-            title:'Best day ever',
-            description:'Intern boiis came to town',
-            is_suspension:true
-        }
-    ];
+    $scope.events = [];
 
     $scope.calendar;
 
@@ -122,7 +109,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         if(index>-1){
             $scope.modalEvent = angular.copy(dateEvent.events[index]);
         }
-        if(!$scope.modalEvent.hasOwnProperty('suspension')){
+        if(!$scope.modalEvent.hasOwnProperty('is_suspension')){
             $scope.modalEvent.is_suspension = false;
         }
         angular.element('#addOrEditEventModal').modal('show');

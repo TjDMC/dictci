@@ -176,7 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">
                     <form ng-submit="submitMonetization()">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="specialMonetization" ng-model="monetize.special">
+                            <input class="form-check-input" type="checkbox" ng-true-value=1 ng-false-value=0 id="specialMonetization" ng-model="monetize.special">
                             <label class="form-check-label" for="specialMonetization">Special</label>
                         </div>
                         <div class="dropdown form-group">

@@ -77,6 +77,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         $scope.sick_bal_date = moment().endOf("month");
         $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
+        console.log(leaves);
     }
 
 	$scope.openModal = function(index){
@@ -473,7 +474,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			years--;
 			months += 12;
 		}
-		
+
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 

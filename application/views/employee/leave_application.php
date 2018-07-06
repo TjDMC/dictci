@@ -123,8 +123,9 @@ if(!isset($events)){
             </div>
             <div class="form-group">
                 <div class="form-check">
-                    <input class="form-check-input pull-right" type="checkbox" id="withoutPay" ng-model="leave.info.is_without_pay"></input>
-                    <label class="form-check-label" for="withoutPay">Without Pay</label>
+                    <input class="form-check-input" ng-true-value=1 ng-false-value=0 type="checkbox" id="withoutPay" ng-model="leave.info.is_without_pay"></input>
+                    <input id="isSuspension" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_suspension"></input>
+                    <label class="form-check-label" for="withoutPay">Without Pay{{leave.info}}</label>
                 </div>
             </div>
             <div class="table-responsive">
