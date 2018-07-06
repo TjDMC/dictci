@@ -105,28 +105,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Vacation</p>
-                    <table class="table">
-                        <tr>
-                            <th>Amount</th>
-                            <th>Remarks</th>
-                        </tr>
-                        <tr ng-repeat="com in computationsCopy.vacation">
-                            <td>{{com.amount/1000}}</td>
-                            <td>{{com.remarks}}</td>
-                        </tr>
-                    </table>
-                    <p>Sick</p>
-                    <table class="table">
-                        <tr>
-                            <th>Amount</th>
-                            <th>Remarks</th>
-                        </tr>
-                        <tr ng-repeat="com in computationsCopy.sick">
-                            <td>{{com.amount/1000}}</td>
-                            <td>{{com.remarks}}</td>
-                        </tr>
-                    </table>
+                    <div class="table-responsive">
+                        <p>Vacation</p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Amount</th>
+                                <th>Remarks</th>
+                                <th>Date</th>
+                            </tr>
+                            <tr ng-repeat="com in computationsCopy.vacation">
+                                <td>{{com.amount/1000}}</td>
+                                <td>{{com.remarks}}</td>
+                                <td>{{com.date}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-responsive">
+                        <p>Sick</p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Amount</th>
+                                <th>Remarks</th>
+                                <th>Date</th>
+                            </tr>
+                            <tr ng-repeat="com in computationsCopy.sick">
+                                <td>{{com.amount/1000}}</td>
+                                <td>{{com.remarks}}</td>
+                                <td>{{com.date}}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
