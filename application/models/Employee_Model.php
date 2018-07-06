@@ -83,7 +83,7 @@ class Employee_Model extends MY_Model{
         array(
             "field_name"=>"is_without_pay",
             "field_title"=>"Without Pay?",
-            "required"=>true
+            "required"=>false
         )
     );
 
