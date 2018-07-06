@@ -71,7 +71,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				var date_range = leave.date_ranges[j];
 				date_range.start_date = moment(date_range.start_date).format($rootScope.dateFormat);
 				date_range.end_date = moment(date_range.end_date).format($rootScope.dateFormat);
-                date_range.credits = parseFloat((date_range.hours/8+  (date_range.minutes==30?0.062:date_range.minutes/(60*8))  ).toFixed(3));
+                date_range.credits = parseFloat((date_range.hours/8+ $rootScope.minutesToCredits(date_range.minutes) ).toFixed(3));
 			}
         }
 
@@ -674,12 +674,12 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
         var credits = date_range.credits;
         switch(type){
             case 'credits':
-                hours = parseInt(date_range.credits*8);
-                minutes = Math.round((date_range.credits*8-hours)*60);
+                hours = parseInt(credits*8);
+                minutes = $rootScope.creditsToMinutes(credits);
                 break;
             case 'time':
-                credits = date_range.hours/8;
-                credits = date_range.minutes == 30 ? credits+0.062:credits+date_range.minutes/(8*60);
+                credits = hours/8;
+                credits += $rootScope.minutesToCredits(minutes);
                 break;
             default:
                 return;
