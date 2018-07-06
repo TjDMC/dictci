@@ -10,6 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p>Employee No: {{employee.emp_no}}</p>
         <p>Name: {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
         <p>First Day: {{employee.first_day}}</p>
+        <p>Initial Credits: Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
 
         <div class="dropdown form-group" style="max-width:400px">
             <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="balance=getBalance()">Leave Credits Balance</button>
