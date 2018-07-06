@@ -1,0 +1,78 @@
+---
+CHECKLIST
+---
+leave credit computations
+	-suspension of work
+	-optimization (?)
+	-visualization 
+	
+terminal leave benefits
+	
+layouting and printing of forms
+
+leave application
+	-make completely modal
+	-rename to 'leave records'
+	-rename 'employee' model to 'employee leaves'
+	
+documentation
+
+external employee database (deployment)
+
+infographics
+	-charts
+	-statistics
+	
+---	
+Activity Plan
+---
+
+Softwares Used:
+-GitHub Desktop
+-XAMPP
+	- Apache
+	- MySQL
+-Atom
+-Notepadd++
+-Google Chrome
+
+Equipment:
+-Desktop PC - 1 unit
+-Mouse - 1 unit
+-Keyboard - 1 unit
+-Monitor - 1 unit
+
+June 18, 2018 - June 22, 2018
+	-Orientation
+	-Workstation setup
+	-Website framework setup
+	
+June 25, 2018 - June 29, 2018
+	-Website Development
+	
+July 02, 2018 - July 06, 2018
+	-Website Development
+	-Prototype 1 Testing
+	
+July 09, 2018 - July 14, 2018
+	-Website Development
+	-Prototype 2 Testing
+	-Test Deployment
+	
+July 16, 2018 - July 20, 2018
+	-Deployment
+	-Integration with external employees table
+	-Bug-fixing
+	-Polishing
+	-Optimizations
+	-Documentation
+	
+July 23, 2018 - July 27, 2018
+	-Bug-fixing
+	-Polishing
+	-Optimizations
+	-Documentation
+	-Signing of certificates (?)
+	
+July 30, 2018 - July 31, 2018
+	-Signing of certificates
