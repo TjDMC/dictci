@@ -48,7 +48,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 	$scope.lwop
 	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.computations = {
-        vacation:[/*{amount:number,remarks:''}*/],
+        vacation:[/*{amount:number,remarks:'',date:date}*/],
         sick:[]
     };
     $scope.computationsCopy = {};
@@ -183,7 +183,6 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 
 	$scope.getBalance = function(){
-
         $scope.computations = {vacation:[],sick:[]};
 		var t1 = performance.now();
 		var hold = $scope.computeBal($scope.bal_date);
@@ -216,8 +215,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			var firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
-            $scope.computations.vacation.push({amount:firstMC,remarks:'First month computation'});
-            $scope.computations.sick.push({amount:firstMC,remarks:'First month computation'});
+            $scope.computations.vacation.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
+            $scope.computations.sick.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
 			dateStart.add(1,'month');
 		}
 		// #first_month_computation
@@ -243,7 +242,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 						//	Vacation and Forced Leaves
 						currV -= creditUsed;
 						fLeave -= creditUsed;
-                        $scope.computations.vacation.push({amount:-creditUsed,remarks:'Vacation and Forced Leaves'});
+                        $scope.computations.vacation.push({amount:-creditUsed,remarks:'Vacation and Forced Leaves',date:range.start_date+'-'+range.end_date});
 					}else if(leave.info.type=="Sick"){
 						//	Sick Leaves
 						currS -= creditUsed;
@@ -265,8 +264,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
                                     $scope.computations.sick.push({amount:currV,remarks:'Monetization'});
                                 }
 							}
-							currV=5000;
                             $scope.computations.vacation.push({amount:-currV+5000,remarks:'Monetization'});
+							currV=5000;
 						}
 						// #temporal_solution_for_monetization_of_leaves
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
@@ -289,11 +288,12 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				}
 			}
 			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
+                $scope.computations.vacation.push({amount:currS,remarks:'Absent due to sickness and out of sick leave'});
+                $scope.computations.sick.push({amount:-currS,remarks:'Absent due to sickness and out of sick leave'});
 				currV += currS;
 				fLeave += currS;
 				currS = 0;
-                $scope.computations.vacation.push({amount:currS,remarks:'Absent due to sickness and out of sick leave'});
-                $scope.computations.sick.push({amount:-currS,remarks:'Absent due to sickness and out of sick leave'});
+
 			}
 			if(currV<0){// Employee incurring absence without pay
 				lwop += Math.abs(currV)/1000;
@@ -303,21 +303,21 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 				if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 					absent += Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'));
 				}
-				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
-				currS += Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
                 $scope.computations.vacation.push({amount:-currV+Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),remarks:'Absence without pay'});
                 $scope.computations.sick.push({amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),remarks:'Absence without pay'});
+				currV = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
+				currS += Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
-				currV += lastCredit;
-				currS += lastCredit;
                 $scope.computations.vacation.push({amount:lastCredit,remarks:'Last Credit'});
                 $scope.computations.sick.push({amount:lastCredit,remarks:'Last Credit'});
+				currV += lastCredit;
+				currS += lastCredit;
 			}else{
 				currV += 1250;
 				currS += 1250;
-                $scope.computations.vacation.push({amount:1250,remarks:'Accumulation'});
-                $scope.computations.sick.push({amount:1250,remarks:'Accumulation'});
+                $scope.computations.vacation.push({amount:1250,remarks:'Accumulation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
+                $scope.computations.sick.push({amount:1250,remarks:'Accumulation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
 			}
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) ){
                 currV = currV-fLeave;
