@@ -56,7 +56,7 @@ if(!isset($events)){
 
     <?php if (!$isModal) :?>
         <div class="card-header">
-            <h2>Application for Leave</h2>
+            <h2>Application for Leave<span ng-if="employee.emp_no">:</span> <a ng-if="employee.emp_no" href="<?=base_url()?>employee/display/{{employee.emp_no}}">{{employee.emp_no}}</a></h2>
         </div>
     <?php endif ?>
 
