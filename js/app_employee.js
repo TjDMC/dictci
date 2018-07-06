@@ -640,6 +640,27 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		return credits;
 	}
 
+    $scope.updateCredits = function(date_range,type){
+        var hours = date_range.hours;
+        var minutes = date_range.minutes;
+        var credits = date_range.credits;
+        switch(type){
+            case 'credits':
+                hours = parseInt(date_range.credits*8);
+                minutes = Math.round((date_range.credits*8-hours)*60);
+                break;
+            case 'time':
+                credits = date_range.hours/8;
+                credits += date_range.minutes/(8*60);
+                break;
+            default:
+                return;
+        }
+        date_range.hours = hours;
+        date_range.minutes = minutes;
+        date_range.credits = parseFloat(credits.toFixed(3));
+    }
+
 	$scope.addOrDeleteRange = function(action,index=-1){
 		switch(action){
 			case 0://add
@@ -666,6 +687,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		}
         $scope.$broadcast('startDateSet');
 		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
+        $scope.updateCredits($scope.leave.date_ranges[index],'time');
     }
 
 	$scope.endDateSet = function(index){
@@ -673,6 +695,7 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			$scope.leave.date_ranges[index].start_date = $scope.leave.date_ranges[index].end_date;
 		}
 		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
+        $scope.updateCredits($scope.leave.date_ranges[index],'time');
 	}
 
     $scope.endDateRender = function($view,$dates,index){

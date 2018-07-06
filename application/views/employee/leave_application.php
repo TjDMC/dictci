@@ -134,9 +134,9 @@ if(!isset($events)){
     					<th></th>
     					<th>From</th>
     					<th>To</th>
+                        <th>Credits</th>
     					<th>Hours</th>
     					<th>Minutes</th>
-    					<th>Credits Equivalent</th>
     				</tr>
                     <tr ng-repeat="date_range in leave.date_ranges track by $index">
                         <td style="width:40px"><button class="btn btn-light" type="button" ng-click="addOrDeleteRange(1,$index)"><i class="fas fa-times"></i></button></td>
@@ -167,19 +167,22 @@ if(!isset($events)){
                                 <datetimepicker data-before-render="endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day',renderOn:'startDateSet' }" data-on-set-time="endDateSet($index)"></datetimepicker>
                             </ul>
                         </div></td>
+                        <td>
+                            <div class="input-group">
+                                <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-init="date_range.credits = date_range.hours/8+date_range.minutes/(60*8) | number:3" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
+                            </div>
+    					</td>
                         <td style="max-width:200px">
                             <div class="input-group">
-                                <input class="form-control" min="0" step="1" type="number" ng-model="date_range.hours" ng-disabled="!date_range.start_date" required>
+                                <input class="form-control" min="0" step="1" type="number" ng-change="updateCredits(date_range,'time')" ng-model="date_range.hours" ng-disabled="!date_range.start_date" required>
                             </div>
                         </td>
                         <td style="max-width:200px;margin-left:10px">
                             <div class="input-group">
-                                <input class="form-control" min="0" step="1" type="number" ng-model="date_range.minutes" ng-disabled="!date_range.start_date" required>
+                                <input class="form-control" min="0" step="1" type="number" ng-change="updateCredits(date_range,'time')" ng-model="date_range.minutes" ng-disabled="!date_range.start_date" required>
                             </div>
                         </td>
-    					<td>
-    						<span>{{date_range.hours/8+date_range.minutes/(60*8) | number:3}}</span>
-    					</td>
+
                     </tr>
                     <tr>
     					<td></td>
