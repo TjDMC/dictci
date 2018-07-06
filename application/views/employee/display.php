@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p>First Day: {{employee.first_day}}</p>
 
         <div class="dropdown form-group" style="max-width:400px">
-            <label>Leave Credits Balance: {{getBalance()}}</label>
+            <p>Leave Credits Balance: {{getBalance()}} <button class="btn btn-light" type="button" ng-click="showComputationsModal()"><i class="fas fa-calculator"></i></button></p>
             <a id="vacBalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -94,6 +94,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="computationsModal" tabindex="-1" role="dialog" aria-labelledby="computationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="computationsModalLabel">Computations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Vacation</p>
+                    <table class="table">
+                        <tr>
+                            <th>Amount</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr ng-repeat="com in computationsCopy.vacation">
+                            <td>{{com.amount/1000}}</td>
+                            <td>{{com.remarks}}</td>
+                        </tr>
+                    </table>
+                    <p>Sick</p>
+                    <table class="table">
+                        <tr>
+                            <th>Amount</th>
+                            <th>Remarks</th>
+                        </tr>
+                        <tr ng-repeat="com in computationsCopy.sick">
+                            <td>{{com.amount/1000}}</td>
+                            <td>{{com.remarks}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
