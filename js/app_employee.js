@@ -337,7 +337,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 
     $scope.getDeductedCredits = function(type,date_range){
-		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')){
+		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
 			return $scope.getCreditEquivalent(type,date_range);
 		}else{
 			return 0;
@@ -345,16 +345,24 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 
 	$scope.getCreditEquivalent = function(type,date_range){
-		var credits = (date_range.hours/8+date_range.minutes/(60*8)).toFixed(3);
+		var HDayEquiv = [0,0.125,0.250,0.375,0.500,0.625,0.750,0.875,1.000];
+		var MDayEquiv = [0.000,0.002,0.004,0.006,0.008,0.010,0.012,0.015,0.017,0.019,0.021,0.023,0.025,0.027,0.029,0.031,0.033,0.035,0.037,0.040,0.042,0.044,0.046,0.048,0.050,0.052,0.054,0.056,0.058,0.060,0.062,0.065,0.067,0.069,0.071,0.073,0.075,0.077,0.079,0.081,0.083,0.085,0.087,0.090,0.092,0.094,0.096,0.098,0.100,0.102,0.104,0.106,0.108,0.110,0.112,0.115,0.117,0.119,0.121,0.123,0.125];
+		var hours = date_range.hours;
+		var minutes = date_range.minutes;
+		hours += Math.floor(minutes/60);
+		minutes = minutes%60;
+		var credits = Math.floor(hours/8);
+		hours = hours%8;
+		credits = (HDayEquiv[hours] + MDayEquiv[minutes]).toFixed(3);
+		
+		// +date_range.minutes/(60*8)
 
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
 
 		if(!type.toLowerCase().includes("monetization")){
 			while(start<=end){
-				/*if(start.day()==0 || start.day()==6)
-					credits--;
-				else*/ if($scope.isHoliday(start))
+				if($scope.isHoliday(start))
 					credits--;
 				start = start.add(1,'day');
 			}
