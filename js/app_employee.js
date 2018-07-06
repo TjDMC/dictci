@@ -243,6 +243,8 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
                         $scope.computations.vacation.push({amount:-creditUsed,remarks:'Vacation and Forced Leaves',date:range.start_date+'-'+range.end_date});
+					}else if(leave.info.type=="Undertime"){
+						currV -= creditUsed;
 					}else if(leave.info.type=="Sick"){
 						//	Sick Leaves
 						currS -= creditUsed;
