@@ -231,7 +231,7 @@ class Employee_Model extends MY_Model{
 				return $checker;
 			}
 
-            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false){
+            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false && strpos(strtolower($leaveInfoChecker['type']),'undertime')===false){
                 //Check for date conflicts
                 $this->db->select("*");
                 $this->db->from(DB_PREFIX.'leaves');
@@ -322,7 +322,7 @@ class Employee_Model extends MY_Model{
                 return $checker;
             }
 
-            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false){
+            if(strpos(strtolower($leaveInfoChecker['type']),'monetization')===false && strpos(strtolower($leaveInfoChecker['type']),'undertime')===false){
                 //Check for conflicting dates
                 $this->db->select("*");
                 $this->db->from(DB_PREFIX.'leaves');
