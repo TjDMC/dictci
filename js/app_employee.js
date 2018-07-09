@@ -61,6 +61,15 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         };
         $scope.bal_date = moment().subtract(1,'month').endOf('month');
         //Sort Leaves
+        $scope.sortAndFormatLeaves();
+
+        $scope.sick_bal_date = moment().endOf("month");
+        $scope.vac_bal_date = moment().endOf("month");
+        $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
+        console.log(leaves);
+    }
+
+    $scope.sortAndFormatLeaves = function(format){
         $scope.leaves.sort(function(a,b){
             return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
         });
@@ -74,29 +83,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
                 date_range.credits = parseFloat((date_range.hours/8+ $rootScope.minutesToCredits(date_range.minutes) ).toFixed(3));
 			}
         }
-
-        $scope.sick_bal_date = moment().endOf("month");
-        $scope.vac_bal_date = moment().endOf("month");
-        $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
-        console.log(leaves);
     }
 
-	$scope.openModal = function(index){
-		angular.element('#editLeaveModal').modal('show');
-        var leave = angular.copy($scope.leaves[index]);
-        for(var i = 0 ; i<leave.date_ranges.length ; i++){
-            var date_range =  leave.date_ranges[i];
-            date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
-            date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
-            date_range.hours = parseInt(date_range.hours);
-            date_range.minutes = parseInt(date_range.minutes);
+	$scope.openLeaveModal = function(index = null){
+        if(index == null){
+    		$scope.$broadcast('openLeaveModal',null);
+        }else{
+            $scope.$broadcast('openLeaveModal',$scope.leaves[index]);
         }
-        var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
-        if(validLeaves.indexOf(leave.info.type)==-1){
-            leave.info.type_others = leave.info.type;
-            leave.info.type = 'Others';
-        }
-		$scope.$broadcast('openLeaveModal',leave);
 	}
 
     /* Monetization */
@@ -132,7 +126,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
         }
 
         $rootScope.post(
-            $rootScope.baseURL+"/employee/leaveApplication",
+            $rootScope.baseURL+"/employee/leaverecords",
             data,
             function(response){
                 $rootScope.showCustomModal('Success',response.msg,
@@ -240,7 +234,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
 					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range)*1000;
-					
+
 					if(leave.info.is_without_pay){
 						if(leave.info.type=="Sick")
 							lwop += creditUsed;
@@ -248,7 +242,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 							mLWOP += creditUsed;
 						continue;
 					}
-					
+
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory') ){
 						//	Vacation and Forced Leaves
 						currV -= creditUsed;
@@ -355,6 +349,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
     }
 
     $scope.getDeductedCredits = function(type,date_range,withoutPay){
+        console.log(type);
 		if(!withoutPay && (type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime')){
 			return $scope.getCreditEquivalent(type,date_range);
 		}else{
@@ -565,14 +560,16 @@ app.controller('employee_add',function($scope,$rootScope,$window){
     }
 })
 
-app.controller('leave_application',function($scope,$rootScope,$window,$filter,employeeSearchFilter){
-    $scope.employees = [];
-    $scope.employee = {};
+
+/*Requires parent controller: employee_display*/
+
+app.controller('employee_leave_records',function($scope,$rootScope){
     $scope.leave = {
         info:{},
         date_ranges:[]
     }
 	$scope.events = [];
+    var leaveReference = null; //Stores reference to the original leave (used when openning the leave modal)
 
 	$scope.leaveDateRangeTemplate = {
 		start_date:'',
@@ -581,60 +578,48 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 		minutes:0
 	};
 
-    $scope.init = function(employees="",employee=null,events=""){
-        $scope.employees = employees==""?$scope.employees:employees;
-        for(var i = 0 ; i<$scope.employees.length ; i++){
-            var currEmployee = $scope.employees[i];
-            currEmployee.name = currEmployee.last_name+", "+currEmployee.first_name+" "+currEmployee.middle_name;
-        }
-        if(employee!=null){
-            $scope.employee = employee;
-            $scope.employee.name = employee.last_name+", "+employee.first_name+" "+employee.middle_name;
-        }else{
-            employee={};
-        }
+    $scope.init = function(events=null){
         $scope.addOrDeleteRange(0);
-		$scope.events = events==""?$scope.events:events;
+		$scope.events = events===null?$scope.events:events;
     }
 
-    /*Employee Live Search*/
-    $scope.focusedEmployeeIndex = 0;
-    $scope.onMouseOver = function(index){
-        $scope.focusedEmployeeIndex = index;
-    }
-    $scope.onKeyDown = function($event,filterArg){
-        if ($event.keyCode == 38)
-            $scope.focusedEmployeeIndex=$scope.focusedEmployeeIndex-1<0?0:$scope.focusedEmployeeIndex-1;
-        else if ($event.keyCode == 40)
-            $scope.focusedEmployeeIndex=$scope.focusedEmployeeIndex+1>=$scope.employees.length?$scope.employees.length-1:$scope.focusedEmployeeIndex+1;
-        else if($event.keyCode == 13){
-            $scope.setEmployee($filter('employeeSearch')($scope.employees,filterArg,$scope.employee[filterArg])[$scope.focusedEmployeeIndex].emp_no);
-            $event.preventDefault();
+	$scope.$on('openLeaveModal',function(event, leave=null){
+        $scope.leave = {
+            info:{},
+            date_ranges:[]
         }
-    }
-    $scope.setEmployee = function(emp_no){
-        for(var i = 0 ; i<$scope.employees.length ; i++){
-            if(emp_no==$scope.employees[i].emp_no){
-                $scope.employee = angular.copy($scope.employees[i]);
+        if(leave !== null){
+            leaveReference = leave;
+    		$scope.leave = angular.copy(leave);
+            //Formatting the passed leave
+            for(var i = 0 ; i<$scope.leave.date_ranges.length ; i++){
+                var date_range =  $scope.leave.date_ranges[i];
+                date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
+                date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
+                date_range.hours = parseInt(date_range.hours);
+                date_range.minutes = parseInt(date_range.minutes);
             }
+            var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
+            if(validLeaves.indexOf($scope.leave.info.type)==-1){
+                $scope.leave.info.type_others = $scope.leave.info.type;
+                $scope.leave.info.type = 'Others';
+            }
+        }else{
+            $scope.addOrDeleteRange(0);
         }
-        $scope.searchFocusName = false;
-        $scope.searchFocusEmpNo = false;
-    }
-    /*end Employee Live Search*/
-
-	$scope.$on('openLeaveModal',function(event, leave){
-        angular.element('#leaveType'+leave.info.type).addClass('active');
-        //Set css styling for leaves (ng-class not working :c )
+        /* Setting css styling for leave type radio group (ng-class is not working :c)*/
         var leaveTypes = ['Vacation','Sick','Maternity','Paternity','Others'];
-        var index = leaveTypes.indexOf(leave.info.type);
-        if(index>-1){
-            leaveTypes.splice(index,1);
+        if($scope.leave.info.type){
+            angular.element('#leaveType'+$scope.leave.info.type).addClass('active');
+            var index = leaveTypes.indexOf($scope.leave.info.type);
+            if(index>-1){
+                leaveTypes.splice(index,1);
+            }
         }
         for(var i = 0 ; i<leaveTypes.length ; i++){
             angular.element('#leaveType'+leaveTypes[i]).removeClass('active');
         }
-		$scope.leave = leave;
+        angular.element('#addOrEditLeaveModal').modal('show');
 	});
 
     var getTotalDays = function(index){
@@ -738,12 +723,31 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
         }
     }
 
-    $scope.submit = function(isModal = false){
+    $scope.submit = function(addOrEdit){
         var data = angular.copy($scope.leave);
-        data.info.emp_no = $scope.employee.emp_no;
-		if(isModal){
-			data.action = "edit";
-		}
+        data.info.emp_no = $scope.employee.emp_no; //$scope.employee is from parent
+
+        var succMsg = '';
+        var succFunc = function(response){};
+        switch(addOrEdit){
+            case 'add':
+                succMsg = 'Successfully added leave.';
+                succFunc = function(response){
+                    $scope.leaves.push(response.leave); //$scope.leaves is from parent
+                }
+                data.action = 'add';
+                break;
+            case 'edit':
+                succMsg = 'Successfully edited leave.';
+                succFunc = function(response){
+                    leaveReference.info = response.leave.info;
+                    leaveReference.date_ranges = response.leave.date_ranges;
+                }
+                data.action='edit';
+                break;
+            default:
+                return;
+        }
 
 		for(var i=0; i<data.date_ranges.length; i++){
 			if( data.date_ranges[i].start_date=="" || data.date_ranges[i].start_date==null || data.date_ranges[i].end_date=="" || data.date_ranges[i].end_date==null ){
@@ -792,16 +796,29 @@ app.controller('leave_application',function($scope,$rootScope,$window,$filter,em
 			data.date_ranges[i].start_date = moment(data.date_ranges[i].start_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 			data.date_ranges[i].end_date = moment(data.date_ranges[i].end_date,$rootScope.dateFormat).format("YYYY/MM/DD");
 		}
+
         $rootScope.post(
-            $rootScope.baseURL+"/employee/leaveApplication",
+            $rootScope.baseURL+"/employee/leaveRecords",
             data,
             function(response){
-                $rootScope.showCustomModal('Success',response.msg,
+                //returning date ranges to their original format
+                for(var i = 0 ; i<$scope.leaves.length ; i++){
+        			var leave = $scope.leaves[i];
+                    for(var j = 0 ; j<leave.date_ranges.length ; j++){
+        				var date_range = leave.date_ranges[j];
+        				date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
+        				date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
+        			}
+                }
+
+                succFunc(response);
+
+                $scope.sortAndFormatLeaves(); //From parent
+                $rootScope.showCustomModal('Success',succMsg,
                     function(){
-                        $window.location.reload();
+                        angular.element('#customModal').modal('hide');
                     },
                     function(){
-                        $window.location.reload();
                     }
                 );
             },

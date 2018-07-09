@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<a href="<?= base_url()?>employee/add">Add Employee</a>
 						</li>
 						<li>
-							<a href="<?= base_url()?>employee/leaveapplication">Application For Leave</a>
+							<a href="<?= base_url()?>employee/leaverecords">Application For Leave</a>
 						</li>
 					</ul>
 				</li>

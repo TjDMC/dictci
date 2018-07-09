@@ -60,21 +60,20 @@ class Employee extends MY_Controller{
     public function delete(){
     }
 
-    public function leaveApplication($employeeNo=null){
+    public function leaveRecords($employeeNo=null){
         $input = $this->input->post('data');
         if($input === null){
             $employee = null;
-            if($employeeNo!==null){
+            if($employeeNo===null){
+                redirect('/employee');
+            }else{
                 $employee = $this->employee_model->getEmployee($employeeNo);
             }
-            $employees = $this->employee_model->getEmployees();
-
 			//	Calendar Events
 			$events = $this->calendar_model->getEvents();
             $this->html(
                 function() use ($employees,$employee,$events){
-                    $this->load->view('employee/leave_application',array(
-                        "employees"=>json_encode($employees,JSON_HEX_APOS|JSON_HEX_QUOT),
+                    $this->load->view('employee/leave_records',array(
                         "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
 						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
                     ));
@@ -99,10 +98,11 @@ class Employee extends MY_Controller{
                 $response = $this->employee_model->addLeaves($data);
             }
 
-            if($response !== null){
+            if(!is_array($response)){ //if response is not an array, it is a string containing an error msg.
                 custom_response(false, $response);
             }else{
-                custom_response(true,"Successfully ".(isset($data['action'])&&$data['action']=='edit' ? 'edited':'added' )." leave.");
+                log_message('debug',print_r($response,true));
+                custom_response(true,"Success",array('leave'=>$response));
             }
         }
 
