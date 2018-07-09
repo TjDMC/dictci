@@ -43,6 +43,24 @@ class Calendar extends MY_Controller
         }
         custom_response(true,'Success');
     }
+	
+	public function manageHolidays(){
+		$this->html(
+			function(){
+				$this->load->view('calendar/holiday');
+			}
+		);
+	}
+	
+	public function suspendWork(){
+		$this->html(
+			function(){
+				$this->load->view('calendar/suspend',array(
+					'events'=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
+				));
+			}
+		);
+	}
 
 }
 

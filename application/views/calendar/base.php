@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </div>
             <table class="table table-bordered calendar">
-                <tr>
+                <tr style="background-color:#000000;color:#ffffff">
                     <th class="text-center p-0">Sun</th>
                     <th class="text-center p-0">Mon</th>
                     <th class="text-center p-0">Tue</th>
@@ -51,10 +51,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <th class="text-center p-0">Sat</th>
                 </tr>
                 <tr ng-repeat="row in calendar">
-                    <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%" ng-click="showModal(date)">
-                        <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}">{{date.date()}}</p>
-                        <div>
-                            <p class="font-italic" ng-repeat="event in date.events">{{event.title}}.</p>
+                    <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%;{{(moment().format('YYYY-MM-DD') == date.format('YYYY-MM-DD')) ? 'background-color:#cccccc':''}} " ng-click="showModal(date)">
+                        <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}" >{{date.date()}}</p>
+                        <div ng-repeat="event in date.events" style="background-color:#000000;color:#ffffff;border-radius:5px;padding-left:5px">
+                            <p class="font-italic" >{{event.title}}.</p>
                         </div>
                     </td>
                 </tr>

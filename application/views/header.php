@@ -81,10 +81,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<a href="<?= base_url().'calendar' ?>">View Calendar</a>
 						</li>
 						<li>
-							<a href="<?= base_url().'calendar' ?>">Add Holiday</a>
+							<a href="<?= base_url().'calendar/manageHolidays' ?>">Manage Holidays</a>
 						</li>
 						<li>
-							<a href="#">Suspended Work</a>
+							<a href="<?= base_url().'calendar/suspendWork' ?>">Suspended Work</a>
 						</li>
 					</ul>
 				</li>
