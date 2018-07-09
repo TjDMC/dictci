@@ -76,7 +76,7 @@ app.run(function($rootScope,$http,$httpParamSerializer,$timeout){
 	//Asynchronously sets the field of a scope to the value given by valueGiver function
 	$rootScope.longComputation = function(scope,field,valueGiver){
 		$rootScope.busy = true;
-		$timeout(function(){scope[field]=valueGiver();$rootScope.busy=false;},1);
+		$timeout(function(){scope[field]=valueGiver();$rootScope.busy=false;},0);
 	}
 
 	/*Omnibus minute-credit equivalence*/
