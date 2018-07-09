@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/popper.min.js' ?>"></script>
 	<script src="<?= base_url().'js/bootstrap.min.js' ?>"></script>
     <script src="<?= base_url().'js/angular.min.js' ?>"></script>
-	<script src="<?= base_url().'js/angular-sanitize.min.js' ?>"></script>
-
+	<script src="<?= base_url().'js/chart.min.js' ?>"></script>
+	<script src="<?= base_url().'js/angular-chart.min.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.templates.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/dateTimeInput.js' ?>"></script>
@@ -81,10 +81,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							<a href="<?= base_url().'calendar' ?>">View Calendar</a>
 						</li>
 						<li>
-							<a href="<?= base_url().'calendar' ?>">Add Holiday</a>
+							<a href="<?= base_url().'calendar/manageHolidays' ?>">Manage Holidays</a>
 						</li>
 						<li>
-							<a href="#">Suspended Work</a>
+							<a href="<?= base_url().'calendar/suspendWork' ?>">Suspended Work</a>
 						</li>
 					</ul>
 				</li>

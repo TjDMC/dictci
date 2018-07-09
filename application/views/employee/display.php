@@ -13,7 +13,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
 
         <div class="dropdown form-group" style="max-width:400px">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="balance=getBalance()">Leave Credits Balance</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="longComputation(this,'balance',getBalance)">Leave Credits Balance</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#leaveCreditStatisticsModal" type="button">Leave Credits Statistics</button>
         </div>
 
 
@@ -21,6 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Application For Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="">Print Information</button>
         </div>
 
         <div>
@@ -154,6 +156,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
                         </ul>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-controller="employee_statistics" class="modal fade" id="leaveCreditStatisticsModal" tabindex="-1" role="dialog" aria-labelledby="leaveCreditStatisticsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveCreditStatisticsLabel">Leave Credits Statistics</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <canvas class="chart chart-line" chart-data="statistics.data"
+                        chart-labels="statistics.labels">
+                    </canvas>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

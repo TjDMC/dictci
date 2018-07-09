@@ -1,6 +1,6 @@
-var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput']);
+var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput','chart.js']);
 
-app.run(function($rootScope,$http,$httpParamSerializer){
+app.run(function($rootScope,$http,$httpParamSerializer,$timeout){
 	moment.tz.add("Asia/Manila|+08 +09|-80 -90|010101010|-1kJI0 AL0 cK10 65X0 mXB0 vX0 VK10 1db0|24e6");
 	moment.tz.setDefault("Asia/Manila");
 
@@ -71,6 +71,12 @@ app.run(function($rootScope,$http,$httpParamSerializer){
 			headers : {'Content-Type': 'application/x-www-form-urlencoded'}
 		}).then(success,error);
 
+	}
+
+	//Asynchronously sets the field of a scope to the value given by valueGiver function
+	$rootScope.longComputation = function(scope,field,valueGiver){
+		$rootScope.busy = true;
+		$timeout(function(){scope[field]=valueGiver();$rootScope.busy=false;},0);
 	}
 
 	/*Omnibus minute-credit equivalence*/
