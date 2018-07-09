@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div class="dropdown form-group" style="max-width:400px">
             <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="longComputation(this,'balance',getBalance)">Leave Credits Balance</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#leaveCreditStatisticsModal" type="button">Leave Credits Statistics</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#leaveCreditStatisticsModal" ng-click="$broadcast('openStatisticsModal')" type="button">Leave Credits Statistics</button>
         </div>
 
 
@@ -155,6 +155,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
                         </ul>
                     </div>
+                    <div>
+                        Leaves:
+                            <p>insert here this month's date ranges that are included in the current computation</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -173,6 +177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
+                    {{statistics.data}}
                     <canvas class="chart chart-line" chart-data="statistics.data"
                         chart-labels="statistics.labels">
                     </canvas>
