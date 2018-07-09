@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)' class="card">
+<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>,<?=$events?>)' class="card">
     <div class="card-header">
         <h1>Employee Information</h1>
     </div>
@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.minutes}}</td>
-    						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range,leave.info.is_without_pay)}}</td>
+    						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range)}}</td>
     					</tr>
     				</tbody>
 

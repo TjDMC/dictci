@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script>
 		console.log("%c STOP! ","color: red; background-color: black; font-size: 100px; font-weight: bold");
 		console.log("%cThis feature is meant for developers' use only.","font-size: 30px");
-		console.log("%cAnything inputted here might cause errors in the system.","font-size:20px")
+		console.log("%cAnything entered here might cause errors in the system.","font-size:20px")
 	</script>
 </head>
 

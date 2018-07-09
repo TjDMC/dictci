@@ -52,7 +52,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         sick:[]
     };
     $scope.computationsCopy = {};
-    $scope.init = function(employee,leaves){
+    $scope.init = function(employee,leaves,events){
         $scope.employee = employee;
         $scope.leaves = leaves;
         $scope.employee.credits = {
@@ -355,9 +355,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $rootScope.longComputation(this,'balance',$scope.getBalance);
     }
 
-    $scope.getDeductedCredits = function(type,date_range,withoutPay){
-        console.log(type);
-		if(!withoutPay && (type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime')){
+    $scope.getDeductedCredits = function(type,date_range){
+		if( (type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime')){
 			return $scope.getCreditEquivalent(type,date_range);
 		}else{
 			return 0;
@@ -462,22 +461,16 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	// Chacking difference between the two
 	$scope.terminalBenefit = function(){
 		var salary = 100*$scope.employee.salary;
-		//console.log("\nStart\n");
 		var balance = $scope.computeBal($scope.terminal_date);
-		//console.log(balance);
-		//console.log("\nEnd\n");
 		var credits = Number(balance[0]) + Number(balance[1]);
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		//console.log(credits);
-		//console.log("huhu");
-
+		
 		return (tlb/100).toFixed(2);
 	}
 
 	$scope.terminalBenefit2 = function(){
-		console.log("Start");
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
@@ -515,11 +508,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			for(var j=0;j<leave.date_ranges.length;j++){
 				var range = leave.date_ranges[j];
 				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
-					creditsUsed += range.hours*125 + range.minutes*125/60;		// Nasasama sa bilang yung mga without pay: dapat hindi
+					creditsUsed += range.hours*125 + range.minutes*125/60;
 				}
 			}
 		}
+		console.log(creditsUsed);
 		creditsUsed -= $scope.lwop[1]*1000;
+		console.log(creditsUsed);
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
