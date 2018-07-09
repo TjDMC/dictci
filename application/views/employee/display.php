@@ -178,6 +178,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
+                    {{bal_history}}
                     {{statistics.data}}
                     <canvas class="chart chart-line" chart-data="statistics.data"
                         chart-labels="statistics.labels">

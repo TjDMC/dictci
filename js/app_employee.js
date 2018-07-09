@@ -214,7 +214,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			currV += firstMC; currS += firstMC;
             $scope.computations.vacation.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
             $scope.computations.sick.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
-			dateStart.add(1,'month');
+            $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')] = {vac:currV,sick:currS};
+            dateStart.add(1,'month');
 		}
 		// #first_month_computation
 
@@ -530,7 +531,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		
+
 		return (tlb/100000).toFixed(2);
 	}
 });
@@ -856,8 +857,11 @@ app.controller('employee_statistics',function($scope,$rootScope){
         var currDate = startDate.clone().endOf('month');
         while(currDate.isSameOrBefore(endDate,'month')){
             var bal = bal_history[currDate.clone().format('YYYY-MM-DD')];
-            if(bal)
+            if(bal){
                 result.push(bal);
+            }else {
+                result.push({vac:0,sick:0});
+            }
             currDate.add(1,'months').endOf('month');
             console.log('test');
         }
@@ -866,8 +870,8 @@ app.controller('employee_statistics',function($scope,$rootScope){
         console.log(result);
         for(var i = 0 ; i<result.length ; i++){
             console.log(result[i]);
-            vac.push(result[i].vac/1000);
-            sick.push(result[i].sick/1000);
+            vac.push(result[i].vac/1000.0);
+            sick.push(result[i].sick/1000.0);
         }
         $scope.statistics.data = [vac,sick];
         return result;
@@ -875,7 +879,7 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
     $scope.$on('openStatisticsModal',function(event){
         $rootScope.longComputation($scope,'bal_history',function(){
-            $scope.computeBal(moment().add(-1,'month').endOf('month')); //computations history gets set internally in computeBal which is in employee_display
+            $scope.computeBal(moment().add(1,'month').endOf('month')); //computations history gets set internally in computeBal which is in employee_display
             $scope.getLeaves('2018-01-01','2018-07-01',$scope.computations.bal_history)
             return angular.copy($scope.computations.bal_history);
         });
