@@ -819,15 +819,15 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         				date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
         			}
                 }
-
                 succFunc(response);
-
                 $scope.sortAndFormatLeaves(); //From parent
                 $rootScope.showCustomModal('Success',succMsg,
                     function(){
                         angular.element('#customModal').modal('hide');
+                        angular.element('#addOrEditLeaveModal').modal('hide');
                     },
                     function(){
+                        angular.element('#addOrEditLeaveModal').modal('hide');
                     }
                 );
             },
