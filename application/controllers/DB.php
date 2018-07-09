@@ -14,10 +14,10 @@ class DB extends MY_Controller {
 			show_error("You don't have permission to access this page.",403);
 			return;
 		}
-		$this->load->model("employee_model");
+		$this->load->model("employee_leaves_model");
 		$this->load->model("calendar_model");
 		$this->calendar_model->createTable();
-		$this->employee_model->createTable();
+		$this->employee_leaves_model->createTable();
 	}
 
 	public function populate(){
@@ -25,7 +25,7 @@ class DB extends MY_Controller {
 			show_error("You don't have permission to access this page.",403);
 			return;
 		}
-		$this->load->model("employee_model");
-		$this->employee_model->populate();
+		$this->load->model("employee_leaves_model");
+		$this->employee_leaves_model->populate();
 	}
 }

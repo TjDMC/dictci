@@ -4,17 +4,21 @@ CHECKLIST
 leave credit computations
 	-suspension of work
 	-optimization (?)
-	-visualization 
-	
+	-visualization
+
+Employee Page
+	-ui update
+	-more leave history filters
+
 terminal leave benefits
-	
+
 layouting and printing of forms
 
 leave application
-	-make completely modal
-	-rename to 'leave records'
-	-rename 'employee' model to 'employee leaves'
-	
+	-make completely modal - done July 09, 2018
+	-rename to 'leave records' - done July 09, 2018
+	-rename 'employee' model to 'employee leaves' - done July 09, 2018
+
 documentation
 
 external employee database (deployment)
@@ -22,8 +26,8 @@ external employee database (deployment)
 infographics
 	-charts
 	-statistics
-	
----	
+
+---
 Activity Plan
 ---
 
@@ -46,19 +50,19 @@ June 18, 2018 - June 22, 2018
 	-Orientation
 	-Workstation setup
 	-Website framework setup
-	
+
 June 25, 2018 - June 29, 2018
 	-Website Development
-	
+
 July 02, 2018 - July 06, 2018
 	-Website Development
 	-Prototype 1 Testing
-	
+
 July 09, 2018 - July 14, 2018
 	-Website Development
 	-Prototype 2 Testing
 	-Test Deployment
-	
+
 July 16, 2018 - July 20, 2018
 	-Deployment
 	-Integration with external employees table
@@ -66,13 +70,13 @@ July 16, 2018 - July 20, 2018
 	-Polishing
 	-Optimizations
 	-Documentation
-	
+
 July 23, 2018 - July 27, 2018
 	-Bug-fixing
 	-Polishing
 	-Optimizations
 	-Documentation
 	-Signing of certificates (?)
-	
+
 July 30, 2018 - July 31, 2018
 	-Signing of certificates

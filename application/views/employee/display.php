@@ -7,10 +7,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h1>Employee Information</h1>
     </div>
     <div class="card-body">
-        <p>Employee No: {{employee.emp_no}}</p>
-        <p>Name: {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
-        <p>First Day: {{employee.first_day}}</p>
-        <p>Initial Credits: Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
+        <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
+        <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
+        <p><span class="font-weight-bold">First Day:</span> {{employee.first_day}}</p>
+        <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
 
         <div class="dropdown form-group" style="max-width:400px">
             <button class="btn btn-primary" data-toggle="modal" data-target="#computeBalModal" ng-click="balance=getBalance()">Leave Credits Balance</button>
@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
         <div class="form-group">
-            <a href="<?=base_url()."employee/leaveapplication/{{employee.emp_no}}"?>" class="btn btn-primary">Application For Leave</a>
+            <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Application For Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
         </div>
@@ -55,10 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     							{{leave.info.remarks}}
     						</td>
                             <td style="text-align:right">
-                                <!--<button data-toggle="modal" data-target="#editLeaveModal" class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="modalOpened = true">
-                                    <i class="fas fa-edit"></i>
-                                </button>-->
-    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="openModal($index)">
+    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="openLeaveModal($index)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button ng-click="leave.info.show=!leave.info.show" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.info.show?'Collapse':'Expand'}}">
@@ -73,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.minutes}}</td>
-    						<td>{{getDeductedCredits(leave.info.type,date_range,leave.info.is_without_pay)}}</td>
+    						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range,leave.info.is_without_pay)}}</td>
     					</tr>
     				</tbody>
 
@@ -165,19 +162,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 
-	<div class="modal fade" id="editLeaveModal" tabindex="-1" role="dialog" aria-labelledby="leaveModelLabel" aria-hidden="true">
+	<div class="modal fade" id="addOrEditLeaveModal" tabindex="-1" role="dialog" aria-labelledby="addOrEditLeaveLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="leaveModelLabel">Edit Leave</h5>
+                    <h5 class="modal-title" id="addOrEditLeaveLabel">Add/Edit Leave</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <?= $this->load->view("employee/leave_application",array(
-                        'isModal'=>true
-                    ),true);?>
+                    <?= $this->load->view("employee/leave_records",array(),true);?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

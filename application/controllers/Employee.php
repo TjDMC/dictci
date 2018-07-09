@@ -5,13 +5,13 @@ class Employee extends MY_Controller{
 
     public function __construct(){
         parent::__construct();
-        $this->load->model("employee_model");
+        $this->load->model("employee_leaves_model");
 		$this->load->model("calendar_model");
     }
 
     public function body(){
         $this->load->view("employee/navigation",array(
-            "employees"=>json_encode($this->employee_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT)
+            "employees"=>json_encode($this->employee_leaves_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT)
         ));
     }
 
@@ -21,11 +21,11 @@ class Employee extends MY_Controller{
             $this->index();
             return;
         }
-        $employee = $this->employee_model->getEmployee($employeeNo);
+        $employee = $this->employee_leaves_model->getEmployee($employeeNo);
         if($employee==null){
             show_404();
         }
-        $leaves = $this->employee_model->getLeaves($employeeNo);
+        $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
 
         $this->html(
             function() use ($employee,$leaves){
@@ -47,7 +47,7 @@ class Employee extends MY_Controller{
             );
         }else{
             $data = parse_custom_post($input);
-            $response = $this->employee_model->addEmployee($data);
+            $response = $this->employee_leaves_model->addEmployee($data);
             if($response!==null){
                 custom_response(false,$response);
             }else{
@@ -60,21 +60,20 @@ class Employee extends MY_Controller{
     public function delete(){
     }
 
-    public function leaveApplication($employeeNo=null){
+    public function leaveRecords($employeeNo=null){
         $input = $this->input->post('data');
         if($input === null){
             $employee = null;
-            if($employeeNo!==null){
-                $employee = $this->employee_model->getEmployee($employeeNo);
+            if($employeeNo===null){
+                redirect('/employee');
+            }else{
+                $employee = $this->employee_leaves_model->getEmployee($employeeNo);
             }
-            $employees = $this->employee_model->getEmployees();
-
 			//	Calendar Events
 			$events = $this->calendar_model->getEvents();
             $this->html(
                 function() use ($employees,$employee,$events){
-                    $this->load->view('employee/leave_application',array(
-                        "employees"=>json_encode($employees,JSON_HEX_APOS|JSON_HEX_QUOT),
+                    $this->load->view('employee/leave_records',array(
                         "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
 						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
                     ));
@@ -94,15 +93,16 @@ class Employee extends MY_Controller{
                 $data['info']["type"] = $data['info']['type_others'];
             }
             if(isset($data['action'])&&$data['action']=='edit'){
-                $response = $this->employee_model->editLeave($data);
+                $response = $this->employee_leaves_model->editLeave($data);
             }else{
-                $response = $this->employee_model->addLeaves($data);
+                $response = $this->employee_leaves_model->addLeaves($data);
             }
 
-            if($response !== null){
+            if(!is_array($response)){ //if response is not an array, it is a string containing an error msg.
                 custom_response(false, $response);
             }else{
-                custom_response(true,"Successfully ".(isset($data['action'])&&$data['action']=='edit' ? 'edited':'added' )." leave.");
+                log_message('debug',print_r($response,true));
+                custom_response(true,"Success",array('leave'=>$response));
             }
         }
 
@@ -110,7 +110,7 @@ class Employee extends MY_Controller{
 
     public function deleteLeave(){
         $data = parse_custom_post($this->input->post('data'));
-        $this->employee_model->deleteLeave($data);
+        $this->employee_leaves_model->deleteLeave($data);
         custom_response(true,'Leave record deleted');
     }
 

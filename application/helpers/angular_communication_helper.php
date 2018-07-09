@@ -18,6 +18,6 @@ function custom_response($isSuccessful,$msg,$custom=array()){
     foreach($custom as $key=>$c){
         $response[$key]=$c;
     }
-	echo json_encode($response);
+	echo json_encode($response,JSON_NUMERIC_CHECK);
 	die();
 }

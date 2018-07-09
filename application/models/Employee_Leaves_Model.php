@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Employee_Model extends MY_Model{
+class Employee_Leaves_Model extends MY_Model{
 
     private $employeeFields = array(
         array(
@@ -255,7 +255,11 @@ class Employee_Model extends MY_Model{
         $leaveInfoChecker['date_added']=date('Y-m-d');
         $leaveInfoChecker['date_last_edited']=date('Y-m-d');
 		$this->db->insert(DB_PREFIX."leaves",$leaveInfoChecker);
+        //get leave id
+        $id = $this->db->insert_id();
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
+
+        return $this->getLeave($id);
 	}
 
     public function getEmployee($employeeNo){
@@ -287,6 +291,21 @@ class Employee_Model extends MY_Model{
 			));
 		}
         return $leaves;
+    }
+
+    public function getLeave($leaveID){
+        $this->db->where('leave_id',$leaveID);
+        $res = $this->db->get(DB_PREFIX.'leaves')->result_array();
+        if(count($res)<1){
+            return 'No such leave';
+        }
+        $this->db->where('leave_id',$leaveID);
+        $leave = array(
+            'info'=>$res[0],
+            'date_ranges'=>$this->db->get(DB_PREFIX."leave_date_range")->result_array()
+        );
+
+        return $leave;
     }
 
     public function editLeave($leaveData){
@@ -350,7 +369,12 @@ class Employee_Model extends MY_Model{
         //Insert new records
         $leaveInfoChecker['date_last_edited']=date('Y-m-d');
         $this->db->insert(DB_PREFIX.'leaves',$leaveInfoChecker);
+        //get leave id
+        $id = $this->db->insert_id();
         $this->db->insert_batch(DB_PREFIX.'leave_date_range',$dateRangeChecker);
+
+        return $this->getLeave($id);
+
     }
 
     public function deleteLeave($leaveID){
