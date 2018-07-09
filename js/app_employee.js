@@ -464,14 +464,14 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		var salary = 100*$scope.employee.salary;
 		//console.log("\nStart\n");
 		var balance = $scope.computeBal($scope.terminal_date);
-		console.log(balance);
+		//console.log(balance);
 		//console.log("\nEnd\n");
 		var credits = Number(balance[0]) + Number(balance[1]);
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		console.log(credits);
-		console.log("huhu");
+		//console.log(credits);
+		//console.log("huhu");
 
 		return (tlb/100).toFixed(2);
 	}
@@ -491,9 +491,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		dateStart.add(months,'months');
 
 		var days = dateEnd.diff(dateStart, 'days');
-
 		days -= Math.floor($scope.lwop[0]);
-		console.log($scope.lwop);
 
 		while(days<0){
 			months--;
@@ -503,13 +501,11 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 			years--;
 			months += 12;
 		}
-		console.log(" M: " + months + "\tD: " + days);
 
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
 		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[2*days];
-		console.log(leaveEarned);
 		//	#credits_earned
 
 		//	Credits Used
@@ -526,14 +522,13 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 		creditsUsed -= $scope.lwop[1]*1000;
 		//	#credits_used
 
-		var credits = 2*leaveEarned + (currV + currS); console.log(credits);
+		var credits = 2*leaveEarned + currV + currS;
 		credits -= creditsUsed;
 		var salary = 100*$scope.employee.salary;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		console.log(credits);
-		console.log("End");
+		
 		return (tlb/100000).toFixed(2);
 	}
 });
