@@ -5,7 +5,7 @@ $segments = $this->uri->segment_array();
 
 //custom url names
 $urlnames = array(
-    'leaveapplication'=>'Leave Application'
+    //'leaveapplication'=>'Leave Application'
 );
 
 $breadcrumbs = '<a href="'.base_url().'">Home</a>';

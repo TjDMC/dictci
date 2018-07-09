@@ -69,9 +69,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<li>
 							<a href="<?= base_url()?>employee/add">Add Employee</a>
 						</li>
-						<li>
-							<a href="<?= base_url()?>employee/leaverecords">Application For Leave</a>
-						</li>
 					</ul>
 				</li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
