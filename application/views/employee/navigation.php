@@ -20,7 +20,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     <div class="card-body p-5">
         <div class="form-group">
-            <a href="<?=base_url()."employee/leaveapplication"?>" role="button" class="btn btn-primary">Application For Leave</a>
             <a href="<?=base_url()."employee/add"?>" class="btn btn-primary">Add Employee</a>
         </div>
         <div ng-init='employeeArray =employeesToArray(<?=$employees?>)'>
