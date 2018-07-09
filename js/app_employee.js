@@ -40,7 +40,7 @@ app.controller('employee_nav',function($scope,$rootScope){
     }
 });
 
-app.controller('employee_display',function($scope,$rootScope,$window){
+app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.employee = {};
     $scope.leaves = [];
     $scope.bal_date = '';
@@ -352,7 +352,7 @@ app.controller('employee_display',function($scope,$rootScope,$window){
 
     $scope.balDateSet = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
-        $scope.balance = $scope.getBalance();
+        $rootScope.longComputation(this,'balance',$scope.getBalance);
     }
 
     $scope.getDeductedCredits = function(type,date_range,withoutPay){
@@ -841,5 +841,22 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                 );
             }
         );
+    }
+});
+
+/*Requires employee_display controller as parent*/
+app.controller('employee_statistics',function($scope,$rootScope){
+    $scope.statistics={
+        data:[1,3,5,6,1,5,-2,5]
+    };
+    $scope.statistics.labels = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    $scope.getLeaves = function(startDate,endDate){
+        for(var i = 0 ; i<$scope.leaves.length ; i++){
+            var leave = $scope.leaves[i];
+            for(var j = 0 ; j<leave.date_ranges.length ; j++){
+                var date_range = leave.date.date_ranges[j];
+
+            }
+        }
     }
 });
