@@ -49,7 +49,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.computations = {
         vacation:[/*{amount:number,remarks:'',date:date}*/],
-        sick:[]
+        sick:[],
+        bal_history:{}
     };
     $scope.computationsCopy = {};
     $scope.init = function(employee,leaves){
@@ -179,7 +180,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
 	$scope.getBalance = function(){
-        $scope.computations = {vacation:[],sick:[]};
+        $scope.computations = {vacation:[],sick:[],bal_history:{}};
 		var t1 = performance.now();
 		var hold = $scope.computeBal($scope.bal_date);
 		var t2 = performance.now();
@@ -213,7 +214,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			currV += firstMC; currS += firstMC;
             $scope.computations.vacation.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
             $scope.computations.sick.push({amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
-			dateStart.add(1,'month');
+            $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')] = {vac:currV,sick:currS};
+            dateStart.add(1,'month');
 		}
 		// #first_month_computation
 
@@ -342,6 +344,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 currV = currV-fLeave;
                 $scope.computations.vacation.push({amount:-fLeave,remarks:'Forced Leave'});
             }
+            $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')]={vac:currV, sick:currS};
 			dateStart.add(1,'month');
 		}
 		// #computation_for_other_months
@@ -464,14 +467,14 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var salary = 100*$scope.employee.salary;
 		//console.log("\nStart\n");
 		var balance = $scope.computeBal($scope.terminal_date);
-		console.log(balance);
+		//console.log(balance);
 		//console.log("\nEnd\n");
 		var credits = Number(balance[0]) + Number(balance[1]);
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		console.log(credits);
-		console.log("huhu");
+		//console.log(credits);
+		//console.log("huhu");
 
 		return (tlb/100).toFixed(2);
 	}
@@ -491,9 +494,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		dateStart.add(months,'months');
 
 		var days = dateEnd.diff(dateStart, 'days');
-
 		days -= Math.floor($scope.lwop[0]);
-		console.log($scope.lwop);
 
 		while(days<0){
 			months--;
@@ -503,13 +504,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			years--;
 			months += 12;
 		}
-		console.log(" M: " + months + "\tD: " + days);
 
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
 		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[2*days];
-		console.log(leaveEarned);
 		//	#credits_earned
 
 		//	Credits Used
@@ -526,14 +525,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		creditsUsed -= $scope.lwop[1]*1000;
 		//	#credits_used
 
-		var credits = 2*leaveEarned + (currV + currS); console.log(credits);
+		var credits = 2*leaveEarned + currV + currS;
 		credits -= creditsUsed;
 		var salary = 100*$scope.employee.salary;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		console.log(credits);
-		console.log("End");
+
 		return (tlb/100000).toFixed(2);
 	}
 });
@@ -850,13 +848,42 @@ app.controller('employee_statistics',function($scope,$rootScope){
         data:[1,3,5,6,1,5,-2,5]
     };
     $scope.statistics.labels = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    $scope.getLeaves = function(startDate,endDate){
-        for(var i = 0 ; i<$scope.leaves.length ; i++){
-            var leave = $scope.leaves[i];
-            for(var j = 0 ; j<leave.date_ranges.length ; j++){
-                var date_range = leave.date.date_ranges[j];
-
+    $scope.bal_history = {};
+    $scope.getLeaves = function(startDate,endDate,bal_history){
+        var result = [];
+        startDate = moment(startDate);
+        endDate = moment(endDate);
+        console.log(startDate.format('YYYY-MM-DD')+' '+endDate.format('YYYY-MM-DD'));
+        var currDate = startDate.clone().endOf('month');
+        while(currDate.isSameOrBefore(endDate,'month')){
+            var bal = bal_history[currDate.clone().format('YYYY-MM-DD')];
+            if(bal){
+                result.push(bal);
+            }else {
+                result.push({vac:0,sick:0});
             }
+            currDate.add(1,'months').endOf('month');
+            console.log('test');
         }
+        var vac=[];
+        var sick=[];
+        console.log(result);
+        for(var i = 0 ; i<result.length ; i++){
+            console.log(result[i]);
+            vac.push(result[i].vac/1000.0);
+            sick.push(result[i].sick/1000.0);
+        }
+        $scope.statistics.data = [vac,sick];
+        return result;
     }
+
+    $scope.$on('openStatisticsModal',function(event){
+        $rootScope.longComputation($scope,'bal_history',function(){
+            $scope.computeBal(moment().add(1,'month').endOf('month')); //computations history gets set internally in computeBal which is in employee_display
+            $scope.getLeaves('2018-01-01','2018-07-01',$scope.computations.bal_history)
+            return angular.copy($scope.computations.bal_history);
+        });
+        console.log(moment('1900-01-01').endOf('month').valueOf());
+    });
+
 });
