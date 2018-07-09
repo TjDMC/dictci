@@ -12,6 +12,8 @@ Employee Page
 
 terminal leave benefits
 
+Loading Overlay - done July 09, 2018
+
 layouting and printing of forms
 
 leave application
