@@ -22,7 +22,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Application For Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="">Print Information</button>
+			<a href="<?= base_url().'employee/form/'?>{{employee.emp_no}}">
+				<button type="button" class="btn btn-primary">Print Information</button>
+			</a>
         </div>
 
         <div>

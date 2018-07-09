@@ -113,5 +113,13 @@ class Employee extends MY_Controller{
         $this->employee_leaves_model->deleteLeave($data);
         custom_response(true,'Leave record deleted');
     }
+	
+	public function form(){
+		$this->html(
+			function(){
+				$this->load->view('employee/form');
+			}
+		);
+	}
 
 }
