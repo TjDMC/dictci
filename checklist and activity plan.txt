@@ -6,6 +6,10 @@ leave credit computations
 	-optimization (?)
 	-visualization
 
+Employee Page
+	-ui update
+	-more leave history filters
+
 terminal leave benefits
 
 layouting and printing of forms
