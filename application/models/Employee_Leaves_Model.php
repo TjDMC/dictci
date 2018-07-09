@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Employee_Model extends MY_Model{
+class Employee_Leaves_Model extends MY_Model{
 
     private $employeeFields = array(
         array(
