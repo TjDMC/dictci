@@ -30,6 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 </div>
 
+<!-- CSS spinner taken from http://cssload.net -->
 <style>
 .cssload-fond{
 	position:fixed;
@@ -88,10 +89,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	background-color:rgb(151,191,13);
 	top:23px; left:23px;
 }
-
-
-
-
 
 @keyframes cssload-animball_one
 {
