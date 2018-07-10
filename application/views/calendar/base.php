@@ -28,16 +28,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <h3 class="col-5 text-left my-auto">{{formatCurrentDate()}}</h3>
                 <div class="col my-auto btn-group">
                     <div class="btn-group">
-                        <button class="btn btn-outline-secondary" type="button" ng-click="setCurrentDate(moment())">Today</button>
-                        <a  class="dropdown-toggle btn btn-outline-secondary" id="navigateDate" role="button" data-toggle="dropdown" data-target="#" href="#">Navigate</a>
+                        <button class="btn btn-outline-primary" type="button" ng-click="setCurrentDate(moment())">Today</button>
+                        <a  class="dropdown-toggle btn btn-outline-primary" id="navigateDate" role="button" data-toggle="dropdown" data-target="#" href="#">Navigate</a>
                         <ul class="dropdown-menu" role="menu">
                             <datetimepicker data-ng-model="navigateDate" data-on-set-time="setCurrentDate(newDate)" data-datetimepicker-config="{ dropdownSelector: '#navigateDate',minView:'month',startView:'month' }"/>
                         </ul>
                     </div>
                 </div>
                 <div class="col-2 btn-group justify-content-end">
-                    <button ng-click="addMonth(-1)" class="btn btn-outline-dark my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-left fa-2x"></i></button>
-                    <button ng-click="addMonth(1)" class="btn btn-outline-dark my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-right fa-2x"></i></button>
+                    <button ng-click="addMonth(-1)" class="btn btn-outline-primary my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-left fa-2x"></i></button>
+                    <button ng-click="addMonth(1)" class="btn btn-outline-primary my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-right fa-2x"></i></button>
                 </div>
             </div>
             <table class="table table-bordered calendar">
