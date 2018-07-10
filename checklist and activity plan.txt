@@ -26,8 +26,8 @@ documentation
 external employee database (deployment)
 
 infographics
-	-charts
-	-statistics
+	-charts - done July 10, 2018
+	-statistics - done July 10, 2018
 
 ---
 Activity Plan
