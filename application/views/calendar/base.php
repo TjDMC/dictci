@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     <div class="card-body">
         <div class="table-responsive container mx-auto" style="max-width:1200px">
-            <div class="row mb-3 justify-content-between">
+            <div class="row mb-3 justify-content-between pt-1">
                 <h3 class="col-5 text-left my-auto">{{formatCurrentDate()}}</h3>
                 <div class="col my-auto btn-group">
                     <div class="btn-group">
@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </div>
             <table class="table table-bordered calendar">
-                <tr style="background-color:#000000;color:#ffffff">
+                <tr style="background-color:#0099ff;color:white">
                     <th class="text-center p-0">Sun</th>
                     <th class="text-center p-0">Mon</th>
                     <th class="text-center p-0">Tue</th>
