@@ -24,24 +24,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     <div class="card-body">
         <div class="table-responsive container mx-auto" style="max-width:1200px">
-            <div class="row mb-3 justify-content-between">
+            <div class="row mb-3 justify-content-between pt-1">
                 <h3 class="col-5 text-left my-auto">{{formatCurrentDate()}}</h3>
                 <div class="col my-auto btn-group">
                     <div class="btn-group">
-                        <button class="btn btn-outline-secondary" type="button" ng-click="setCurrentDate(moment())">Today</button>
-                        <a  class="dropdown-toggle btn btn-outline-secondary" id="navigateDate" role="button" data-toggle="dropdown" data-target="#" href="#">Navigate</a>
+                        <button class="btn btn-outline-primary" type="button" ng-click="setCurrentDate(moment())">Today</button>
+                        <a  class="dropdown-toggle btn btn-outline-primary" id="navigateDate" role="button" data-toggle="dropdown" data-target="#" href="#">Navigate</a>
                         <ul class="dropdown-menu" role="menu">
                             <datetimepicker data-ng-model="navigateDate" data-on-set-time="setCurrentDate(newDate)" data-datetimepicker-config="{ dropdownSelector: '#navigateDate',minView:'month',startView:'month' }"/>
                         </ul>
                     </div>
                 </div>
                 <div class="col-2 btn-group justify-content-end">
-                    <button ng-click="addMonth(-1)" class="btn btn-outline-dark my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-left fa-2x"></i></button>
-                    <button ng-click="addMonth(1)" class="btn btn-outline-dark my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-right fa-2x"></i></button>
+                    <button ng-click="addMonth(-1)" class="btn btn-outline-primary my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-left fa-2x"></i></button>
+                    <button ng-click="addMonth(1)" class="btn btn-outline-primary my-auto" style="max-width:50px;max-height:50px"><i class="fas fa-angle-right fa-2x"></i></button>
                 </div>
             </div>
             <table class="table table-bordered calendar">
-                <tr style="background-color:#000000;color:#ffffff">
+                <tr class="bg-primary" style="color:white">
                     <th class="text-center p-0">Sun</th>
                     <th class="text-center p-0">Mon</th>
                     <th class="text-center p-0">Tue</th>
@@ -53,8 +53,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <tr ng-repeat="row in calendar">
                     <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%;{{(moment().format('YYYY-MM-DD') == date.format('YYYY-MM-DD')) ? 'background-color:#cccccc':''}} " ng-click="showModal(date)">
                         <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}" >{{date.date()}}</p>
-                        <div ng-repeat="event in date.events" style="background-color:#000000;color:#ffffff;border-radius:5px;padding-left:5px">
-                            <p class="font-italic" >{{event.title}}.</p>
+                        <div ng-repeat="event in date.events" class="bg-dark" style="color:#ffffff;border-radius:5px;padding-left:5px">
+                            <p class="font-italic" >{{event.title}}</p>
                         </div>
                     </td>
                 </tr>

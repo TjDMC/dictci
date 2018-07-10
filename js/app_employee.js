@@ -931,6 +931,7 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
     $scope.$on('openStatisticsModal',function(event){
         $rootScope.longComputation($scope,'bal_history',function(){
+            $scope.year = moment();
             $scope.computeBal(moment().add(1,'month').endOf('month')); //computations history gets set internally in computeBal which is in employee_display
             updateGraph(moment().startOf('year'),moment(),$scope.computations.bal_history)
             return angular.copy($scope.computations.bal_history);
@@ -939,4 +940,3 @@ app.controller('employee_statistics',function($scope,$rootScope){
     });
 
 });
-
