@@ -43,7 +43,7 @@ class Calendar extends MY_Controller
         }
         custom_response(true,'Success');
     }
-	
+
 	public function manageHolidays(){
 		$this->html(
 			function(){
@@ -51,10 +51,11 @@ class Calendar extends MY_Controller
 			}
 		);
 	}
-	
+
 	public function suspendWork(){
+        $events = $this->calendar_model->getEvents();
 		$this->html(
-			function(){
+			function() use ($events){
 				$this->load->view('calendar/suspend',array(
 					'events'=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
 				));

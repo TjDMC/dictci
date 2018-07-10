@@ -11,14 +11,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
         <p><span class="font-weight-bold">First Day:</span> {{employee.first_day}}</p>
         <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
-        
+
         <div class="dropdown form-group" style="max-width:400px">
             <button class="btn btn-success" data-toggle="modal" data-target="#computeBalModal" ng-click="longComputation(this,'balance',getBalance)">Leave Credits Balance</button>
             <button class="btn btn-success" data-toggle="modal" data-target="#leaveCreditStatisticsModal" ng-click="$broadcast('openStatisticsModal')" type="button">Leave Credits Statistics</button>
         </div>
 
         <div class="form-group">
-            <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Application For Leave</button>
+            <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Add Leave Record</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
 			<a href="<?= base_url().'employee/form/'?>{{employee.emp_no}}">
