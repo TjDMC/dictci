@@ -8,10 +8,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div style="background-color:#000000">
 		<div style="width:auto;float:left">
-			<p>NAME:&nbsp;&nbsp;<u>{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</u><p>
+			<p>NAME:&nbsp;&nbsp;<span>{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</span><p>
 		</div>
 		<div style="width:auto;float:right">
-			<p>Date Entered Service:&nbsp;&nbsp;<u>{{employee.first_day}}</u></p>
+			<p>Date Entered Service:&nbsp;&nbsp;<span>{{employee.first_day}}</span></p>
 		</div>
 	</div>
 	<div style="clear:center">
