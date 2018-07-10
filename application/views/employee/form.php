@@ -2,23 +2,23 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 <div>
-	<div style="float:center">
+	<div style="text-align:center">
 		<p>RECORD OF LEAVES OF ABSENCE</p>
 		<p>(UNDER R.A. 2266)</p>
 	</div>
-	<div>
-		<div style="background-color:#000000;width:auto;float:left">
+	<div style="background-color:#000000">
+		<div style="width:auto;float:left">
 			<p>NAME:&nbsp&nbsp<u>asdf</u><p>
 		</div>
-		<div style="background-color:#cccccc;width:auto;float:right">
+		<div style="width:auto;float:right">
 			<p>Date Entered Service:&nbsp&nbsp<u>sdfdf</u></p>
 		</div>
 	</div>
-	<div style="float:center">
-	<table class="table table-bordered" style="width:auto;table-layout:fixed">
+	<div style="clear:center">
+	<table class="table table-bordered" style="text-align:center;width:100%;table-layout:abs">
 		<col width="50px">
 		<col width="50px">
-		<col width="100px">
+		<col width="130px">
 		<col width="50px">
 		<col width="50px">
 		<col width="33px">
@@ -29,48 +29,48 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<col width="33px">
 		<col width="50px">
 		<col width="50px">
-		<col width="100px">
+		<col width="130px">
 		<tr>
-			<th colspan="2" rowspan="2" style="padding-top:35px;padding-left:20px">Leave Earned</th>
-			<th rowspan="3" style="padding-top:35px;padding-left:15px">WHEN TAKEN</th>
-			<th colspan="2" rowspan="2" style="padding-top:35px;padding-left:15px">LEAVES TAKEN</th>
-			<th colspan="3" style="padding-left:20px">UNDERTIME</th>
-			<th rowspan="2" colspan="3" style="padding-top:35px;padding-left:30px">W/O PAY</th>
-			<th colspan="2" rowspan="2" style="padding-top:35px;padding-left:30px">BALANCE</th>
-			<th rowspan="3" style="padding-top:50px;padding-left:35px">REMARK</th>
+			<th colspan="2" rowspan="2" style="vertical-align:middle">Leave Earned</th>
+			<th rowspan="3" style="vertical-align:middle">WHEN TAKEN</th>
+			<th colspan="2" rowspan="2" style="vertical-align:middle">LEAVES TAKEN</th>
+			<th colspan="3" style="vertical-align:middle">UNDERTIME</th>
+			<th rowspan="2" colspan="3" style="vertical-align:middle">W/O PAY</th>
+			<th colspan="2" rowspan="2" style="vertical-align:middle">BALANCE</th>
+			<th rowspan="3" style="vertical-align:middle">REMARK</th>
 		</tr>
 		<tr>
-			<th colspan="3" style="padding-left:50px">VAC</th>
+			<th colspan="3">VAC</th>
 		</tr>
 		<tr>
-			<th>VAC</th>
-			<th>SICK</th>
-			<th>VAC</th>
-			<th>SICK</th>
-			<th style="padding-left:8px"><font size="1">HOUR</font></th>
-			<th style="padding-left:8px"><font size="1">MIN</font></th>
-			<th style="padding-left:8px"><font size="1">TOTAL</font></th>
-			<th style="padding-left:8px"><font size="1">HOUR</font></th>
-			<th style="padding-left:8px"><font size="1">MIN</font></th>
-			<th style="padding-left:8px"><font size="1">TOTAL</font></th>
-			<th>VAC</th>
-			<th>SICK</th>
+			<th style="vertical-align:middle">VAC</th>
+			<th style="vertical-align:middle">SICK</th>
+			<th style="vertical-align:middle">VAC</th>
+			<th style="vertical-align:middle">SICK</th>
+			<th style="vertical-align:middle"><font size="1">HOUR</font></th>
+			<th style="vertical-align:middle"><font size="1">MIN</font></th>
+			<th style="vertical-align:middle"><font size="1">TOTAL</font></th>
+			<th style="vertical-align:middle"><font size="1">HOUR</font></th>
+			<th style="vertical-align:middle"><font size="1">MIN</font></th>
+			<th style="vertical-align:middle"><font size="1">TOTAL</font></th>
+			<th style="vertical-align:middle">VAC</th>
+			<th style="vertical-align:middle">SICK</th>
 		</tr>
 		<tr ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td style="padding-left:5px"><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
-			<td><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
 		</tr>
 	</table>
 	</div>
