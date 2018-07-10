@@ -37,8 +37,14 @@ if(count($segments)>0){
 }
 ?><!DOCTYPE html>
 
+<style>
+@media print {
+   .breadcrumbs { display: none; }
+}
+</style>
+
 <?php if ($this->ion_auth->logged_in()):?>
-    <div class="card mb-3">
+    <div class="breadcrumbs card mb-3">
         <div class="card-header">
             <?=$this->ion_auth->logged_in()?$breadcrumbs:''?>
         </div>
