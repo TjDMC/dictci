@@ -26,11 +26,11 @@ class Employee extends MY_Controller{
             show_404();
         }
         $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
-		
+
 		$events = $this->calendar_model->getEvents();
 
         $this->html(
-            function() use ($employee,$leaves){
+            function() use ($employee,$leaves,$events){
                 $this->load->view("employee/display",array(
                     "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
                     "leaves"=>json_encode($leaves,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK),
@@ -75,7 +75,7 @@ class Employee extends MY_Controller{
 			//	Calendar Events
 			$events = $this->calendar_model->getEvents();
             $this->html(
-                function() use ($employees,$employee,$events){
+                function() use ($employee,$events){
                     $this->load->view('employee/leave_records',array(
                         "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
 						"events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
@@ -116,7 +116,7 @@ class Employee extends MY_Controller{
         $this->employee_leaves_model->deleteLeave($data);
         custom_response(true,'Leave record deleted');
     }
-	
+
 	public function form(){
 		$this->html(
 			function(){
