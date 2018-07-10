@@ -469,7 +469,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-		
+
 		return (tlb/100).toFixed(2);
 	}
 
@@ -840,42 +840,93 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 /*Requires employee_display controller as parent*/
 app.controller('employee_statistics',function($scope,$rootScope){
     $scope.statistics={
-        data:[1,3,5,6,1,5,-2,5]
+        labels:['January','February','March','April','May','June','July','August','September','October','November','December'],
+        series:['Vacation','Sick'],
+        options:{
+            scales:{
+                xAxes:[
+                    {
+                        ticks:{
+                            autoSkip:false
+                        }
+                    }
+                ],
+                yAxes:[
+                    {
+                        ticks:{
+                            beginAtZero:true
+                        }
+                    }
+                ]
+            }
+        },
+        colors:["rgba(0,100,255,1)","rgba(0,255,0,1)"]
     };
-    $scope.statistics.labels = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    $scope.year = moment();
     $scope.bal_history = {};
-    $scope.getLeaves = function(startDate,endDate,bal_history){
-        var result = [];
+    $scope.moment = moment;
+
+    $scope.addYear = function(amt){
+        if($scope.year.year()+amt > moment().year() || $scope.year.year()+amt < moment($scope.employee.first_day,$rootScope.dateFormat).year())
+            return;
+        $scope.year.add(amt,'year');
+        var endDate = $scope.year.clone().endOf('year').isSameOrAfter(moment(),'month') ? moment():$scope.year.clone().endOf('year');
+        updateGraph($scope.year.clone().startOf('year'),endDate);
+    }
+
+    $scope.setYear = function(){
+        $scope.year = moment($scope.year);
+        var endDate = $scope.year.clone().endOf('year').isSameOrAfter(moment(),'month') ? moment():$scope.year.clone().endOf('year');
+        updateGraph($scope.year.clone().startOf('year'),endDate);
+    }
+
+    $scope.statisticsDateRender = function($view,$dates){
+        $dates.filter(function(date){
+            return date.localDateValue()<moment($scope.employee.first_day,$rootScope.dateFormat).startOf('year').valueOf() || date.localDateValue() > moment().endOf('year').valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
+    }
+
+    $scope.endDateRender = function($view,$dates,index){
+        if($scope.leave.date_ranges[index].start_date){
+            var activeDate = moment($scope.leave.date_ranges[index].start_date).subtract(1, $view).add(1, 'minute');
+
+            $dates.filter(function(date){
+                return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment($scope.leave.date_ranges[index].start_date).endOf('month').valueOf();
+            }).forEach(function(date){
+                date.selectable = false;
+            });
+        }
+    }
+
+    var updateGraph = function(startDate,endDate,bal_history = null){
+        bal_history = bal_history?bal_history:$scope.computations.bal_history;
         startDate = moment(startDate);
         endDate = moment(endDate);
-        console.log(startDate.format('YYYY-MM-DD')+' '+endDate.format('YYYY-MM-DD'));
         var currDate = startDate.clone().endOf('month');
-        while(currDate.isSameOrBefore(endDate,'month')){
-            var bal = bal_history[currDate.clone().format('YYYY-MM-DD')];
-            if(bal){
-                result.push(bal);
-            }else {
-                result.push({vac:0,sick:0});
-            }
-            currDate.add(1,'months').endOf('month');
-            console.log('test');
-        }
         var vac=[];
         var sick=[];
-        console.log(result);
-        for(var i = 0 ; i<result.length ; i++){
-            console.log(result[i]);
-            vac.push(result[i].vac/1000.0);
-            sick.push(result[i].sick/1000.0);
+        while(currDate.isSameOrBefore(endDate,'month')){
+
+            var bal = bal_history[currDate.clone().format('YYYY-MM-DD')];
+            if(bal){
+                vac.push(bal.vac/1000);
+                sick.push(bal.sick/1000);
+            }else {
+                vac.push(0);
+                sick.push(0);
+            }
+            currDate.add(1,'months').endOf('month');
         }
+
         $scope.statistics.data = [vac,sick];
-        return result;
     }
 
     $scope.$on('openStatisticsModal',function(event){
         $rootScope.longComputation($scope,'bal_history',function(){
             $scope.computeBal(moment().add(1,'month').endOf('month')); //computations history gets set internally in computeBal which is in employee_display
-            $scope.getLeaves('2018-01-01','2018-07-01',$scope.computations.bal_history)
+            updateGraph(moment().startOf('year'),moment(),$scope.computations.bal_history)
             return angular.copy($scope.computations.bal_history);
         });
         console.log(moment('1900-01-01').endOf('month').valueOf());
