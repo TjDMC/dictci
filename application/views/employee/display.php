@@ -286,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <table class="table">
                         <tr>
                             <th>First Day</th>
-                            <th>Terminal Date</th>
+                            <th>Termination Date</th>
                             <th>Total Days</th>
                             <th>Leave Without Pay</th>
                         </tr>
@@ -294,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <td>{{employee.first_day}}</td>
                             <td>
                                 <div class=" dropdown">
-                                    <a id="terminalDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                    <a id="terminationDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
                                         <div class="input-group">
                                             <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="terminal_date">
                                             <div class="input-group-append">
@@ -303,7 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <datetimepicker  data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminalDate',minView:'day'}"></datetimepicker>
+                                        <datetimepicker  data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
                                     </ul>
                                 </div>
                             </td>
