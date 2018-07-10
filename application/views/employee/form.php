@@ -14,21 +14,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<p style="font-size:18px"><b>Date Entered Service:</b>&nbsp;&nbsp;<u>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</u></p>
 		</div>
 	</div>
-	<table class="table table-bordered" style="text-align:center;width:100%;table-layout:abs">
-		<col width="50px">
-		<col width="50px">
-		<col width="130px">
-		<col width="50px">
-		<col width="50px">
-		<col width="33px">
-		<col width="33px">
-		<col width="33px">
-		<col width="33px">
-		<col width="33px">
-		<col width="33px">
-		<col width="50px">
-		<col width="50px">
-		<col width="130px">
+	<table class="table table-bordered table-sm" style="text-align:center;width:100%">
+	<colgroup>
+		<col width="7%">
+		<col width="7%">
+		<col width="17%">
+		<col width="7%">
+		<col width="7%">
+		<col width="4%">
+		<col width="4%">
+		<col width="4%">
+		<col width="4%">
+		<col width="4%">
+		<col width="4%">
+		<col width="7%">
+		<col width="7%">
+		<col width="17%">
+	</colgroup>
 		<tr>
 			<th colspan="2" rowspan="2" style="vertical-align:middle">Leave Earned</th>
 			<th rowspan="3" style="vertical-align:middle">WHEN TAKEN</th>
@@ -55,21 +57,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<th style="vertical-align:middle">VAC</th>
 			<th style="vertical-align:middle">SICK</th>
 		</tr>
-		<tr ng-repeat="i in [1,2,3,4,5,6,7,8,9]">
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
-			<td style="vertical-align:middle"><font size="2">value{{i}}</font></td>
+		<tbody ng-repeat="leave in leaves">
+		<tr ng-repeat="range in leave.date_ranges">
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2">{{range.start_date}}-{{range.end_date}}</font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2">{{range.hours}}</font></td>
+			<td style="vertical-align:middle"><font size="2">{{range.minutes}}</font></td>
+			<td style="vertical-align:middle"><font size="2">{{Math.round((range.hours*60 + range.minutes)/60)}}</font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2"></font></td>
+			<td style="vertical-align:middle"><font size="2">{{leave.info.remarks}}</font></td>
 		</tr>
+		</tbody>
 	</table>
 </div>
