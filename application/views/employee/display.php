@@ -179,12 +179,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    {{bal_history}}
-                    {{statistics.data}}
-                    <canvas class="chart chart-line" chart-data="statistics.data"
-                        chart-labels="statistics.labels">
-                    </canvas>
+                <div class="modal-body text-center">
+                    <div class="btn btn-group mx-auto">
+                        <div class="btn-group">
+                            <a  class="btn btn-outline-primary dropdown-toggle" id="statisticsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{year.year()}}</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <datetimepicker data-ng-model="year" data-datetimepicker-config="{ dropdownSelector: '#statisticsDate',minView:'year',startView:'year' }" data-before-render="statisticsDateRender($view,$dates)"
+                                    data-on-set-time="setYear()"/>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= moment(employee.first_day,dateFormat).year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() >= moment().year()" ng-click="addYear(1)" type="button"><i class="fas fa-angle-right"></i></button>
+                    </div>
+                    <div>
+                        <canvas class="chart chart-line" chart-data="statistics.data"
+                            chart-labels="statistics.labels" chart-options="statistics.options" chart-series="statistics.series" chart-colors="statistics.colors">
+                        </canvas>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
