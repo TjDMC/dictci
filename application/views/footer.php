@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 }
 .cssload-ball_4
 {
-	background-color:rgb(151,191,13);
+	background-color:rgb(240,240,240);
 	top:23px; left:23px;
 }
 
