@@ -1,17 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-<div>
+<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
 	<div style="text-align:center">
 		<p>RECORD OF LEAVES OF ABSENCE</p>
 		<p>(UNDER R.A. 2266)</p>
 	</div>
 	<div style="background-color:#000000">
 		<div style="width:auto;float:left">
-			<p>NAME:&nbsp&nbsp<u>asdf</u><p>
+			<p>NAME:&nbsp;&nbsp;<u>{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</u><p>
 		</div>
 		<div style="width:auto;float:right">
-			<p>Date Entered Service:&nbsp&nbsp<u>sdfdf</u></p>
+			<p>Date Entered Service:&nbsp;&nbsp;<u>{{employee.first_day}}</u></p>
 		</div>
 	</div>
 	<div style="clear:center">

@@ -939,3 +939,4 @@ app.controller('employee_statistics',function($scope,$rootScope){
     });
 
 });
+
