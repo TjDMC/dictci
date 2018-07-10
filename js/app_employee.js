@@ -53,7 +53,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         bal_history:{}
     };
     $scope.computationsCopy = {};
-    $scope.init = function(employee,leaves,events){
+    $scope.init = function(employee,leaves){
         $scope.employee = employee;
         $scope.leaves = leaves;
         $scope.employee.credits = {
@@ -580,9 +580,12 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 		minutes:0
 	};
 
-    $scope.init = function(events=null){
+    $scope.init = function(employee=null,events=null){
         $scope.addOrDeleteRange(0);
+		console.log(employee);
+		console.log(events);
 		$scope.events = events===null?$scope.events:events;
+		console.log($scope.events);
     }
 
 	$scope.$on('openLeaveModal',function(event, leave=null){
@@ -635,8 +638,11 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             }else{
 				var events = $scope.events;
 				for(var i=0;i<events.length;i++){
-					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') )
+					console.log("event");
+					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') ){
+						console.log("pumasok");
 						days--;
+					}
 				}
 			}
             startDate.add(1,'days');

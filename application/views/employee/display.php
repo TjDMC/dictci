@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 
-<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>,<?=$events?>)' class="card">
+<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)' class="card">
     <div class="card-header">
         <h1>Employee Information</h1>
     </div>
