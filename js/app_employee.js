@@ -66,7 +66,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.sick_bal_date = moment().endOf("month");
         $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
-        console.log(leaves);
     }
 
     $scope.sortAndFormatLeaves = function(format){
@@ -394,21 +393,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
 		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
 
-		if(!type.toLowerCase().includes("monetization")){
-			while(start<=end){
-				if($scope.isHoliday(start))
-					credits--;
-				start = start.add(1,'day');
-			}
-		}
-
 		if(typeof credits =='number') credits = credits.toFixed(3);
 		return credits;
-	}
-
-	$scope.isHoliday = function(date){
-		// Need a set of holidays
-		return false;
 	}
 
     /* leave history filters */
