@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="btn-group">
                             <a  class="dropdown-toggle btn btn-outline-info" id="leaveFilterDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{filter.date.date.format(filter.date.format)}}</a>
                             <ul class="dropdown-menu" role="menu">
-                                <datetimepicker data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'renderDateFilter'}"/>
+                                <datetimepicker data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'configDateFilter'}"/>
                             </ul>
                         </div>
                     </div>

@@ -193,7 +193,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		*/
 		// As per MC No. 14, s. 1999
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
-		
+
 		var leaves = angular.copy($scope.leaves);
 
 		var lastDay = moment(enDate,$rootScope.dateFormat);
@@ -467,7 +467,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             }
             $scope.leaves[i].show = show;
         }
-        $scope.$broadcast('renderDateFilter');
+        $scope.$broadcast('configDateFilter');
     }
 
 	$scope.reFilter = function(type_filter){
