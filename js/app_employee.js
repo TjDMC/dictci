@@ -253,7 +253,50 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}else{
 				firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			}
-			firstMC = creditByHalfDay[2*firstMC];
+			// Consider absences as without pay
+			for(var i=0;i<leaves.length;i++){
+				var leave = leaves[i];
+				for(var j=0;j<leave.date_ranges.length;j++){
+					var range = leave.date_ranges[j];
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) || moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) )
+						continue;
+					var creditUsed = $scope.getCreditEquivalent(range)*1000;
+					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')||leave.info.type=="Sick" ){
+						firstMC -= creditUsed/1000;
+						lwop += creditUsed;
+						wopCtr += creditUsed;
+					}else if(leave.info.type=="Undertime"){
+						firstMC -= creditUsed/1000;
+					}else if(leave.info.type.toLowerCase().includes('monet')){
+						$rootScope.showCustomModal('Error','Employee may not monetize yet.',function(){angular.element('#customModal').modal('hide');},function(){});
+					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
+						//	Special Priviledge Leaves
+						spLeave -= creditUsed;
+						if(spLeave<0){
+							firstMC+=spLeave/1000;
+                            $scope.computations.factors.push({type:'Vacation',amount:spLeave,remarks:'Special Priviledge Leave'});
+							spLeave=0;
+						}
+					}else if(leave.info.type.toLowerCase().includes('parental')){
+						//	Parental Leaves	(For Solo Parents)
+						pLeave -= creditUsed;
+						if(pLeave<0){
+							firstMC+=pLeave/1000;
+                            $scope.computations.factors.push({type:'Vacation',amount:pLeave,remarks:'Parental Leave'});
+							pLeave=0;
+						}
+					}
+					leave.date_ranges.splice(j,1);
+					j--;
+				}
+				if(leave.date_ranges.length==0){
+					leaves.splice(i,1);
+					i--;
+				}
+			}
+			var keep = (firstMC%1)*1000;
+			firstMC = Math.floor(firstMC);
+			firstMC = creditByHalfDay[2*firstMC] - (keep*1.25/30);
 			currV += firstMC; currS += firstMC;
             $scope.computations.factors.push({type:'Vacation',amount:firstMC,remarks:'Accumulation.',start_date:dateStart.clone().endOf('month')});
             $scope.computations.factors.push({type:'Sick',amount:firstMC,remarks:'Accumulation.',start_date:dateStart.clone().endOf('month')});
@@ -269,8 +312,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				fLeave=5000;
 				spLeave=3000;
 				pLeave=7000;
-				monetized=false;
 			}
+			monetized=false;
 			var mLWOP = 0;	// month's without pays
 			for(var i=0;i<leaves.length;i++){
 				var leave = leaves[i];
@@ -278,7 +321,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
-					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range)*1000;
+					var creditUsed = $scope.getCreditEquivalent(range)*1000;
 
 					//	For testing only
 					if( moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) ){
@@ -407,13 +450,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     $scope.getDeductedCredits = function(type,date_range){
 		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
-			return $scope.getCreditEquivalent(type,date_range);
+			return $scope.getCreditEquivalent(date_range);
 		}else{
 			return 0;
 		}
     }
 
-	$scope.getCreditEquivalent = function(type,date_range){
+	$scope.getCreditEquivalent = function(date_range){
 		var HDayEquiv = [0,0.125,0.250,0.375,0.500,0.625,0.750,0.875,1.000];
 		var MDayEquiv = [0,0.002,0.004,0.006,0.008,0.010,0.012,0.015,0.017,0.019,0.021,0.023,0.025,0.027,0.029,0.031,0.033,0.035,0.037,0.040,0.042,0.044,0.046,0.048,0.050,0.052,0.054,0.056,0.058,0.060,0.062,0.065,0.067,0.069,0.071,0.073,0.075,0.077,0.079,0.081,0.083,0.085,0.087,0.090,0.092,0.094,0.096,0.098,0.100,0.102,0.104,0.106,0.108,0.110,0.112,0.115,0.117,0.119,0.121,0.123,0.125];
 		var hours = date_range.hours;
@@ -583,6 +626,61 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);
 	}
+	
+	$scope.startDateOnSetTime = function() {
+		console.log("start on set");
+		$scope.$broadcast('start-date-changed');
+	}
+
+	$scope.endDateOnSetTime = function() {
+		console.log("end on set");
+		$scope.$broadcast('end-date-changed');
+	}
+
+	$scope.startDateBeforeRender = function($dates, $empfday) {
+		console.log("start render");
+		var limitDate = moment($empfday).subtract(1,'month');
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf()
+		}).forEach(function (date) {
+			date.selectable = false;
+		})
+		if ($scope.range_end_date) {
+			var activeDate = moment($scope.range_end_date);
+			$dates.filter(function (date) {
+				return date.localDateValue() >= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}else if($scope.range_start_date==null){
+			$scope.range_start_date = limitDate.add(1,'month');
+			$scope.range_end_date = moment($empfday).endOf('year');
+		}
+	}
+
+	$scope.endDateBeforeRender = function($view, $dates, $empfday) {
+		console.log("end render");
+		var limitDate = moment($empfday).subtract(1,'month');
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf()
+		}).forEach(function (date) {
+			date.selectable = false;
+		})
+		if ($scope.range_start_date) {
+			var activeDate = moment($scope.range_start_date).subtract(1, $view).add(1, 'minute');
+
+			$dates.filter(function (date) {
+				return date.localDateValue() <= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}
+	}
+	
+	$scope.formPrintingDisplay = function(){
+		
+	}
+	
 });
 
 app.controller('employee_add',function($scope,$rootScope,$window){
@@ -636,8 +734,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 
     $scope.init = function(employee=null,events=null){
         $scope.addOrDeleteRange(0);
-		console.log(employee);
-		console.log(events);
 		$scope.events = events===null?$scope.events:events;
 		console.log($scope.events);
     }

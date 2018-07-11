@@ -116,7 +116,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="form-check">
                                 <input class="form-check-input" id="isSuspension" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_suspension"></input>
                                 <label for="isSuspension">Suspension</label>
-                            </div class="form-check">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Title</label>
