@@ -36,6 +36,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="text-right">
                     <div class="col btn-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-info">
+                                <input type="checkbox" ng-true-value=false ng-false-value=true ng-model="filter.date.enabled" autocomplete="off"/> All Time
+                            </label>
+                        </div>
+                        <div ng-if="filter.date.enabled" class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-outline-info active">
                                 <input type="radio" name="leave_date_filter_precision" value="year" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off" checked> Year
                             </label>
@@ -46,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input type="radio" name="leave_date_filter_precision" value="day" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off"> Day
                             </label>
                         </div>
-                        <div class="btn-group">
+                        <div ng-if="filter.date.enabled" class="btn-group">
                             <a  class="dropdown-toggle btn btn-outline-info" id="leaveFilterDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{filter.date.date.format(filter.date.format)}}</a>
                             <ul class="dropdown-menu" role="menu">
                                 <datetimepicker data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'configDateFilter'}"/>
@@ -66,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <th>Minutes</th>
                         <th>Deducted Credits</th>
                     </tr>
-    				<tbody ng-repeat="leave in leaves" ng-show="leave.show && filterLeave(leave)">
+    				<tbody ng-repeat="leave in leaves" ng-show="(filter.date.enabled?leave.show:true) && filterLeave(leave)">
     					<tr style="background-color:lightgray" >
                             <td>
     							{{leave.info.type}}
@@ -83,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </button>
                             </td>
     					</tr>
-    					<tr ng-show="leave.expand && date_range.show" ng-repeat="date_range in leave.date_ranges">
+    					<tr ng-show="leave.expand && (filter.date.enabled?date_range.show:true)" ng-repeat="date_range in leave.date_ranges">
     						<td></td>
     						<td></td>
     						<td>{{date_range.start_date}}</td>

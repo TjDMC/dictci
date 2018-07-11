@@ -412,12 +412,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
 
     /* leave history filters */
-    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'
+    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
     $scope.filter = {
         type:{
             every:true
         },
         date:{
+            enabled:true,
             precision:'year', //year, month, or day
             date:moment(),
             format:'YYYY'
