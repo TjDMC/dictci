@@ -1,7 +1,61 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
+<style>
+@media print{
+	.none-printable{
+		display: none;
+	}
+}
+</style>
 <div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
+
+	<div class="none-printable">
+		<div><p><font size="4"><b>Select printing range</b></font></p></div>
+		<table>
+			<tr>
+				<td><p><font size="3"><b>From</b></font></p>
+					<div class="dropdown">
+						<a id="startDateRange" data-toggle="dropdown" data-target="dropdown" href="#">
+							<div class="input-group">
+								<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="range_start_date" required>
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+								</div>
+							</div>
+						</a>
+						<ul class="dropdown-menu">
+							<datetimepicker
+								data-ng-model="range_start_date" 
+								data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month', renderOn: 'end-date-changed' }" 
+								data-on-set-time="startDateOnSetTime()"
+								data-before-render="startDateBeforeRender($dates,employee.first_day)"></datetimepicker>
+						</ul>
+					</div>
+				</td>
+				<td><p><font size="3"><b>To</b></font></p>
+					<div class="dropdown">
+						<a id="endDateRange" data-toggle="dropdown" data-target="dropdown" href="#">
+							<div class="input-group">
+								<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="range_end_date" required>
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+								</div>
+							</div>
+						</a>
+						<ul class="dropdown-menu">
+							<datetimepicker 
+								data-ng-model="range_end_date" 
+								data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month', renderOn: 'start-date-changed' }" 
+								data-on-set-time="endDateOnSetTime()"
+								data-before-render="endDateBeforeRender($view,$dates,employee.first_day)"></datetimepicker>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div><br/><br/>
+
 	<div style="text-align:center">
 		<p style="font-size:25px"><b>RECORD OF LEAVES OF ABSENCE</b></p>
 		<p><b>(UNDER R.A. 2266)</b></p>

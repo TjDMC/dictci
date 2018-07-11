@@ -561,6 +561,61 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);
 	}
+	
+	$scope.startDateOnSetTime = function() {
+		console.log("start on set");
+		$scope.$broadcast('start-date-changed');
+	}
+
+	$scope.endDateOnSetTime = function() {
+		console.log("end on set");
+		$scope.$broadcast('end-date-changed');
+	}
+
+	$scope.startDateBeforeRender = function($dates, $empfday) {
+		console.log("start render");
+		var limitDate = moment($empfday).subtract(1,'month');
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf()
+		}).forEach(function (date) {
+			date.selectable = false;
+		})
+		if ($scope.range_end_date) {
+			var activeDate = moment($scope.range_end_date);
+			$dates.filter(function (date) {
+				return date.localDateValue() >= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}else if($scope.range_start_date==null){
+			$scope.range_start_date = limitDate.add(1,'month');
+			$scope.range_end_date = moment($empfday).endOf('year');
+		}
+	}
+
+	$scope.endDateBeforeRender = function($view, $dates, $empfday) {
+		console.log("end render");
+		var limitDate = moment($empfday).subtract(1,'month');
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf()
+		}).forEach(function (date) {
+			date.selectable = false;
+		})
+		if ($scope.range_start_date) {
+			var activeDate = moment($scope.range_start_date).subtract(1, $view).add(1, 'minute');
+
+			$dates.filter(function (date) {
+				return date.localDateValue() <= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}
+	}
+	
+	$scope.formPrintingDisplay = function(){
+		
+	}
+	
 });
 
 app.controller('employee_add',function($scope,$rootScope,$window){
