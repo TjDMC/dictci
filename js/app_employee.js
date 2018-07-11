@@ -215,6 +215,45 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}else{
 				firstMC = Math.abs(dateStart.clone().endOf('month').diff(dateStart, 'days'))+1;
 			}
+			// Consider absences as without leave
+			for(var i=0;i<leaves.length;i++){
+				var leave = leaves[i];
+				for(var j=0;j<leave.date_ranges.length;j++){
+					var range = leave.date_ranges[j];
+					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
+						continue;
+					var creditUsed = $scope.getCreditEquivalent(leave.info.type,range);
+					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')||leave.info.type=="Sick" ){
+						firstMC -= creditUsed; console.log("IN");
+					}else if(leave.info.type=="Undertime"){
+						currV -= creditUsed;
+					}else if(leave.info.type.toLowerCase().includes('monet')){
+						$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
+					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
+						//	Special Priviledge Leaves
+						spLeave -= creditUsed*1000;
+						if(spLeave<0){
+							currV+=spLeave;
+                            $scope.computations.factors.push({type:'Vacation',amount:spLeave,remarks:'Special Priviledge Leave'});
+							spLeave=0;
+						}
+					}else if(leave.info.type.toLowerCase().includes('parental')){
+						//	Parental Leaves	(For Solo Parents)
+						pLeave -= creditUsed*1000;
+						if(pLeave<0){
+							currV+=pLeave;
+                            $scope.computations.factors.push({type:'Vacation',amount:pLeave,remarks:'Parental Leave'});
+							pLeave=0;
+						}
+					}
+					leave.date_ranges.splice(j,1);
+					j--;
+				}
+				if(leave.date_ranges.length==0){
+					leaves.splice(i,1);
+					i--;
+				}
+			}
 			firstMC = creditByHalfDay[2*firstMC];
 			currV += firstMC; currS += firstMC;
             $scope.computations.factors.push({type:'Vacation',amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
@@ -231,8 +270,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				fLeave=5000;
 				spLeave=3000;
 				pLeave=7000;
-				monetized=false;
 			}
+			monetized=false;
 			var mLWOP = 0;	// month's without pays
 			for(var i=0;i<leaves.length;i++){
 				var leave = leaves[i];
