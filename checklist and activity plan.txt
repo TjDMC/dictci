@@ -3,7 +3,7 @@ CHECKLIST
 ---
 leave credit computations
 	-suspension of work
-	-optimization (?)
+	-optimization - done(?) July 11, 2018
 	-visualization
 
 Employee Page
