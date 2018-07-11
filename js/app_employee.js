@@ -46,7 +46,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.bal_date = '';
 	$scope.terminal_date = '';
 	$scope.lwop = [];	/* 0: total lwop; 1: lwop due to currV<0 */
-	$scope.filter = {every:true,vacation:true,sick:true,maternity:true,paternity:true,others:true};
     $scope.computations = {
         vacation:[/*{amount:number,remarks:'',date:date}*/],
         sick:[],
@@ -404,67 +403,83 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return false;
 	}
 
-	$scope.reFilter = function(filter){
-		switch(filter){
-			case 'Every':
-				if($scope.filter.every){
-					$scope.filter.every = false;
-					$scope.filter.vacation = false;
-					$scope.filter.sick = false;
-					$scope.filter.maternity = false;
-					$scope.filter.paternity = false;
-					$scope.filter.others = false;
-				}else{
-					$scope.filter.every = true;
-					$scope.filter.vacation = true;
-					$scope.filter.sick = true;
-					$scope.filter.maternity = true;
-					$scope.filter.paternity = true;
-					$scope.filter.others = true;
-				}
-				break;
+    /* leave history filters */
+    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'
+    $scope.filter = {
+        type:{
+            every:true
+        },
+        date:{
+            precision:'year', //year, month, or day
+            date:moment(),
+            format:'YYYY'
+        }
+    };
+    $scope.initFilters = function(){
+        for(var i = 0 ; i<$scope.type_filters.length ; i++){
+            $scope.filter.type[$scope.type_filters[i]] = true;
+        }
+        for(var i=0;i<$scope.leaves.length;i++){
+            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
+                $scope.leaves[i].date_ranges[j].show = true;
+            }
+        }
+        $scope.changeDateFilter();
+    }
+    $scope.filterLeave = function(leave){ //returns true if leave can be shown
+        if($scope.type_filters.indexOf(leave.info.type.toLowerCase())>-1){
+            return $scope.filter.type[leave.info.type.toLowerCase()];
+        }else{
+            return $scope.filter.type['others'];
+        }
+    }
 
-			case 'Vacation':
-				if($scope.filter.vacation)
-					$scope.filter.every=false;
-				$scope.filter.vacation = !$scope.filter.vacation;
-				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
-					$scope.filter.every=true;
-				break;
+    $scope.changeDateFilter = function(){
+        switch($scope.filter.date.precision){
+            case 'year':
+                $scope.filter.date.format = 'YYYY';
+                break;
+            case 'month':
+                $scope.filter.date.format = 'MMMM YYYY';
+                break;
+            case 'day':
+                $scope.filter.date.format = 'MMMM DD, YYYY';
+                break;
+        }
+        $scope.filter.date.date = moment($scope.filter.date.date);
+        for(var i=0;i<$scope.leaves.length;i++){
+            var show = false;
+            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
+                if(!moment($scope.leaves[i].date_ranges[j].start_date,$rootScope.dateFormat).isSame($scope.filter.date.date,$scope.filter.date.precision)){
+                    $scope.leaves[i].date_ranges[j].show = false;
+                }else {
+                    $scope.leaves[i].date_ranges[j].show = true;
+                }
+                show = show||$scope.leaves[i].date_ranges[j].show;
+            }
+            $scope.leaves[i].show = show;
+        }
+        $scope.$broadcast('renderDateFilter');
+    }
 
-			case 'Sick':
-				if($scope.filter.sick)
-					$scope.filter.every=false;
-				$scope.filter.sick = !$scope.filter.sick;
-				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
-					$scope.filter.every=true;
-				break;
-
-			case 'Maternity':
-				if($scope.filter.maternity)
-					$scope.filter.every=false;
-				$scope.filter.maternity = !$scope.filter.maternity;
-				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
-					$scope.filter.every=true;
-				break;
-
-			case 'Paternity':
-				if($scope.filter.paternity)
-					$scope.filter.every=false;
-				$scope.filter.paternity = !$scope.filter.paternity;
-				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
-					$scope.filter.every=true;
-				break;
-
-			default:
-				if($scope.filter.others)
-					$scope.filter.every=false;
-				$scope.filter.others = !$scope.filter.others;
-				if($scope.filter.vacation && $scope.filter.sick && $scope.filter.maternity && $scope.filter.paternity && $scope.filter.others)
-					$scope.filter.every=true;
-				break;
-		}
+	$scope.reFilter = function(type_filter){
+        console.log(type_filter);
+		if(type_filter=='every'){
+            $scope.filter.type.every = !$scope.filter.type.every;
+            for(var i=0 ; i<$scope.type_filters.length ; i++){
+                $scope.filter.type[$scope.type_filters[i]] = $scope.filter.type.every;
+            }
+        }else{
+            if($scope.type_filters.indexOf(type_filter)>-1)
+                $scope.filter.type[type_filter] = !$scope.filter.type[type_filter];
+            var every = true;
+            for(var i = 0; i<$scope.type_filters.length ; i++){
+                every = every && $scope.filter.type[$scope.type_filters[i]];
+            }
+            $scope.filter.type.every = every;
+        }
 	}
+    /*end Leave history filters*/
 
 	// Chacking difference between the two
 	$scope.terminalBenefit = function(){

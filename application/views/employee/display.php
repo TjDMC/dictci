@@ -28,15 +28,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div>
             <h3>Leave History</h3>
-			<div class="form-group" style="overflow-x:auto">
-				<div class="btn-group btn-group-toggle">
-					<label class="btn btn-outline-info" ng-class="{active:filter.every}" ng-click="reFilter('Every')">All</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.vacation}" ng-click="reFilter('Vacation')">Vacation</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.sick}" ng-click="reFilter('Sick')">Sick</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.maternity}" ng-click="reFilter('Maternity')">Maternity</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.paternity}" ng-click="reFilter('Paternity')">Paternity</label>
-					<label class="btn btn-outline-info" ng-class="{active:filter.others}" ng-click="reFilter('Others')">Others</label>
+			<div class="form-group row">
+				<div class="col btn-group btn-group-toggle">
+					<label class="btn btn-outline-info" ng-class="{active:filter.type.every}" ng-click="reFilter('every')">All</label>
+                    <label ng-init="initFilters()" ng-repeat="type_filter in type_filters" class="btn btn-outline-info text-capitalize" ng-class="{active:filter.type[type_filter]}" ng-click="reFilter(type_filter)">{{type_filter}}</label>
 				</div>
+                <div class="text-right">
+                    <div class="col btn-group">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-info active">
+                                <input type="radio" name="leave_date_filter_precision" value="year" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off" checked> Year
+                            </label>
+                            <label class="btn btn-outline-info">
+                                <input type="radio" name="leave_date_filter_precision" value="month" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off"> Month
+                            </label>
+                            <label class="btn btn-outline-info">
+                                <input type="radio" name="leave_date_filter_precision" value="day" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off"> Day
+                            </label>
+                        </div>
+                        <div class="btn-group">
+                            <a  class="dropdown-toggle btn btn-outline-info" id="leaveFilterDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{filter.date.date.format(filter.date.format)}}</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <datetimepicker data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'renderDateFilter'}"/>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 			</div>
             <div class="table-responsive">
     			<table class="table" >
@@ -49,7 +66,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <th>Minutes</th>
                         <th>Deducted Credits</th>
                     </tr>
-    				<tbody ng-repeat="leave in leaves" ng-init="leave.info.show=true" ng-show="( leave.info.type=='Vacation'&& filter.vacation ? true:false ) || ( leave.info.type=='Sick'&& filter.sick ? true:false ) || ( leave.info.type=='Maternity'&& filter.maternity ? true:false ) || ( leave.info.type=='Paternity'&& filter.paternity ? true:false ) || ( leave.info.type!='Vacation' && leave.info.type!='Sick' && leave.info.type!='Maternity' && leave.info.type!='Paternity' && filter.others ? true:false )">
+    				<tbody ng-repeat="leave in leaves" ng-show="leave.show && filterLeave(leave)">
     					<tr style="background-color:lightgray" >
                             <td>
     							{{leave.info.type}}
@@ -61,12 +78,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="openLeaveModal($index)">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button ng-click="leave.info.show=!leave.info.show" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.info.show?'Collapse':'Expand'}}">
-                                    <i class="far {{leave.info.show?'fa-minus-square':'fa-plus-square'}}"></i>
+                                <button ng-init="leave.expand=true" ng-click="leave.expand=!leave.expand" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.expand?'Collapse':'Expand'}}">
+                                    <i class="far {{leave.expand?'fa-minus-square':'fa-plus-square'}}"></i>
                                 </button>
                             </td>
     					</tr>
-    					<tr ng-show="leave.info.show" ng-repeat="date_range in leave.date_ranges">
+    					<tr ng-show="leave.expand && date_range.show" ng-repeat="date_range in leave.date_ranges">
     						<td></td>
     						<td></td>
     						<td>{{date_range.start_date}}</td>
