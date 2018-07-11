@@ -228,7 +228,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						lwop += creditUsed;
 						wopCtr += creditUsed;
 					}else if(leave.info.type=="Undertime"){
-						currV -= creditUsed;
+						firstMC -= creditUsed/1000;
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						$rootScope.showCustomModal('Error','Employee may not monetize yet.',function(){angular.element('#customModal').modal('hide');},function(){});
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
@@ -256,7 +256,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					i--;
 				}
 			}
-			firstMC = creditByHalfDay[2*firstMC];
+			var keep = (firstMC%1)*1000;
+			firstMC = Math.floor(firstMC);
+			firstMC = creditByHalfDay[2*firstMC] - (keep*1.25/30);
 			currV += firstMC; currS += firstMC;
             $scope.computations.factors.push({type:'Vacation',amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
             $scope.computations.factors.push({type:'Sick',amount:firstMC,remarks:'First month computation',date:dateStart.clone().endOf('month').format('MMMM DD, YYYY')});
