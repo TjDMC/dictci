@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 }
 </style>
+<br/><br/>
 <div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
 
 	<div class="none-printable">
@@ -51,6 +52,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								data-before-render="endDateBeforeRender($view,$dates,employee.first_day)"></datetimepicker>
 						</ul>
 					</div>
+				</td>
+				<td><p>&nbsp;</p>
+					<button class="btn btn-success" ng-click="">All</button>
 				</td>
 			</tr>
 		</table>
@@ -112,13 +116,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<th style="vertical-align:middle">VAC</th>
 				<th style="vertical-align:middle">SICK</th>
 			</tr>
-			<tbody ng-repeat="leave in leaves">
-				<tr ng-repeat="range in leave.date_ranges">
+			<tbody ng-repeat="leave in leaves | l2hDateOrder">
+				<tr ng-repeat="range in leave.date_ranges | filter:dateRangeFilter">
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.start_date}}-{{range.end_date}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : ''}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : ''}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{range.start_date}} - {{range.end_date}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : '' | number:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : '' | number:2}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{range.hours}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{range.minutes}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{((range.hours*60 + range.minutes)/60) | number:2}}</font></td>

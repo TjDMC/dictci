@@ -52,6 +52,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         bal_history:{}
     };
     $scope.computationsCopy = {};
+	
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
         $scope.leaves = leaves;
@@ -587,6 +588,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return (tlb/100000).toFixed(2);
 	}
 	
+	// datetimepicker section for form printing
 	$scope.startDateOnSetTime = function() {
 		console.log("start on set");
 		$scope.$broadcast('start-date-changed');
@@ -636,9 +638,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			})
 		}
 	}
+	//end of datetimepicker for form printing
 	
-	$scope.formPrintingDisplay = function(){
-		
+	$scope.dateRangeFilter = function(item){
+		if((moment(item.start_date) >= moment($scope.range_start_date).day(0))&&(moment(item.start_date) <= moment($scope.range_end_date).endOf('month'))){
+			return item;
+		}
 	}
 	
 });
@@ -1052,4 +1057,10 @@ app.controller('employee_statistics',function($scope,$rootScope){
         console.log(moment('1900-01-01').endOf('month').valueOf());
     });
 
+});
+
+app.filter('l2hDateOrder', function(){
+	return function(input){
+		return input.slice().reverse();
+	};
 });
