@@ -202,6 +202,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
                     <div class="btn btn-group mx-auto">
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= moment(employee.first_day,dateFormat).year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
                         <div class="btn-group">
                             <a  class="btn btn-outline-primary dropdown-toggle" id="statisticsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{year.year()}}</a>
                             <ul class="dropdown-menu" role="menu">
@@ -209,7 +210,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     data-on-set-time="setYear()"/>
                             </ul>
                         </div>
-                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= moment(employee.first_day,dateFormat).year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
                         <button class="btn btn-outline-primary" ng-disabled="year.year() >= moment().year()" ng-click="addYear(1)" type="button"><i class="fas fa-angle-right"></i></button>
                     </div>
                     <div>
