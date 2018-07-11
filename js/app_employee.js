@@ -184,7 +184,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var factorsCopy = angular.copy($scope.computations.factors);
         for(var i = moment($scope.employee.first_day,$rootScope.dateFormat).year() ; i<=$scope.bal_date.year() ;i++){
             var months = [];
-            for(var j = 1 ; j<=12 && !(i==$scope.bal_date.year() && j>$scope.bal_date.month()) ; j++){
+            for(var j = 1 ; j<=12 && !(i==$scope.bal_date.year() && j>$scope.bal_date.month()+1) ; j++){
                 var factors=[];
                 for(var k = 0 ; k<factorsCopy.length ; k++){
                     if(factorsCopy[k].start_date.month()==j){
@@ -626,7 +626,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);
 	}
-	
+
 	$scope.startDateOnSetTime = function() {
 		console.log("start on set");
 		$scope.$broadcast('start-date-changed');
@@ -676,11 +676,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			})
 		}
 	}
-	
+
 	$scope.formPrintingDisplay = function(){
-		
+
 	}
-	
+
 });
 
 app.controller('employee_add',function($scope,$rootScope,$window){
