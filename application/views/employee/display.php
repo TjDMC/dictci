@@ -182,6 +182,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div>
                         Leaves:
                             <p>insert here this month's date ranges that are included in the current computation</p>
+                        <p ng-repeat="computation in computations.factors">{{computation}}</p>
                     </div>
                 </div>
                 <div class="modal-footer">
