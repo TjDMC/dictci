@@ -8,10 +8,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 }
 </style>
-<br/><br/>
-<div ng-controller="employee_display" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
-
-	<div class="none-printable">
+<ng-include src="'testrow'"></ng-include>
+<div ng-controller="employee_display as dynhtml" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
+	<div class="none-printable"><br/><br/>
 		<div><p><font size="4"><b>Select printing range</b></font></p></div>
 		<table>
 			<tr>
@@ -54,12 +53,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
 				</td>
 				<td><p>&nbsp;</p>
-					<button class="btn btn-success" ng-click="printAll(employee.first_day,leaves[0].date_ranges[0].end_date)">All</button>
+					<button class="btn btn-success" ng-click="printAll(employee.first_day,leaves[0].date_ranges[leaves[0].date_ranges.length-1].end_date)">All Time</button>
 				</td>
 			</tr>
-		</table>
-	</div><br/><br/>
-
+		</table><br/><br/>
+	</div>
 	<div style="text-align:center">
 		<p style="font-size:25px"><b>RECORD OF LEAVES OF ABSENCE</b></p>
 		<p><b>(UNDER R.A. 2266)</b></p>
@@ -77,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<colgroup>
 			<col width="7%">
 			<col width="7%">
-			<col width="17%">
+			<col width="22%">
 			<col width="7%">
 			<col width="7%">
 			<col width="4%">
@@ -88,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<col width="4%">
 			<col width="7%">
 			<col width="7%">
-			<col width="17%">
+			<col width="12%">
 		</colgroup>
 			<tr>
 				<th colspan="2" rowspan="2" style="vertical-align:middle">Leave Earned</th>
@@ -116,19 +114,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<th style="vertical-align:middle">VAC</th>
 				<th style="vertical-align:middle">SICK</th>
 			</tr>
-			<tbody ng-repeat="leave in leaves | l2hDateOrder">
+			<tbody ng-repeat="leave in leaves | lowHigh | filter:testFilter">
 				<tr ng-repeat="range in leave.date_ranges | filter:dateRangeFilter">
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.start_date}} - {{range.end_date}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{range.start_date | shortDate}} - {{range.end_date | shortDate}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.hours | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.minutes | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{((range.hours*60 + range.minutes)/60) | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2"></font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? range.hours : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? range.minutes : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? range.hours : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? range.minutes : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2">{{leave.info.remarks}}</font></td>
@@ -137,3 +135,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</table>
 	</div>
 </div>
+<script type="text/ng-template" id="testrow">
+	<!--<tr>
+		<td style="vertical-align:middle"><font size="2">1.25</font></td>
+		<td style="vertical-align:middle"><font size="2">1.25</font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2"></font></td>
+		<td style="vertical-align:middle"><font size="2">balance as of ??</font></td>
+	</tr>-->
+	<button class="btn btn-primary">dasfsdf</button>
+</script>

@@ -1,3 +1,17 @@
+/**
+Table of Contents
+1.0 Employee Home Page - employee_nav
+2.0 Employee Display Page - employee_display
+    2.1 Leave Credit Monetization
+    2.2 Leave Credit Computation Visualization
+    2.3 Leave Credit Computation
+    2.4 Leave History Filters
+    2.5 Terminal Benefit Computations
+3.0 Employee Leave Records - employee_leave_records
+4.0 Employee Statistics -  employee_statistics
+**/
+
+
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
 	$scope.limit = 10;
@@ -96,7 +110,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         }
 	}
 
-    /* Monetization */
+    /*Section 2.1 Monetization */
     $scope.monetize = {
         date:moment(),
         credits:0,
@@ -181,7 +195,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         );
     }
 
-    /*Computation visualization*/
+    /*Section 2.2 Computation visualization*/
     $scope.getComputationsTable = function(year){
         var factorsCopy = angular.copy($scope.computations.factors);
         var table = factorsCopy.filter(function(factor){
@@ -231,6 +245,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
 
+    /*Section 2.3 Leave Credit Computation*/
 	$scope.computeBal = function(enDate){
 		/*
 				The numbers are converted to integer for computational accuracy. Displayed and saved values are converted back to three(3) decimal places
@@ -502,6 +517,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
+    /*end Leave Credit Computation*/
 
     $scope.balDateSet = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
@@ -536,7 +552,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return credits;
 	}
 
-    /* leave history filters */
+    /*Section 2.4 leave history filters */
     $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
     $scope.filter = {
         type:{
@@ -614,7 +630,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
     /*end Leave history filters*/
 
-    /* Terminal Benefit computations */
+    /*Section 2.5 Terminal Benefit computations */
 	// Chacking difference between the two
     $scope.terBenefit = null;
     $scope.terBenefit2 = null;
@@ -745,7 +761,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 	//end of datetimepicker for form printing
-	
+
 	$scope.startDateRender = function($view,$dates,index){
         var activeDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, $view).add(1, 'minute');
 
@@ -768,9 +784,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 
-/*  $scope.inkSaveRounderFilter = function(item){
-    return Math.floor();
-  }*/
+  $scope.testFilter = function(item){
+    var temp = angular.copy(item);
+    /*var prev = temp[0].date_ranges[0].end_date;
+    temp.forEach(function(rancont,i){
+      temp[i].date_ranges.forEach(function(content,j){
+        if(moment(prev).month()!=moment(content.end_date).month()){ console.log(moment(prev).format('MM-DD-YYYY')+" "+moment(content.end_date).format('MM-DD-YYYY'));
+
+          prev = content.end_date;
+        }else{
+
+        }
+      });
+    });*/
+    return item;
+  }
 
 });
 
@@ -1179,9 +1207,9 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
 });
 
-app.filter('l2hDateOrder', function(){
+app.filter('lowHigh', function(){
 	return function(input){
-		return input.slice().reverse();
+    return input.slice().reverse();
 	};
 });
 
@@ -1194,5 +1222,51 @@ app.filter('numNullRounder', function(){
     }else{
       return '';
     }
+  };
+});
+
+app.filter('shortDate', function(){
+  return function(input){
+    var result = "";
+    switch(moment(input).month()){
+      case 0:
+        result = result+"Jan";
+        break;
+      case 1:
+        result = result+"Feb";
+        break;
+      case 2:
+        result = result+"Mar";
+        break;
+      case 3:
+        result = result+"Apr";
+        break;
+      case 4:
+        result = result+"May";
+        break;
+      case 5:
+        result = result+"Jun";
+        break;
+      case 6:
+        result = result+"Jul";
+        break;
+      case 7:
+        result = result+"Aug";
+        break;
+      case 8:
+        result = result+"Sep";
+        break;
+      case 9:
+        result = result+"Oct";
+        break;
+      case 10:
+        result = result+"Nov";
+        break;
+      case 11:
+        result = result+"Dec";
+        break;
+    }
+    result = result + " " + moment(input).format('DD') + ", " + moment(input).year();
+    return result;
   };
 });

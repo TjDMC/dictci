@@ -8,6 +8,9 @@ leave credit computations
 	-update credits on add/edit event
 		or computations done on display
 
+Calendar
+	-add recurring field - done July 12, 2018
+
 Employee Page
 	-ui update
 	-more leave history filters - done July 11, 2018

@@ -53,8 +53,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <tr ng-repeat="row in calendar">
                     <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%;{{(moment().format('YYYY-MM-DD') == date.format('YYYY-MM-DD')) ? 'background-color:#cccccc':''}} " ng-click="showModal(date)">
                         <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}" >{{date.date()}}</p>
-                        <div ng-repeat="event in date.events" class="bg-dark" style="color:#ffffff;border-radius:5px;padding-left:5px">
-                            <p class="font-italic" >{{event.title}}</p>
+                        <div ng-repeat="event in date.events" style="color:#ffffff;border-radius:5px;padding-left:5px" ng-class="{'bg-success':event.is_recurring,'bg-dark':!event.is_recurring}">
+                            <p class="font-italic">{{event.title}}</p>
                         </div>
                     </td>
                 </tr>
@@ -79,12 +79,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <th>Title</th>
                                 <th>Description</th>
                                 <th>Suspension</th>
+                                <th>Recurring</th>
                                 <th></th>
                             </tr>
                             <tr ng-repeat="event in modalDate.events">
                                 <td>{{event.title}}</td>
                                 <td>{{event.description}}</td>
-                                <td>{{event.is_suspension?'true':'false'}}</td>
+                                <td>{{event.is_suspension?'Yes':'No'}}</td>
+                                <td>{{event.is_recurring?'Yes':'No'}}</td>
                                 <td><button class="btn btn-info" type="button" ng-click="showAddOrEditModal(modalDate,$index)">Edit</button></td>
                             </tr>
                         </table>
@@ -116,6 +118,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="form-check">
                                 <input class="form-check-input" id="isSuspension" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_suspension"></input>
                                 <label for="isSuspension">Suspension</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" id="isRecurring" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_recurring"></input>
+                                <label for="isRecurring">Recurring</label>
                             </div>
                         </div>
                         <div class="form-group">

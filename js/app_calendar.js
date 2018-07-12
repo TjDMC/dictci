@@ -64,14 +64,20 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
                 succMsg = 'Added event successfully.';
                 succFunction = function(response){
                     $scope.modalEvent.id = response.id;
-                    cache.date.events.push($scope.modalEvent);
+                    $scope.events.push($scope.modalEvent); //add to global events
+                    cache.date.events.push($scope.modalEvent); //add to cache. cache refers to the modal that pops up
                 }
                 break;
             case 'edit':
                 url = $rootScope.baseURL+'calendar/actionevents/edit';
                 succMsg = 'Edited event successfully.';
                 succFunction = function(response){
-                    cache.date.events[cache.index] = $scope.modalEvent;
+                    for(var i = 0 ; i<$scope.events.length ; i++){
+                        if($scope.events[i].id == $scope.modalEvent.id){
+                            $scope.events[i] = $scope.modalEvent; //edit global events
+                        }
+                    }
+                    cache.date.events[cache.index] = $scope.modalEvent; //edit cache
                 }
                 break;
             case 'delete':
@@ -79,7 +85,12 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
                 succMsg = 'Event deleted.';
                 data = $scope.modalEvent.id;
                 succFunction = function(response){
-                    cache.date.events.splice(cache.index,1);
+                    for(var i = 0 ; i<$scope.events.length ; i++){
+                        if($scope.events[i].id == $scope.modalEvent.id){
+                            $scope.events.splice(i,1); //delete from global events
+                        }
+                    }
+                    cache.date.events.splice(cache.index,1); //delete from cache
                 }
                 break;
             default:
@@ -92,6 +103,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
             function(response){
                 $rootScope.showCustomModal('Success',succMsg,function(){
                     succFunction(response);
+                    //$scope.calendar = $scope.getCalendar($scope.currentDate);
                     angular.element('#customModal').modal('hide');
                     angular.element('#addOrEditEventModal').modal('hide');
                 },function(){});
@@ -108,9 +120,6 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         cache.index = index;
         if(index>-1){
             $scope.modalEvent = angular.copy(dateEvent.events[index]);
-        }
-        if(!$scope.modalEvent.hasOwnProperty('is_suspension')){
-            $scope.modalEvent.is_suspension = false;
         }
         angular.element('#addOrEditEventModal').modal('show');
     }
@@ -160,13 +169,19 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
             for(var j = 0 ; j < calendar[i].length ; j++){
                 calendar[i][j].events = [];
                 for(var k = 0 ; k<$scope.events.length ; k++){
-                    if(calendar[i][j].isSame(moment($scope.events[k].date),'day')){
-                        calendar[i][j].events.push($scope.events[k]);
+                    if($scope.events[k].is_recurring){
+                        if(calendar[i][j].dayOfYear()==moment($scope.events[k].date).dayOfYear()){
+                            calendar[i][j].events.push($scope.events[k]);
+                        }
+                    }else{
+                        if(calendar[i][j].isSame(moment($scope.events[k].date),'day')){
+                            calendar[i][j].events.push($scope.events[k]);
+                        }
                     }
                 }
             }
         }
-        console.log(calendar);
+
         return calendar;
     }
 });
