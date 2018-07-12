@@ -6,6 +6,7 @@ leave credit computations
 	-optimization - done(?) July 11, 2018
 	-visualization
 	-update credits on add/edit event
+		or computations done on display
 
 Employee Page
 	-ui update

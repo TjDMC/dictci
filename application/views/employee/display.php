@@ -176,7 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                         </a>
                         <ul class="dropdown-menu">
-                            <datetimepicker  data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
+                            <datetimepicker data-before-render="startDateBeforeRender($dates,employee.first_day)" data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
                         </ul>
                     </div>
                     <div class="text-center">
@@ -302,7 +302,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker  data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
                             </ul>
                         </div>
                         <div class="form-group">
@@ -357,7 +357,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <datetimepicker data-on-set-time="setTerminalDate(newDate)" data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
+                                        <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-on-set-time="setTerminalDate(newDate)" data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
                                     </ul>
                                 </div>
                             </td>
