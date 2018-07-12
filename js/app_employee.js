@@ -734,9 +734,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 
-/*  $scope.inkSaveRounderFilter = function(item){
-    return Math.floor();
-  }*/
+  $scope.testFilter = function(item){
+    var temp = angular.copy(item);
+    /*var prev = temp[0].date_ranges[0].end_date;
+    temp.forEach(function(rancont,i){
+      temp[i].date_ranges.forEach(function(content,j){
+        if(moment(prev).month()!=moment(content.end_date).month()){ console.log(moment(prev).format('MM-DD-YYYY')+" "+moment(content.end_date).format('MM-DD-YYYY'));
+
+          prev = content.end_date;
+        }else{
+
+        }
+      });
+    });*/
+    return item;
+  }
 
 });
 
@@ -1145,9 +1157,9 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
 });
 
-app.filter('l2hDateOrder', function(){
+app.filter('lowHigh', function(){
 	return function(input){
-		return input.slice().reverse();
+    return input.slice().reverse();
 	};
 });
 
@@ -1160,5 +1172,51 @@ app.filter('numNullRounder', function(){
     }else{
       return '';
     }
+  };
+});
+
+app.filter('shortDate', function(){
+  return function(input){
+    var result = "";
+    switch(moment(input).month()){
+      case 0:
+        result = result+"Jan";
+        break;
+      case 1:
+        result = result+"Feb";
+        break;
+      case 2:
+        result = result+"Mar";
+        break;
+      case 3:
+        result = result+"Apr";
+        break;
+      case 4:
+        result = result+"May";
+        break;
+      case 5:
+        result = result+"Jun";
+        break;
+      case 6:
+        result = result+"Jul";
+        break;
+      case 7:
+        result = result+"Aug";
+        break;
+      case 8:
+        result = result+"Sep";
+        break;
+      case 9:
+        result = result+"Oct";
+        break;
+      case 10:
+        result = result+"Nov";
+        break;
+      case 11:
+        result = result+"Dec";
+        break;
+    }
+    result = result + " " + moment(input).format('DD') + ", " + moment(input).year();
+    return result;
   };
 });
