@@ -458,15 +458,15 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
 	$scope.getCreditEquivalent = function(date_range){
-		var HDayEquiv = [0,0.125,0.250,0.375,0.500,0.625,0.750,0.875,1.000];
-		var MDayEquiv = [0,0.002,0.004,0.006,0.008,0.010,0.012,0.015,0.017,0.019,0.021,0.023,0.025,0.027,0.029,0.031,0.033,0.035,0.037,0.040,0.042,0.044,0.046,0.048,0.050,0.052,0.054,0.056,0.058,0.060,0.062,0.065,0.067,0.069,0.071,0.073,0.075,0.077,0.079,0.081,0.083,0.085,0.087,0.090,0.092,0.094,0.096,0.098,0.100,0.102,0.104,0.106,0.108,0.110,0.112,0.115,0.117,0.119,0.121,0.123,0.125];
+		var HDayEquiv = [0,125,250,375,500,625,750,875,1000];
+		var MDayEquiv = [0,2,4,6,8,10,12,15,17,19,21,23,25,27,29,31,33,35,37,40,42,44,46,48,50,52,54,56,58,60,62,65,67,69,71,73,75,77,79,81,83,85,87,90,92,94,96,98,100,102,104,106,108,110,112,115,117,119,121,123,125];
 		var hours = date_range.hours;
 		var minutes = date_range.minutes;
 		hours += Math.floor(minutes/60);
 		minutes = minutes%60;
 		var credits = Math.floor(hours/8);
 		hours = hours%8;
-		credits += Number((HDayEquiv[hours] + MDayEquiv[minutes]).toFixed(3));
+		credits += (HDayEquiv[hours] + MDayEquiv[minutes])/1000;
 
 		// +date_range.minutes/(60*8)
 
@@ -586,7 +586,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		dateStart.add(months,'months');
 
 		var days = dateEnd.diff(dateStart, 'days');
-		days -= Math.floor($scope.lwop[0]);
+		days -= $scope.lwop[0];
 
 		while(days<0){
 			months--;
@@ -610,11 +610,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			for(var j=0;j<leave.date_ranges.length;j++){
 				var range = leave.date_ranges[j];
 				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
-					creditsUsed += range.hours*125 + range.minutes*125/60;
+					creditsUsed += range.hours*125 + range.minutes*25/12;
 				}
 			}
 		}
 		creditsUsed -= $scope.lwop[1]*1000;
+		console.log(creditsUsed);
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
