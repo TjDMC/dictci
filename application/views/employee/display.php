@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="form-group">
             <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Add Leave Record</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
+            <button type="button" ng-click="setTerminalDate()" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
 			<a href="<?= base_url().'employee/form/'?>{{employee.emp_no}}">
 				<button type="button" class="btn btn-primary">Print Information</button>
 			</a>
@@ -349,7 +349,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <datetimepicker  data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
+                                        <datetimepicker data-on-set-time="setTerminalDate(newDate)" data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
                                     </ul>
                                 </div>
                             </td>
@@ -371,8 +371,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <div>
                         computations</br>
-						{{terminalBenefit()}}</br>
-						{{terminalBenefit2()}}
+						{{terBenefit}}</br>
+						{{terBenefit2}}
                     </div>
                 </div>
                 <div class="modal-footer">
