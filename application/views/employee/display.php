@@ -197,11 +197,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <th>Date</th>
                                     <th>Credit Type</th>
                                     <th>Amount Added/Deducted</th>
+                                    <th>Balance</th>
                                     <th>Remarks</th>
                                 </tr>
-                                <tbody ng-repeat="factor in computations.table">
-                                    <tr>
-                                        <td colspan="4" >{{factor}}</td>
+                                <tbody ng-repeat="(monthName,month) in computations.table">
+                                    <tr class="bg-light">
+                                        <td colspan="5" >{{monthName}}</td>
+                                    </tr>
+                                    <tr ng-repeat="factor in month">
+                                        <td>{{factor.date.format('MMMM DD, YYYY')}}</td>
+                                        <td>{{factor.type}}</td>
+                                        <td>{{(factor.amount/1000).toFixed(3)}}</td>
+                                        <td>{{(factor.balance/1000).toFixed(3)}}</td>
+                                        <td>{{factor.remarks}}</td>
                                     </tr>
                                 </tbody>
                             </table>

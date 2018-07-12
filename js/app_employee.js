@@ -184,10 +184,26 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var table = factorsCopy.filter(function(factor){
             return factor.date.year() == year;
         });
+        var months = {};
         for(var i = 0 ; i<12 ; i++){
-
+            var monthName = moment(i+1,'MM').format('MMMM');
+            months[monthName] = [];
+            for(var j = 0 ; j<table.length ; j++){
+                if(table[j].date.month()==i){
+                    months[monthName].push(table[j]);
+                    table.splice(j,1);
+                    j--;
+                }
+            }
         }
-        return table;
+
+        angular.forEach(months,function(month,key){
+            if(month.length == 0){
+                delete months[key];
+            }
+        });
+
+        return months;
     }
 
     $scope.computationsDateRender = function($view,$dates){
@@ -690,11 +706,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         });
     }
 
+  $scope.printAll = function($empfday,$lastLeaveDate){
+    $scope.range_start_date = moment($empfday).day(0);
+    $scope.range_end_date = moment($lastLeaveDate).endOf('month');
+    $scope.startDateOnSetTime();
+  }
+
 	$scope.dateRangeFilter = function(item){
 		if((moment(item.start_date,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).day(0))&&(moment(item.start_date,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))){
 			return item;
 		}
 	}
+
+/*  $scope.inkSaveRounderFilter = function(item){
+    return Math.floor();
+  }*/
 
 });
 
@@ -1107,4 +1133,16 @@ app.filter('l2hDateOrder', function(){
 	return function(input){
 		return input.slice().reverse();
 	};
+});
+
+app.filter('numNullRounder', function(){
+  return function(input,mul){
+    mul = mul == undefined ? 0 : mul;
+    var mult = Math.pow(10,mul);
+    if(input!=0){
+      return Math.round(input*mult)/mult;
+    }else{
+      return '';
+    }
+  };
 });
