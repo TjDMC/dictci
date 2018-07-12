@@ -294,9 +294,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 			}
 			var keep = (500 - (firstMC%500))%500;
-			console.log(keep);
 			firstMC = Math.floor(firstMC/500);
-			console.log(firstMC);
 			firstMC = creditByHalfDay[firstMC] - (keep*1.25/30);
 			currV += firstMC; currS += firstMC;
             $scope.computations.factors.push({type:'Vacation',amount:firstMC,remarks:'Accumulation.',start_date:dateStart.clone().endOf('month')});
@@ -600,7 +598,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
-		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[2*days];
+		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)];
 		//	#credits_earned
 
 		//	Credits Used
@@ -615,7 +613,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
 		}
 		creditsUsed -= $scope.lwop[1]*1000;
-		console.log(creditsUsed);
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
