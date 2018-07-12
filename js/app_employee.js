@@ -694,11 +694,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
 	//end of datetimepicker for form printing
 
+  $scope.printAll = function($empfday,$lastLeaveDate){
+    $scope.range_start_date = moment($empfday).day(0);
+    $scope.range_end_date = moment($lastLeaveDate).endOf('month');
+    $scope.startDateOnSetTime();
+  }
+
 	$scope.dateRangeFilter = function(item){
 		if((moment(item.start_date) >= moment($scope.range_start_date).day(0))&&(moment(item.start_date) <= moment($scope.range_end_date).endOf('month'))){
 			return item;
 		}
 	}
+
+/*  $scope.inkSaveRounderFilter = function(item){
+    return Math.floor();
+  }*/
 
 });
 
@@ -1113,4 +1123,16 @@ app.filter('l2hDateOrder', function(){
 	return function(input){
 		return input.slice().reverse();
 	};
+});
+
+app.filter('numNullRounder', function(){
+  return function(input,mul){
+    mul = mul == undefined ? 0 : mul;
+    var mult = Math.pow(10,mul);
+    if(input!=0){
+      return Math.round(input*mult)/mult;
+    }else{
+      return '';
+    }
+  };
 });

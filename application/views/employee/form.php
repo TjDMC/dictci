@@ -27,8 +27,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</a>
 						<ul class="dropdown-menu">
 							<datetimepicker
-								data-ng-model="range_start_date" 
-								data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month', renderOn: 'end-date-changed' }" 
+								data-ng-model="range_start_date"
+								data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month', renderOn: 'end-date-changed' }"
 								data-on-set-time="startDateOnSetTime()"
 								data-before-render="startDateBeforeRender($dates,employee.first_day)"></datetimepicker>
 						</ul>
@@ -45,16 +45,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							</div>
 						</a>
 						<ul class="dropdown-menu">
-							<datetimepicker 
-								data-ng-model="range_end_date" 
-								data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month', renderOn: 'start-date-changed' }" 
+							<datetimepicker
+								data-ng-model="range_end_date"
+								data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month', renderOn: 'start-date-changed' }"
 								data-on-set-time="endDateOnSetTime()"
 								data-before-render="endDateBeforeRender($view,$dates,employee.first_day)"></datetimepicker>
 						</ul>
 					</div>
 				</td>
 				<td><p>&nbsp;</p>
-					<button class="btn btn-success" ng-click="">All</button>
+					<button class="btn btn-success" ng-click="printAll(employee.first_day,leaves[0].date_ranges[0].end_date)">All</button>
 				</td>
 			</tr>
 		</table>
@@ -121,11 +121,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2">{{range.start_date}} - {{range.end_date}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : '' | number:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : '' | number:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.hours}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.minutes}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{((range.hours*60 + range.minutes)/60) | number:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{range.hours | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{range.minutes | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{((range.hours*60 + range.minutes)/60) | numNullRounder:2}}</font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
