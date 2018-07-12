@@ -188,27 +188,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
         }
         return table;
-        /*for(var i = moment($scope.employee.first_day,$rootScope.dateFormat).year() ; i<=$scope.bal_date.year() ;i++){
-            var months = [];
-            for(var j = 1 ; j<=12 && !(i==$scope.bal_date.year() && j>$scope.bal_date.month()+1) ; j++){
-                var factors=[];
-                for(var k = 0 ; k<factorsCopy.length ; k++){
-                    if(factorsCopy[k].start_date.month()==(j-1) && factorsCopy[k].start_date.year()==i){
-                        factors.push(factorsCopy[k]);
-                        factorsCopy.splice(k,1);
-                        k--;
-                    }
-                }
-                months.push({
-                    month:moment(i+' '+j,'YYYY MM'),
-                    factors:factors
-                });
-            }
-            $scope.computations.table.push({
-                year:moment(i,'YYYY'),
-                months:months
-            });
-        }*/
     }
 
     $scope.computationsDateRender = function($view,$dates){
@@ -228,6 +207,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var hold = $scope.computeBal($scope.bal_date);
 		var t2 = performance.now();
 		console.log(t2-t1);
+        $scope.computations.year_filter = moment();
         $scope.computations.table = $scope.getComputationsTable(moment().year());
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
@@ -308,8 +288,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			console.log(firstMC);
 			firstMC = creditByHalfDay[firstMC] - (keep*1.25/30);
 			currV += firstMC; currS += firstMC;
-            $scope.computations.factors.push({type:'Vacation',amount:firstMC,balance:currV,remarks:'Accumulalation.',date:dateStart.clone().endOf('month')});
-            $scope.computations.factors.push({type:'Sick',amount:firstMC,balance:currS,remarks:'Accumulalation.',date:dateStart.clone().endOf('month')});
+            $scope.computations.factors.push({type:'Vacation',amount:firstMC,balance:currV,remarks:'Accumulation.',date:dateStart.clone().endOf('month')});
+            $scope.computations.factors.push({type:'Sick',amount:firstMC,balance:currS,remarks:'Accumulation.',date:dateStart.clone().endOf('month')});
             $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')] = {vac:currV,sick:currS};
             dateStart.add(1,'month');
 		}
@@ -569,7 +549,15 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
     /*end Leave history filters*/
 
+    /* Terminal Benefit computations */
 	// Chacking difference between the two
+    $scope.terBenefit = null;
+    $scope.terBenefit2 = null;
+    $scope.setTerminalDate = function(date){
+        $scope.terminal_date = moment(date);
+        $rootScope.longComputation($scope,'terBenefit',$scope.terminalBenefit);
+        $rootScope.longComputation($scope,'terBenefit2',$scope.terminalBenefit2);
+    }
 	$scope.terminalBenefit = function(){
 		var t1 = performance.now();
 		var salary = 100*$scope.employee.salary;
@@ -641,6 +629,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);
 	}
+    /* end Terminal Benefit Computations*/
 
 	// datetimepicker section for form printing
 	$scope.startDateOnSetTime = function() {
