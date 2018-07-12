@@ -181,28 +181,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div class="text-center">
                         <div class="btn btn-group">
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(moment(employee.first_day,dateFormat),'year')" ng-click="computations.year_filter.add(-1,'year')" type="button"><i class="fas fa-angle-left"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(moment(employee.first_day,dateFormat),'year')" ng-click="computations.year_filter.add(-1,'year')  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
                             <div class="btn-group">
                                 <a  class="btn btn-outline-primary dropdown-toggle" id="computationsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{computations.year_filter.year()}}</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <datetimepicker data-ng-model="computations.year_filter" data-datetimepicker-config="{ dropdownSelector: '#computationsDate',minView:'year',startView:'year' }" data-before-render="computationsDateRender($view,$dates)"
-                                        data-on-set-time="computations.year_filter = moment(computations.year_filter)"/>
+                                        data-on-set-time="(computations.year_filter = moment(computations.year_filter))  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])"/>
                                 </ul>
                             </div>
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrAfter(bal_date,'year')" ng-click="computations.year_filter.add(1,'year')" type="button"><i class="fas fa-angle-right"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrAfter(bal_date,'year')" ng-click="computations.year_filter.add(1,'year') + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-right"></i></button>
                         </div>
                         <div class="table-responsive">
                             <table class="table text-left">
                                 <tr>
                                     <th>Date</th>
                                     <th>Credit Type</th>
-                                    <th>Amount Deducted</th>
+                                    <th>Amount Added/Deducted</th>
                                     <th>Remarks</th>
                                 </tr>
-                                <tbody ng-repeat="years in computations.table">
-                                    <tr ng-if="years.year.year() == computations.year_filter.year()" ng-repeat="month in years.months" class="bg-light">
-                                        <td colspan="4" >{{month.month.format('MMMM YYYY')}}</td>
-                                        <td>{{month.factors}}</td>
+                                <tbody ng-repeat="factor in computations.table">
+                                    <tr>
+                                        <td colspan="4" >{{factor}}</td>
                                     </tr>
                                 </tbody>
                             </table>
