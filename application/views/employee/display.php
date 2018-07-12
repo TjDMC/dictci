@@ -54,7 +54,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div ng-if="filter.date.enabled" class="btn-group">
                             <a  class="dropdown-toggle btn btn-outline-info" id="leaveFilterDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{filter.date.date.format(filter.date.format)}}</a>
                             <ul class="dropdown-menu" role="menu">
-                                <datetimepicker data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'configDateFilter'}"/>
+                                <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-ng-model="filter.date.date" data-on-set-time="changeDateFilter()" data-datetimepicker-config="{ dropdownSelector: '#leaveFilterDate',minView:filter.date.precision,startView:filter.date.precision,configureOn:'configDateFilter'}"/>
                             </ul>
                         </div>
                     </div>
@@ -361,8 +361,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </ul>
                                 </div>
                             </td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>Years: {{totalDays.years}}</br>Months: {{totalDays.months}}</br>Days: {{totalDays.days}}</td>
+                            <td>{{lwop[0]}}</td>
                         </tr>
                     </table>
 
@@ -372,8 +372,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <th>Credits Enjoyed (Vac:Sick)</th>
                         </tr>
                         <tr>
-                            <td>0:0</td>
-                            <td>0:0</td>
+                            <td>{{cEarned.v}} : {{cEarned.s}}</td>
+                            <td>{{cEnjoyed.v}} : {{cEnjoyed.s}}</td>
                         </tr>
                     </table>
 
