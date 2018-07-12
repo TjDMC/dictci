@@ -207,7 +207,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var hold = $scope.computeBal($scope.bal_date);
 		var t2 = performance.now();
 		console.log(t2-t1);
-        $scope.computations.date_filter = moment();
+        $scope.computations.year_filter = moment();
         $scope.computations.table = $scope.getComputationsTable(moment().year());
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
