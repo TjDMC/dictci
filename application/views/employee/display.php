@@ -41,14 +41,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </label>
                         </div>
                         <div ng-if="filter.date.enabled" class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-info active">
-                                <input type="radio" name="leave_date_filter_precision" value="year" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off" checked> Year
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'year'}" ng-click="(filter.date.precision='year')+changeDateFilter()">
+                                <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='year'"> Year
                             </label>
-                            <label class="btn btn-outline-info">
-                                <input type="radio" name="leave_date_filter_precision" value="month" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off"> Month
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'month'}" ng-click="(filter.date.precision='month')+changeDateFilter()">
+                                <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='month'"> Month
                             </label>
-                            <label class="btn btn-outline-info">
-                                <input type="radio" name="leave_date_filter_precision" value="day" ng-change="changeDateFilter()" ng-model="filter.date.precision" autocomplete="off"> Day
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'day'}" ng-click="(filter.date.precision='day')+changeDateFilter()">
+                                <input type="radio" name="leave_date_filter_precision autocomplete="off" ng-checked="filter.date.precision=='day'"> Day
                             </label>
                         </div>
                         <div ng-if="filter.date.enabled" class="btn-group">
