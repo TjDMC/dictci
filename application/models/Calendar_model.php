@@ -24,6 +24,11 @@ class Calendar_Model extends MY_Model
 			'field_name'=>'is_suspension',
 			'field_title'=>'Suspension',
 			'required'=>false
+		),
+		array(
+			'field_name'=>'is_recurring',
+			'field_title'=>'Recurring',
+			'required'=>false
 		)
 	);
 
@@ -33,6 +38,7 @@ class Calendar_Model extends MY_Model
 		$this->dbforge->add_field("date datetime not null");
 		$this->dbforge->add_field("description varchar(300) not null");
 		$this->dbforge->add_field("is_suspension boolean not null default false");
+		$this->dbforge->add_field("is_recurring boolean not null default false");
 		$this->dbforge->create_table(DB_PREFIX.'calendar_events',true);
 	}
 
