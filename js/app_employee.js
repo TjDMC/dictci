@@ -184,10 +184,26 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var table = factorsCopy.filter(function(factor){
             return factor.date.year() == year;
         });
+        var months = {};
         for(var i = 0 ; i<12 ; i++){
-
+            var monthName = moment(i+1,'MM').format('MMMM');
+            months[monthName] = [];
+            for(var j = 0 ; j<table.length ; j++){
+                if(table[j].date.month()==i){
+                    months[monthName].push(table[j]);
+                    table.splice(j,1);
+                    j--;
+                }
+            }
         }
-        return table;
+
+        angular.forEach(months,function(month,key){
+            if(month.length == 0){
+                delete months[key];
+            }
+        });
+
+        return months;
     }
 
     $scope.computationsDateRender = function($view,$dates){
