@@ -627,12 +627,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);
 	}
-<<<<<<< HEAD
 	
 	// datetimepicker section for form printing
-=======
-
->>>>>>> 08d24faaf5ca9914616a8104cc3f3f941650aaa2
 	$scope.startDateOnSetTime = function() {
 		console.log("start on set");
 		$scope.$broadcast('start-date-changed');
@@ -682,18 +678,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			})
 		}
 	}
-<<<<<<< HEAD
 	//end of datetimepicker for form printing
 	
 	$scope.dateRangeFilter = function(item){
 		if((moment(item.start_date) >= moment($scope.range_start_date).day(0))&&(moment(item.start_date) <= moment($scope.range_end_date).endOf('month'))){
 			return item;
 		}
-=======
-
-	$scope.formPrintingDisplay = function(){
-
->>>>>>> 08d24faaf5ca9914616a8104cc3f3f941650aaa2
 	}
 
 });
