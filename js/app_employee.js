@@ -641,7 +641,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 	$scope.startDateBeforeRender = function($dates, $empfday) {
 		console.log("start render");
-		var limitDate = moment($empfday).subtract(1,'month');
+		var limitDate = moment($empfday,$rootScope.dateFormat).subtract(1,'month');
 		$dates.filter(function (date) {
 			return date.localDateValue() < limitDate.valueOf()
 		}).forEach(function (date) {
@@ -656,13 +656,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			})
 		}else if($scope.range_start_date==null){
 			$scope.range_start_date = limitDate.add(1,'month');
-			$scope.range_end_date = moment($empfday).endOf('year');
+			$scope.range_end_date = moment($empfday,$rootScope.dateFormat).endOf('year');
 		}
 	}
 
 	$scope.endDateBeforeRender = function($view, $dates, $empfday) {
 		console.log("end render");
-		var limitDate = moment($empfday).subtract(1,'month');
+		var limitDate = moment($empfday,$rootScope.dateFormat).subtract(1,'month');
 		$dates.filter(function (date) {
 			return date.localDateValue() < limitDate.valueOf()
 		}).forEach(function (date) {
@@ -679,9 +679,19 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 	//end of datetimepicker for form printing
+	
+	$scope.startDateRender = function($view,$dates,index){
+        var activeDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, $view).add(1, 'minute');
+
+        $dates.filter(function(date){
+            return date.localDateValue() <= activeDate.valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
+    }
 
 	$scope.dateRangeFilter = function(item){
-		if((moment(item.start_date) >= moment($scope.range_start_date).day(0))&&(moment(item.start_date) <= moment($scope.range_end_date).endOf('month'))){
+		if((moment(item.start_date,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).day(0))&&(moment(item.start_date,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))){
 			return item;
 		}
 	}
@@ -793,9 +803,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             }else{
 				var events = $scope.events;
 				for(var i=0;i<events.length;i++){
-					console.log("event");
 					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') ){
-						console.log("pumasok");
 						days--;
 					}
 				}
