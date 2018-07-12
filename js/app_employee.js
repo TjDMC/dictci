@@ -188,27 +188,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
         }
         return table;
-        /*for(var i = moment($scope.employee.first_day,$rootScope.dateFormat).year() ; i<=$scope.bal_date.year() ;i++){
-            var months = [];
-            for(var j = 1 ; j<=12 && !(i==$scope.bal_date.year() && j>$scope.bal_date.month()+1) ; j++){
-                var factors=[];
-                for(var k = 0 ; k<factorsCopy.length ; k++){
-                    if(factorsCopy[k].start_date.month()==(j-1) && factorsCopy[k].start_date.year()==i){
-                        factors.push(factorsCopy[k]);
-                        factorsCopy.splice(k,1);
-                        k--;
-                    }
-                }
-                months.push({
-                    month:moment(i+' '+j,'YYYY MM'),
-                    factors:factors
-                });
-            }
-            $scope.computations.table.push({
-                year:moment(i,'YYYY'),
-                months:months
-            });
-        }*/
     }
 
     $scope.computationsDateRender = function($view,$dates){
@@ -228,6 +207,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var hold = $scope.computeBal($scope.bal_date);
 		var t2 = performance.now();
 		console.log(t2-t1);
+        $scope.computations.date_filter = moment();
         $scope.computations.table = $scope.getComputationsTable(moment().year());
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
