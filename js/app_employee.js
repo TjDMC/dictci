@@ -1,3 +1,17 @@
+/**
+Table of Contents
+1.0 Employee Home Page - employee_nav
+2.0 Employee Display Page - employee_display
+    2.1 Leave Credit Monetization
+    2.2 Leave Credit Computation Visualization
+    2.3 Leave Credit Computation
+    2.4 Leave History Filters
+    2.5 Terminal Benefit Computations
+3.0 Employee Leave Records - employee_leave_records
+4.0 Employee Statistics -  employee_statistics
+**/
+
+
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
 	$scope.limit = 10;
@@ -93,7 +107,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         }
 	}
 
-    /* Monetization */
+    /*Section 2.1 Monetization */
     $scope.monetize = {
         date:moment(),
         credits:0,
@@ -178,7 +192,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         );
     }
 
-    /*Computation visualization*/
+    /*Section 2.2 Computation visualization*/
     $scope.getComputationsTable = function(year){
         var factorsCopy = angular.copy($scope.computations.factors);
         var table = factorsCopy.filter(function(factor){
@@ -228,6 +242,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
 
+    /*Section 2.3 Leave Credit Computation*/
 	$scope.computeBal = function(enDate){
 		/*
 				The numbers are converted to integer for computational accuracy. Displayed and saved values are converted back to three(3) decimal places
@@ -450,6 +465,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		$scope.lwop[1] = wopCtr/1000;
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
+    /*end Leave Credit Computation*/
 
     $scope.balDateSet = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
@@ -484,7 +500,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		return credits;
 	}
 
-    /* leave history filters */
+    /*Section 2.4 leave history filters */
     $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
     $scope.filter = {
         type:{
@@ -563,7 +579,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
     /*end Leave history filters*/
 
-    /* Terminal Benefit computations */
+    /*Section 2.5 Terminal Benefit computations */
 	// Chacking difference between the two
     $scope.terBenefit = null;
     $scope.terBenefit2 = null;
@@ -695,7 +711,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 	//end of datetimepicker for form printing
-	
+
 	$scope.startDateRender = function($view,$dates,index){
         var activeDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, $view).add(1, 'minute');
 
