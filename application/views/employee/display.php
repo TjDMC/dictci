@@ -90,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     					</tr>
     					<tr ng-show="leave.expand && (filter.date.enabled?date_range.show:true)" ng-repeat="date_range in leave.date_ranges">
     						<td></td>
-    						<td>{{date_range.holiday_conflicts}}</td>
+    						<td></td>
     						<td>{{date_range.start_date}}</td>
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
@@ -192,23 +192,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrAfter(bal_date,'year')" ng-click="computations.year_filter.add(1,'year') + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-right"></i></button>
                         </div>
                         <div class="table-responsive">
-                            <table class="table text-left">
+                            <table class="table table-bordered text-left">
                                 <tr>
                                     <th>Date</th>
                                     <th>Credit Type</th>
-                                    <th>Amount Added/Deducted</th>
-                                    <th>Balance</th>
+                                    <th colspan="2">Amount Added/Deducted</th>
+                                    <th colspan="2">Balance</th>
                                     <th>Remarks</th>
                                 </tr>
                                 <tbody ng-repeat="(monthName,month) in computations.table">
                                     <tr class="bg-light">
-                                        <td colspan="5" >{{monthName}}</td>
+                                        <td colspan="7" >{{monthName}}</td>
                                     </tr>
                                     <tr ng-repeat="factor in month">
                                         <td>{{factor.date.format('MMMM DD, YYYY')}}</td>
                                         <td>{{factor.type}}</td>
-                                        <td>{{(factor.amount/1000).toFixed(3)}}</td>
-                                        <td>{{(factor.balance/1000).toFixed(3)}}</td>
+                                        <td>{{(factor.amount.v/1000).toFixed(3)}}</td>
+                                        <td>{{(factor.amount.s/1000).toFixed(3)}}</td>
+                                        <td>{{(factor.balance.v/1000).toFixed(3)}}</td>
+                                        <td>{{(factor.balance.s/1000).toFixed(3)}}</td>
                                         <td>{{factor.remarks}}</td>
                                     </tr>
                                 </tbody>
