@@ -80,6 +80,9 @@ class Calendar_Model extends MY_Model
 		$nextID = $this->db->query("SHOW TABLE STATUS LIKE '".DB_PREFIX."calendar_events'")->result_array()[0]["Auto_increment"];
 
 		$checker = $this->checkFields($this->eventFields,$eventData);
+		if(!is_array($checker)){
+			return null;
+		}
 		$this->db->insert(DB_PREFIX.'calendar_events',$checker);
 		$this->checkForDateCollisions($nextID);
 		return $nextID;
@@ -94,7 +97,10 @@ class Calendar_Model extends MY_Model
 		));
 
 		$checker = $this->checkFields($eventFields,$eventData);
-
+		if(!is_array($checker)){
+			return $checker;
+		}
+		
 		$this->db->where('event_id',$checker['event_id'])->update(DB_PREFIX.'calendar_events',$checker);
 		$this->checkForDateCollisions($checker['event_id']);
 	}
