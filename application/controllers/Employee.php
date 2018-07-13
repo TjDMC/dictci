@@ -27,7 +27,7 @@ class Employee extends MY_Controller{
         }
         $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
 		
-		$events = $this->calendar_model->getEvents();
+		$events = $this->calendar_model->getEvents(null);
 
         $this->html(
             function() use ($employee,$leaves,$events){
