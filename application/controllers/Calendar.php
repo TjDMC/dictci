@@ -12,7 +12,7 @@ class Calendar extends MY_Controller
     public function body()
     {
         //$this->load->view("calendar/index.php", array());
-        $events = $this->calendar_model->getEvents();
+        $events = $this->calendar_model->getEvents(null);
         $this->load->view("calendar/base.php",array(
             'events'=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
         ));
@@ -45,15 +45,18 @@ class Calendar extends MY_Controller
     }
 
 	public function manageHolidays(){
+		$events = $this->calendar_model->getEvents(0);
 		$this->html(
-			function(){
-				$this->load->view('calendar/holiday');
+			function() use($events){
+				$this->load->view('calendar/holiday',array(
+					'events'=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
+				));
 			}
 		);
 	}
 
 	public function suspendWork(){
-        $events = $this->calendar_model->getEvents();
+        $events = $this->calendar_model->getEvents(1);
 		$this->html(
 			function() use ($events){
 				$this->load->view('calendar/suspend',array(

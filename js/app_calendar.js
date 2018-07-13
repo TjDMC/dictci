@@ -8,7 +8,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
                 title:title1,
                 type:type1,
                 description:description1
-                id:id1 (optional)
+                event_id:id1 (optional)
             },...
         ]
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
@@ -18,10 +18,12 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
     $scope.calendar;
 
     $scope.init = function(events){
+		console.log(events);
         $scope.events = events;
         $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
         console.log(events);
+		console.log($scope.calendar);
     }
 
     $scope.modalDate = {};
@@ -63,7 +65,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
                 url = $rootScope.baseURL+'calendar/actionevents/add';
                 succMsg = 'Added event successfully.';
                 succFunction = function(response){
-                    $scope.modalEvent.id = response.id;
+                    $scope.modalEvent.event_id = response.event_id;
                     $scope.events.push($scope.modalEvent); //add to global events
                     cache.date.events.push($scope.modalEvent); //add to cache. cache refers to the modal that pops up
                 }
@@ -73,7 +75,7 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
                 succMsg = 'Edited event successfully.';
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
-                        if($scope.events[i].id == $scope.modalEvent.id){
+                        if($scope.events[i].event_id == $scope.modalEvent.event_id){
                             $scope.events[i] = $scope.modalEvent; //edit global events
                         }
                     }
@@ -83,10 +85,10 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
             case 'delete':
                 url = $rootScope.baseURL+'calendar/actionevents/delete';
                 succMsg = 'Event deleted.';
-                data = $scope.modalEvent.id;
+                data = $scope.modalEvent.event_id;
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
-                        if($scope.events[i].id == $scope.modalEvent.id){
+                        if($scope.events[i].event_id == $scope.modalEvent.event_id){
                             $scope.events.splice(i,1); //delete from global events
                         }
                     }
