@@ -860,8 +860,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         }
         $scope.events = newEvents;
         /*end events*/
-
-		console.log($scope.events);
     }
 
 	$scope.$on('openLeaveModal',function(event, leave=null){

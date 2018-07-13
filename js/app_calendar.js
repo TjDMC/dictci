@@ -18,10 +18,12 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
     $scope.calendar;
 
     $scope.init = function(events){
+		console.log(events);
         $scope.events = events;
         $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
         console.log(events);
+		console.log($scope.calendar);
     }
 
     $scope.modalDate = {};

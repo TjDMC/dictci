@@ -69,7 +69,9 @@ class Calendar_Model extends MY_Model
 			$this->db->insert_batch(DB_PREFIX.'calendar_collisions',$insertData);
 	}
 
-	public function getEvents(){
+	public function getEvents($suspension=null){
+		if(null!==$suspension)
+			return $this->db->where('is_suspension',$suspension)->get(DB_PREFIX.'calendar_events')->result_array();
 		return $this->db->get(DB_PREFIX.'calendar_events')->result_array();
 	}
 
