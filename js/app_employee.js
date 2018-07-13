@@ -258,7 +258,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var lastDay = moment(enDate,$rootScope.dateFormat);
 		var isDistinctEnd = true;
 		if(lastDay.isSame(lastDay.clone().endOf('month'), 'day')){ isDistinctEnd=false;}
-		
+
 		var enjoyed = {v:0,s:0};
 		var earned = {v:0,s:0};
 
@@ -269,7 +269,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var lwop = 0, wopCtr = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		var monetized = false;
-		
+
 		var years = lastDay.clone().diff(dateStart.clone(), 'years');
 		dateStart.add(years,'years');
 
@@ -277,13 +277,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		dateStart.add(months,'months');
 
 		var days = lastDay.clone().diff(dateStart.clone(), 'days');
-		
+
 		$scope.totalDays.years = years;
 		$scope.totalDays.months = months;
 		$scope.totalDays.days = days;
-		
+
 		dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
-		
+
 		// First Month Computation
 		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')  &&  currV!=0 && currS!=0){
 			earned.v = currV;
@@ -505,16 +505,16 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			dateStart.add(1,'month');
 		}
 		// #computation_for_other_months
-		
+
 		$scope.lwop[0] = lwop/1000;
 		$scope.lwop[1] = wopCtr/1000;
-		
+
 		$scope.cEarned.v = earned.v/1000;
 		$scope.cEarned.s = earned.s/1000;
-		
+
 		$scope.cEnjoyed.v = enjoyed.v/1000;
 		$scope.cEnjoyed.s = enjoyed.s/1000;
-		
+
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
     /*end Leave Credit Computation*/
@@ -854,6 +854,31 @@ app.controller('employee_leave_records',function($scope,$rootScope){
     $scope.init = function(employee=null,events=null){
         $scope.addOrDeleteRange(0);
 		$scope.events = events===null?$scope.events:events;
+
+        /*Convert events to object to utilize hashmapping*/
+        var newEvents = {
+            recurring:{}
+        };
+        for(var i=0;i<$scope.events.length ; i++){
+            var event = $scope.events[i];
+            if(event.is_recurring){
+                if(event.is_suspension && !newEvents.recurring[moment(event.date).format('MM-DD')]){
+                    newEvents.recurring[moment(event.date).format('MM-DD')] = 'suspension';
+                }else{
+                    newEvents.recurring[moment(event.date).format('MM-DD')] = event;
+                }
+            }else{
+                newEvents[moment(event.date).format('YYYY-MM-DD')] = event;
+                if(event.is_suspension && !newEvents[moment(event.date).format('YYYY-MM-DD')]){
+                    newEvents[moment(event.date).format('YYYY-MM-DD')] = 'suspension';
+                }else{
+                    newEvents[moment(event.date).format('YYYY-MM-DD')] = event;
+                }
+            }
+        }
+        $scope.events = newEvents;
+        /*end events*/
+        
 		console.log($scope.events);
     }
 
@@ -905,12 +930,18 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
                 days--;
             }else{
-				var events = $scope.events;
-				for(var i=0;i<events.length;i++){
+                var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
+                var recurringEventAtDate = $scope.events.recurring[startDate.format('MM-DD')];
+                if(eventAtDate && eventAtDate!='suspension'){ //Check for existence of an event at that date and make sure its not a suspension
+                    days--;
+                }else if(recurringEventAtDate && recurringEventAtDate!='suspension'){  //Check for recurring events
+                    days--;
+                }
+				/*for(var i=0;i<events.length;i++){
 					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') ){
 						days--;
 					}
-				}
+				}*/
 			}
             startDate.add(1,'days');
         }
