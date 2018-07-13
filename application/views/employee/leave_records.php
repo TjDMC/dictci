@@ -91,6 +91,7 @@ if(!isset($events)){
         </div>
         <div class="table-responsive">
             <label>Date Ranges: </label>
+
             <table class="table table-bordered">
 				<tr>
 					<th></th>
@@ -99,40 +100,44 @@ if(!isset($events)){
                     <th>Credits</th>
 					<th>Hours</th>
 					<th>Minutes</th>
+                    <th>Holiday Conflicts</th>
 				</tr>
                 <tr ng-repeat="date_range in leave.date_ranges track by $index">
                     <td style="width:40px"><button class="btn btn-light" type="button" ng-click="addOrDeleteRange(1,$index)"><i class="fas fa-times"></i></button></td>
-                    <td><div class="dropdown" style="min-width:200px;max-width:400px">
-                        <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
-                            <div class="input-group">
-                                <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="date_range.start_date" required>
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    <td>
+                        <div class="dropdown" style="min-width:200px;max-width:400px">
+                            <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                <div class="input-group">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="date_range.start_date" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-ng-model="date_range.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate'+$index,minView:'day' }" data-on-set-time="startDateSet($index)"></datetimepicker>
-                        </ul>
-                    </div></td>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-ng-model="date_range.start_date" data-datetimepicker-config="{ dropdownSelector:'#startdate'+$index,minView:'day' }" data-on-set-time="startDateSet($index)"></datetimepicker>
+                            </ul>
+                        </div>
+                    </td>
 
-                    <td><div class="dropdown" style="min-width:200px;max-width:400px">
-                        <a id="enddate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
-                            <div class="input-group">
-                                <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="date_range.end_date" required>
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    <td>
+                        <div class="dropdown" style="min-width:200px;max-width:400px">
+                            <a id="enddate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                <div class="input-group">
+                                    <input data-date-time-input="{{dateFormat}}" class="form-control" type="text" data-ng-model="date_range.end_date" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <datetimepicker data-before-render="startDateRender($view,$dates,$index);endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day',renderOn:'startDateSet' }" data-on-set-time="endDateSet($index)"></datetimepicker>
-                        </ul>
-                    </div></td>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <datetimepicker data-before-render="startDateRender($view,$dates,$index);endDateRender($view,$dates,$index)" data-ng-model="date_range.end_date" data-datetimepicker-config="{ dropdownSelector:'#enddate'+$index, minView:'day',renderOn:'startDateSet' }" data-on-set-time="endDateSet($index)"></datetimepicker>
+                            </ul>
+                        </div>
+                    </td>
                     <td>
                         <div class="input-group">
                             <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
-                            <p>{{date_range.event_deduction}}</p>
                         </div>
 					</td>
                     <td style="max-width:200px">
@@ -145,7 +150,9 @@ if(!isset($events)){
                             <input class="form-control" min="0" step="1" type="number" ng-change="updateCredits(date_range,'time')" ng-model="date_range.minutes" ng-disabled="!date_range.start_date" required>
                         </div>
                     </td>
-
+                    <td class="align-middle">
+                        {{date_range.holiday_conflicts}}
+                    </td>
                 </tr>
                 <tr>
 					<td></td>
@@ -153,7 +160,7 @@ if(!isset($events)){
 					<td></td>
 					<td></td>
 					<td></td>
-					<td>Total Credits: {{getTotalCredits()|number:3}}</td>
+					<td colspan="2">Total Credits: {{getTotalCredits()|number:3}}</td>
 				</tr>
             </table>
 			<button class="btn btn-secondary form-group" type="button" ng-click="addOrDeleteRange(0)"><span>Add Range</span></button>

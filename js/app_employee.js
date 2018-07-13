@@ -306,7 +306,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) || moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) )
 						continue;
-					var creditUsed = range.credits*1000;
+					var creditUsed = (range.credits-range.holiday_conflicts<0?0:range.credits-range.holiday_conflicts)*1000;
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')||leave.info.type=="Sick"||leave.info.type=="Undertime" ){
 						firstMC -= creditUsed;
 						lwop += creditUsed;
@@ -367,7 +367,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
-					var creditUsed = range.credits*1000;
+					var creditUsed = (range.credits-range.holiday_conflicts<0?0:range.credits-range.holiday_conflicts)*1000;
 
 					//	For testing only
 					if( moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) ){
@@ -480,16 +480,16 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				currS += tmp;
 				earned.v += tmp;
 				earned.s += tmp;
-                $scope.computations.factors.push({type:'Vacation',amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),balance:currV,remarks:'Absence without pay',date:dateStart.clone()});
-                $scope.computations.factors.push({type:'Sick',amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),balance:currS,remarks:'Absence without pay',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation',amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),balance:currV,remarks:'Accumulation - Absence without pay',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Sick',amount:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),balance:currS,remarks:'Accumulation - Absence without pay',date:dateStart.clone()});
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
 				currV += lastCredit;
 				currS += lastCredit;
 				earned.v += lastCredit;
 				earned.s += lastCredit;
-                $scope.computations.factors.push({type:'Vacation',amount:lastCredit,balance:currV,remarks:'Last Credit',date:dateStart.clone()});
-                $scope.computations.factors.push({type:'Sick',amount:lastCredit,balance:currS,remarks:'Last Credit',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation',amount:lastCredit,balance:currV,remarks:'Accumulation - Last Credit',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Sick',amount:lastCredit,balance:currS,remarks:'Accumulation - Last Credit',date:dateStart.clone()});
 			}else{
 				currV += 1250;
 				currS += 1250;
@@ -528,7 +528,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     $scope.getDeductedCredits = function(type,date_range){
 		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
-			return date_range.credits;
+			return date_range.credits - date_range.holiday_conflicts < 0 ? 0 :date_range.credits-date_range.holiday_conflicts;
 		}else{
 			return 0;
 		}
@@ -906,7 +906,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 		if($scope.leave.info.type=="Maternity") return days;
         //Removing weekends and holidays
         var startDate = moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).clone();
-        $scope.leave.date_ranges[index].event_deduction = 0;
+        $scope.leave.date_ranges[index].holiday_conflicts = 0;
         while(startDate.isSameOrBefore($scope.leave.date_ranges[index].end_date,'days')){
             if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
                 days--;
@@ -914,17 +914,9 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                 var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
                 var recurringEventAtDate = $scope.events.recurring[startDate.format('MM-DD')];
                 if(eventAtDate && eventAtDate!='suspension'){ //Check for existence of an event at that date and make sure its not a suspension
-                    if($scope.leave.date_ranges[index].event_deduction){
-                        $scope.leave.date_ranges[index].event_deduction--;
-                    }else{
-                        $scope.leave.date_ranges[index].event_deduction=-1;
-                    }
+                    $scope.leave.date_ranges[index].holiday_conflicts++;
                 }else if(recurringEventAtDate && recurringEventAtDate!='suspension'){  //Check for recurring events
-                    if($scope.leave.date_ranges[index].event_deduction){
-                        $scope.leave.date_ranges[index].event_deduction--;
-                    }else{
-                        $scope.leave.date_ranges[index].event_deduction=-1;
-                    }
+                    $scope.leave.date_ranges[index].holiday_conflicts++;
                 }
 			}
             startDate.add(1,'days');
@@ -934,13 +926,15 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 
 	$scope.getTotalCredits = function(){
 		var credits = 0;
+        var deductions = 0;
 		for(var i = 0 ; i<$scope.leave.date_ranges.length ; i++){
 			if($scope.leave.date_ranges[i].end_date=='' || $scope.leave.date_ranges[i].start_date==''){
 				continue;
 			}
 			credits += $scope.leave.date_ranges[i].credits;
+            credits = credits-($scope.leave.date_ranges[i].holiday_conflicts?$scope.leave.date_ranges[i].holiday_conflicts:0);
 		}
-		return credits;
+		return credits<0?0:credits;
 	}
 
     $scope.updateCredits = function(date_range,type){

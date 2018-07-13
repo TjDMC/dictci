@@ -90,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     					</tr>
     					<tr ng-show="leave.expand && (filter.date.enabled?date_range.show:true)" ng-repeat="date_range in leave.date_ranges">
     						<td></td>
-    						<td></td>
+    						<td>{{date_range.holiday_conflicts}}</td>
     						<td>{{date_range.start_date}}</td>
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>

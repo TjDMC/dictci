@@ -113,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form ng-submit="actionEvent(modalEvent.hasOwnProperty('id')?'edit':'add')">
+                    <form ng-submit="actionEvent(modalEvent.hasOwnProperty('event_id')?'edit':'add')">
                         <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input" id="isSuspension" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_suspension"></input>
@@ -135,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <textarea class="form-control" ng-model="modalEvent.description"></textarea>
                         </div>
                         <button ng-disabled="busy" class="btn btn-info" type="submit">Submit</button>
-                        <button ng-disabled="busy" ng-if="modalEvent.hasOwnProperty('id')" class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
+                        <button ng-disabled="busy" ng-if="modalEvent.hasOwnProperty('event_id')" class="btn btn-danger" type="button" ng-click="actionEvent('delete')">Delete Event</button>
                     </form>
                 </div>
                 <div class="modal-footer">

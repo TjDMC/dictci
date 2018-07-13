@@ -33,7 +33,7 @@ class Calendar_Model extends MY_Model
 	);
 
 	public function createTable(){
-		$this->dbforge->add_field("id int unsigned not null primary key auto_increment");
+		$this->dbforge->add_field("event_id int unsigned not null primary key auto_increment");
 		$this->dbforge->add_field("title varchar(50)");
 		$this->dbforge->add_field("date datetime not null");
 		$this->dbforge->add_field("description varchar(300) not null");
@@ -43,14 +43,30 @@ class Calendar_Model extends MY_Model
 
 		$this->dbforge->add_field('range_id int unsigned not null');
 		$this->dbforge->add_field('event_id int unsigned not null');
-		$this->dbforge->add_field('deducted_credits float(4,3) not null default 0');
 		$this->dbforge->add_field("foreign key (range_id) references ".DB_PREFIX."leave_date_range(range_id) on update cascade on delete cascade");
-		$this->dbforge->add_field("foreign key (event_id) references ".DB_PREFIX."calendar_events(id) on update cascade on delete cascade");
+		$this->dbforge->add_field("foreign key (event_id) references ".DB_PREFIX."calendar_events(event_id) on update cascade on delete cascade");
 		$this->dbforge->create_table(DB_PREFIX.'calendar_collisions',true);
 	}
 
-	public function checkForCollisions(){
+	public function checkForDateCollisions($eventID){
+		$this->db->select('*');
+		$this->db->from(DB_PREFIX.'calendar_events');
+		$this->db->where('event_id',$eventID);
+		$this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leave_date_range.start_date <= '.DB_PREFIX.'calendar_events.date and '.DB_PREFIX.'leave_date_range.end_date >= '.DB_PREFIX.'calendar_events.date');
+		$res = $this->db->get()->result_array();
 
+		$insertData = array();
+		foreach($res as $r){
+			$this->db->where('range_id',$r['range_id']);
+			$this->db->where('event_id',$r['event_id']);
+			$this->db->delete(DB_PREFIX.'calendar_collisions');
+			array_push($insertData,array(
+				'range_id'=>$r['range_id'],
+				'event_id'=>$r['event_id']
+			));
+		}
+		if(count($insertData)>0)
+			$this->db->insert_batch(DB_PREFIX.'calendar_collisions',$insertData);
 	}
 
 	public function getEvents(){
@@ -63,27 +79,28 @@ class Calendar_Model extends MY_Model
 
 		$checker = $this->checkFields($this->eventFields,$eventData);
 		$this->db->insert(DB_PREFIX.'calendar_events',$checker);
-
+		$this->checkForDateCollisions($nextID);
 		return $nextID;
 	}
 
 	public function editEvent($eventData){
 		$eventFields = $this->eventFields;
 		array_push($eventFields,array(
-			'field_name'=>"id",
+			'field_name'=>"event_id",
 			'field_title'=>'ID',
 			'required'=>true
 		));
 
 		$checker = $this->checkFields($eventFields,$eventData);
 
-		$this->db->where('id',$checker['id'])->update(DB_PREFIX.'calendar_events',$checker);
+		$this->db->where('event_id',$checker['event_id'])->update(DB_PREFIX.'calendar_events',$checker);
+		$this->checkForDateCollisions($checker['event_id']);
 	}
 
 	public function deleteEvent($eventID){
 		if(is_array($eventID))
 			return 'Invalid ID';
-		$this->db->where('id',$eventID)->delete(DB_PREFIX.'calendar_events');
+		$this->db->where('event_id',$eventID)->delete(DB_PREFIX.'calendar_events');
 	}
 
 }
