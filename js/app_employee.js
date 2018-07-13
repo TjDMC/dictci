@@ -306,7 +306,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) || moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) )
 						continue;
-					var creditUsed = $scope.getCreditEquivalent(range)*1000;
+					var creditUsed = range.credits*1000;
 					if( leave.info.type=="Vacation"||leave.info.type.toLowerCase().includes('force')||leave.info.type.toLowerCase().includes('mandatory')||leave.info.type=="Sick"||leave.info.type=="Undertime" ){
 						firstMC -= creditUsed;
 						lwop += creditUsed;
@@ -367,7 +367,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
-					var creditUsed = $scope.getCreditEquivalent(range)*1000;
+					var creditUsed = range.credits*1000;
 
 					//	For testing only
 					if( moment(range.end_date,$rootScope.dateFormat).isAfter(lastDay) ){
@@ -533,26 +533,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			return 0;
 		}
     }
-
-	$scope.getCreditEquivalent = function(date_range){
-		var HDayEquiv = [0,125,250,375,500,625,750,875,1000];
-		var MDayEquiv = [0,2,4,6,8,10,12,15,17,19,21,23,25,27,29,31,33,35,37,40,42,44,46,48,50,52,54,56,58,60,62,65,67,69,71,73,75,77,79,81,83,85,87,90,92,94,96,98,100,102,104,106,108,110,112,115,117,119,121,123,125];
-		var hours = date_range.hours;
-		var minutes = date_range.minutes;
-		hours += Math.floor(minutes/60);
-		minutes = minutes%60;
-		var credits = Math.floor(hours/8);
-		hours = hours%8;
-		credits += (HDayEquiv[hours] + MDayEquiv[minutes])/1000;
-
-		// +date_range.minutes/(60*8)
-
-		var start = moment(date_range.start_date,$rootScope.dateFormat).clone();
-		var end = moment(date_range.end_date,$rootScope.dateFormat).clone();
-
-		if(typeof credits =='number') credits = credits.toFixed(3);
-		return credits;
-	}
 
     /*Section 2.4 leave history filters */
     $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
@@ -1000,16 +980,16 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 			$scope.leave.date_ranges[index].end_date = $scope.leave.date_ranges[index].start_date;
 		}
         $scope.$broadcast('startDateSet');
-		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
-        $scope.updateCredits($scope.leave.date_ranges[index],'time');
+		$scope.leave.date_ranges[index].credits = getTotalDays(index);
+        $scope.updateCredits($scope.leave.date_ranges[index],'credits');
     }
 
 	$scope.endDateSet = function(index){
 		if(!$scope.leave.date_ranges[index].start_date){
 			$scope.leave.date_ranges[index].start_date = $scope.leave.date_ranges[index].end_date;
 		}
-		$scope.leave.date_ranges[index].hours = getTotalDays(index)*8;
-        $scope.updateCredits($scope.leave.date_ranges[index],'time');
+		$scope.leave.date_ranges[index].credits = getTotalDays(index);
+        $scope.updateCredits($scope.leave.date_ranges[index],'credits');
 	}
 
     $scope.endDateRender = function($view,$dates,index){
