@@ -496,7 +496,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 $scope.computations.factors.push({type:'Vacation',amount:1250,balance:currV,remarks:'Accumulation',date:dateStart.clone().endOf('month')});
                 $scope.computations.factors.push({type:'Sick',amount:1250,balance:currS,remarks:'Accumulation',date:dateStart.clone().endOf('month')});
 			}
-			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) ){
+			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
                 currV = currV-fLeave;
 				enjoyed.v += fLeave;
                 $scope.computations.factors.push({type:'Vacation',amount:-fLeave,balance:currV,remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
@@ -684,8 +684,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		//	#credits_earned
 
 		//	Credits Used
-		//var creditsUsed = $scope.cEnjoyed.v + $scope.cEnjoyed.s;
-		var creditsUsed = 0;
+		var creditsUsed = ($scope.cEnjoyed.v + $scope.cEnjoyed.s)*1000;
+		/*var creditsUsed = 0;
 		for(var i=0;i<$scope.leaves.length;i++){
 			var leave = $scope.leaves[i];
 			for(var j=0;j<leave.date_ranges.length;j++){
@@ -695,7 +695,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 			}
 		}
-		creditsUsed -= $scope.lwop[1]*1000;
+		creditsUsed -= $scope.lwop[1]*1000;*/
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
