@@ -176,7 +176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                         </a>
                         <ul class="dropdown-menu">
-                            <datetimepicker data-before-render="startDateBeforeRender($dates,employee.first_day)" data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
+                            <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-ng-model="bal_date" data-datetimepicker-config="{ dropdownSelector:'#vacBalDate',startView:'month',minView:'month' }" data-on-set-time="balDateSet()"></datetimepicker>
                         </ul>
                     </div>
                     <div class="text-center">

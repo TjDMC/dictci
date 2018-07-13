@@ -631,7 +631,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     /*end Leave history filters*/
 
     /*Section 2.5 Terminal Benefit computations */
-	// Chacking difference between the two
+	// Checking difference between the two
     $scope.terBenefit = null;
     $scope.terBenefit2 = null;
     $scope.setTerminalDate = function(date){
