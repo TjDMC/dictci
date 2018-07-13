@@ -97,7 +97,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				var date_range = leave.date_ranges[j];
 				date_range.start_date = moment(date_range.start_date).format($rootScope.dateFormat);
 				date_range.end_date = moment(date_range.end_date).format($rootScope.dateFormat);
-                date_range.credits = parseFloat((date_range.hours/8+ $rootScope.minutesToCredits(date_range.minutes) ).toFixed(3));
+                date_range.credits = parseFloat(date_range.credits.toFixed(3));
+                date_range.hours = $rootScope.creditsToTime(date_range.credits).hours;
+                date_range.minutes = $rootScope.creditsToTime(date_range.credits).minutes;
 			}
         }
     }
@@ -526,7 +528,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     $scope.getDeductedCredits = function(type,date_range){
 		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
-			return $scope.getCreditEquivalent(date_range);
+			return date_range.credits;
 		}else{
 			return 0;
 		}
@@ -895,8 +897,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                 var date_range =  $scope.leave.date_ranges[i];
                 date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
                 date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
-                date_range.hours = parseInt(date_range.hours);
-                date_range.minutes = parseInt(date_range.minutes);
             }
             var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
             if(validLeaves.indexOf($scope.leave.info.type)==-1){
@@ -930,13 +930,13 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
                 days--;
             }else{
-                var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
+                /*var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
                 var recurringEventAtDate = $scope.events.recurring[startDate.format('MM-DD')];
                 if(eventAtDate && eventAtDate!='suspension'){ //Check for existence of an event at that date and make sure its not a suspension
                     days--;
                 }else if(recurringEventAtDate && recurringEventAtDate!='suspension'){  //Check for recurring events
                     days--;
-                }
+                }*/
 			}
             startDate.add(1,'days');
         }
@@ -960,12 +960,12 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         var credits = date_range.credits;
         switch(type){
             case 'credits':
-                hours = parseInt(credits*8);
-                minutes = $rootScope.creditsToMinutes(credits);
+                var time = $rootScope.creditsToTime(credits);
+                hours = time.hours;
+                minutes = time.minutes;
                 break;
             case 'time':
-                credits = hours/8;
-                credits += $rootScope.minutesToCredits(minutes);
+                credits = $rootScope.timeToCredits(hours,minutes);
                 break;
             default:
                 return;
