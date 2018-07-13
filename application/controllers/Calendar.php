@@ -26,8 +26,11 @@ class Calendar extends MY_Controller
         switch($action){
             case 'add':
                 $res=$this->calendar_model->addEvent($input);
+                if($res===null){
+                    custom_response(false,'Please check the syntax of your post data.');
+                }
                 custom_response(true,'Success',array(
-                    'id'=>$res
+                    'event_id'=>$res
                 ));
                 break;
             case 'edit':

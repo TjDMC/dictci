@@ -891,6 +891,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 app.controller('employee_add',function($scope,$rootScope,$window){
     $scope.employee={};
     $scope.add = function(){
+        $scope.employee.first_day = moment($scope.employee.first_day).format('YYYY-MM-DD');
         $rootScope.post(
             $rootScope.baseURL+"employee/add/",
             $scope.employee,
