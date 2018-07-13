@@ -55,7 +55,7 @@ class Calendar_Model extends MY_Model
 
 	public function getEvents($suspension){
 		if(null!==$suspension)
-			return $this->db->where('is_suspension',$suspension)->get(DB_PREFIX.'calendar_events')->result_array();
+			return $this->db->order_by("date","asc")->where('is_suspension',$suspension)->get(DB_PREFIX.'calendar_events')->result_array();
 		return $this->db->get(DB_PREFIX.'calendar_events')->result_array();
 	}
 
