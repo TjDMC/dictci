@@ -8,7 +8,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	}
 }
 </style>
-<ng-include src="'testrow'"></ng-include>
 <div ng-controller="employee_display as dynhtml" ng-init='init(<?=$employee ?>,<?=$leaves?>)'>
 	<div class="none-printable"><br/><br/>
 		<div><p><font size="4"><b>Select printing range</b></font></p></div>
@@ -29,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 								data-ng-model="range_start_date"
 								data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month', renderOn: 'end-date-changed' }"
 								data-on-set-time="startDateOnSetTime()"
-								data-before-render="startDateBeforeRender($dates,employee.first_day)"></datetimepicker>
+								data-before-render="startDateBeforeRender($dates,employee.first_day,leaves)"></datetimepicker>
 						</ul>
 					</div>
 				</td>
@@ -114,43 +113,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<th style="vertical-align:middle">VAC</th>
 				<th style="vertical-align:middle">SICK</th>
 			</tr>
-			<tbody ng-repeat="leave in leaves | lowHigh | filter:testFilter">
-				<tr ng-repeat="range in leave.date_ranges | filter:dateRangeFilter">
+			<tbody ng-repeat="leave in leaveFiltered">
+				<tr ng-repeat="range in leave.date_range">
+					<td style="vertical-align:middle"><font size="2">{{leave.vac_bal}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.sick_bal}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{shortDate(range.start) +' - '+ shortDate(range.end)}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.type=='Vacation' ? range.credits : ''}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.type=='Sick' ? range.credits : ''}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.is_wop ? range.hours : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.is_wop ? range.minutes : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{!leave.is_wop ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.is_wop ? range.hours : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.is_wop ? range.minutes : '' | numNullRounder}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.is_wop ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
 					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2">{{range.start_date | shortDate}} - {{range.end_date | shortDate}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Vacation' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.type=='Sick' ? getDeductedCredits(leave.info.type,range) : '' | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? range.hours : '' | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? range.minutes : '' | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{!leave.info.is_without_pay ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? range.hours : '' | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? range.minutes : '' | numNullRounder}}</font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.is_without_pay ? ((range.hours*60 + range.minutes)/60) : '' | numNullRounder:2}}</font></td>
-					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2"></font></td>
-					<td style="vertical-align:middle"><font size="2">{{leave.info.remarks}}</font></td>
+					<td style="vertical-align:middle"><font size="2">{{leave.remarks}}</font></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
-<script type="text/ng-template" id="testrow">
-	<!--<tr>
-		<td style="vertical-align:middle"><font size="2">1.25</font></td>
-		<td style="vertical-align:middle"><font size="2">1.25</font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2"></font></td>
-		<td style="vertical-align:middle"><font size="2">balance as of ??</font></td>
-	</tr>-->
-	<button class="btn btn-primary">dasfsdf</button>
-</script>

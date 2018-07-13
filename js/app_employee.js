@@ -703,7 +703,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		$scope.$broadcast('end-date-changed');
 	}
 
-	$scope.startDateBeforeRender = function($dates, $empfday) {
+	$scope.startDateBeforeRender = function($dates, $empfday, $leaves) {
 		console.log("start render");
 		var limitDate = moment($empfday,$rootScope.dateFormat).subtract(1,'month');
 		$dates.filter(function (date) {
@@ -722,6 +722,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			$scope.range_start_date = limitDate.add(1,'month');
 			$scope.range_end_date = moment($empfday,$rootScope.dateFormat).endOf('year');
 		}
+    $scope.leaveFiltered = $scope.printForm($leaves);
+    console.log($leaves);
 	}
 
 	$scope.endDateBeforeRender = function($view, $dates, $empfday) {
@@ -766,20 +768,132 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
 	}
 
-  $scope.testFilter = function(item){
-    var temp = angular.copy(item);
-    /*var prev = temp[0].date_ranges[0].end_date;
-    temp.forEach(function(rancont,i){
-      temp[i].date_ranges.forEach(function(content,j){
-        if(moment(prev).month()!=moment(content.end_date).month()){ console.log(moment(prev).format('MM-DD-YYYY')+" "+moment(content.end_date).format('MM-DD-YYYY'));
+  $scope.leaveFiltered = [{
+    type:'',
+    remarks:'',
+    is_wop:'',
+    balance:'',
+    date_range:[{
+      start:'',
+      end:'',
+      hours:'',
+      minutes:'',
+      credits:''
+    }]
+  }];
 
-          prev = content.end_date;
+  $scope.printForm = function(input){
+    var container = angular.copy(input.slice().reverse());
+    var temp = [{
+      type:'',
+      remarks:'',
+      is_wop:'',
+      vac_bal:'',
+      sick_bal:'',
+      date_range:[{
+        start:'',
+        end:'',
+        hours:'',
+        minutes:'',
+        credits:''
+      }]
+    }];
+    var prev = moment(container[0].date_ranges[0].end_date);
+    container.forEach(function(leave,i){
+      if(i==0){
+        temp[i].type = leave.info.type;
+        temp[i].remarks = leave.info.remarks;
+        temp[i].is_wop = leave.info.is_without_pay;
+      }else{
+        temp.push({
+          type:leave.info.type,
+          remarks:leave.info.remarks,
+          is_wop:leave.info.is_without_pay,
+          vac_bal:'',
+          sick_bal:'',
+          date_range:[{start:'',end:'',hours:'',minutes:'',credits:''}]
+        });
+      }
+      leave.date_ranges.forEach(function(range,j){
+        if(j==0){
+          temp[temp.length-1].date_range[j].start = moment(range.start_date);
+          temp[temp.length-1].date_range[j].end = moment(range.end_date);
+          temp[temp.length-1].date_range[j].hours = range.hours;
+          temp[temp.length-1].date_range[j].minutes = range.minutes;
+          temp[temp.length-1].date_range[j].credits = range.credits;
+        }else if(prev.month()!=moment(range.end_date).month()){
+          temp.push({
+            type:'',
+            remarks:'bal. as of '+prev.format('MMMM')+', '+prev.year(),
+            is_wop:'',
+            vac_bal:'1.25',
+            sick_bal:'1.25',
+            date_range:[{start:'',end:'',hours:'',minutes:'',credits:''}]
+          });
+          temp[temp.length-1].date_range.push({start:moment(range.start_date),
+            end:moment(range.end_date),
+            hours:range.hours,
+            minutes:range.minutes,
+            credits:range.credits
+          });
         }else{
-
+          temp[temp.length-1].date_range.push({start:moment(range.start_date),
+            end:moment(range.end_date),
+            hours:range.hours,
+            minutes:range.minutes,
+            credits:range.credits
+          });
         }
       });
-    });*/
-    return item;
+    });
+    return temp;
+  }
+
+  $scope.shortDate = function(input){
+    var result = "";
+    switch(moment(input).month()){
+      case 0:
+        result = result+"Jan";
+        break;
+      case 1:
+        result = result+"Feb";
+        break;
+      case 2:
+        result = result+"Mar";
+        break;
+      case 3:
+        result = result+"Apr";
+        break;
+      case 4:
+        result = result+"May";
+        break;
+      case 5:
+        result = result+"Jun";
+        break;
+      case 6:
+        result = result+"Jul";
+        break;
+      case 7:
+        result = result+"Aug";
+        break;
+      case 8:
+        result = result+"Sep";
+        break;
+      case 9:
+        result = result+"Oct";
+        break;
+      case 10:
+        result = result+"Nov";
+        break;
+      case 11:
+        result = result+"Dec";
+        break;
+      default:
+        return '';
+        break;
+    }
+    result = result + " " + moment(input).format('DD') + ", " + moment(input).year();
+    return result;
   }
 
 });
@@ -1237,51 +1351,5 @@ app.filter('numNullRounder', function(){
     }else{
       return '';
     }
-  };
-});
-
-app.filter('shortDate', function(){
-  return function(input){
-    var result = "";
-    switch(moment(input).month()){
-      case 0:
-        result = result+"Jan";
-        break;
-      case 1:
-        result = result+"Feb";
-        break;
-      case 2:
-        result = result+"Mar";
-        break;
-      case 3:
-        result = result+"Apr";
-        break;
-      case 4:
-        result = result+"May";
-        break;
-      case 5:
-        result = result+"Jun";
-        break;
-      case 6:
-        result = result+"Jul";
-        break;
-      case 7:
-        result = result+"Aug";
-        break;
-      case 8:
-        result = result+"Sep";
-        break;
-      case 9:
-        result = result+"Oct";
-        break;
-      case 10:
-        result = result+"Nov";
-        break;
-      case 11:
-        result = result+"Dec";
-        break;
-    }
-    result = result + " " + moment(input).format('DD') + ", " + moment(input).year();
-    return result;
   };
 });
