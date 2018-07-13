@@ -131,8 +131,8 @@ if(!isset($events)){
                     </div></td>
                     <td>
                         <div class="input-group">
-
                             <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
+                            <p>{{date_range.event_deduction}}</p>
                         </div>
 					</td>
                     <td style="max-width:200px">

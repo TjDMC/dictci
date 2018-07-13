@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='month'"> Month
                             </label>
                             <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'day'}" ng-click="(filter.date.precision='day')+changeDateFilter()">
-                                <input type="radio" name="leave_date_filter_precision autocomplete="off" ng-checked="filter.date.precision=='day'"> Day
+                                <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='day'"> Day
                             </label>
                         </div>
                         <div ng-if="filter.date.enabled" class="btn-group">
@@ -95,7 +95,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     						<td>{{date_range.end_date}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.minutes}}</td>
-    						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range)}}</td>
+    						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range).toFixed(3)}}</td>
     					</tr>
     				</tbody>
 

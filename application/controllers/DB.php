@@ -16,8 +16,8 @@ class DB extends MY_Controller {
 		}
 		$this->load->model("employee_leaves_model");
 		$this->load->model("calendar_model");
-		$this->calendar_model->createTable();
 		$this->employee_leaves_model->createTable();
+		$this->calendar_model->createTable();
 	}
 
 	public function populate(){

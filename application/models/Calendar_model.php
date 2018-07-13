@@ -43,7 +43,7 @@ class Calendar_Model extends MY_Model
 
 		$this->dbforge->add_field('range_id int unsigned not null');
 		$this->dbforge->add_field('event_id int unsigned not null');
-		$this->dbforge->add_field('deducted_credits int not null default 0');
+		$this->dbforge->add_field('deducted_credits float(4,3) not null default 0');
 		$this->dbforge->add_field("foreign key (range_id) references ".DB_PREFIX."leave_date_range(range_id) on update cascade on delete cascade");
 		$this->dbforge->add_field("foreign key (event_id) references ".DB_PREFIX."calendar_events(id) on update cascade on delete cascade");
 		$this->dbforge->create_table(DB_PREFIX.'calendar_collisions',true);

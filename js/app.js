@@ -79,22 +79,37 @@ app.run(function($rootScope,$http,$httpParamSerializer,$timeout){
 		$timeout(function(){scope[field]=valueGiver.apply(null,args);$rootScope.busy=false;},0);
 	}
 
-	/*Omnibus minute-credit equivalence*/
+	/*Omnibus time-credit equivalence*/
 	$rootScope.minuteCreditTable = [0,0.002,0.004,0.006,0.008,0.010,0.012,0.015,0.017,0.019,0.021,0.023,0.025,0.027,0.029,0.031,0.033,0.035,0.037,0.040,0.042,0.044,0.046,0.048,0.050,0.052,0.054,0.056,0.058,0.060,0.062,0.065,0.067,0.069,0.071,0.073,0.075,0.077,0.079,0.081,0.083,0.085,0.087,0.090,0.092,0.094,0.096,0.098,0.100,0.102,0.104,0.106,0.108,0.110,0.112,0.115,0.117,0.119,0.121,0.123,0.125];
-	$rootScope.creditsToMinutes = function(x){
-		var y = x%0.125;
+	$rootScope.hourCreditTable = [0,0.125,0.250,0.375,0.500,0.625,0.750,0.875,1];
+
+	/*Converts credit to time and vice versa,
+		where time={hours:(hours),minutes:(minutes)}
+	*/
+	$rootScope.creditsToTime = function(credits){
+		var a=parseInt(credits);
+		var b=credits-a;
+
+		var c=parseInt(b/0.125);
+		var d=b%0.125;
+
 		var closest = 0.125;
 		var minute = 60;
 		for(var i = 0 ; i<$rootScope.minuteCreditTable.length ; i++){
-			if(Math.abs(y-$rootScope.minuteCreditTable[i])<Math.abs(y-closest)){
+			if(Math.abs(d-$rootScope.minuteCreditTable[i])<Math.abs(d-closest)){
 				closest = $rootScope.minuteCreditTable[i];
 				minute = i;
 			}
 		}
-		return minute;
-	};
-	$rootScope.minutesToCredits = function(x){
-		return $rootScope.minuteCreditTable[x%60]+parseInt(x/60)*0.125;
+		return {
+			hours:a*8+c,
+			minutes:minute
+		}
+	}
+	$rootScope.timeToCredits = function(hours,minutes){
+		hours = parseInt(hours);
+		minutes = parseInt(minutes);
+		return $rootScope.hourCreditTable[hours%8]+parseInt(hours/8)+$rootScope.minuteCreditTable[minutes%60]+parseInt(minutes/60);
 	}
 });
 
