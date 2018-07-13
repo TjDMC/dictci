@@ -255,7 +255,32 @@ class Employee_Leaves_Model extends MY_Model{
         $id = $this->db->insert_id();
 		$this->db->insert_batch(DB_PREFIX."leave_date_range",$dateRangeChecker);
 
-        return $this->getLeave($id);
+        $leave =$this->getLeave($id);
+        foreach($leave['date_ranges'] as $dateRange){
+            $this->checkForEventCollisions($dateRange['range_id']);
+        }
+        return $leave;
+	}
+
+    public function checkForEventCollisions($dateRangeID){
+		$this->db->select('*');
+		$this->db->from(DB_PREFIX.'leave_date_range');
+		$this->db->where('range_id',$dateRangeID);
+		$this->db->join(DB_PREFIX.'calendar_events',DB_PREFIX.'calendar_events.date >= '.DB_PREFIX.'leave_date_range.start_date and '.DB_PREFIX.'calendar_events.date <= '.DB_PREFIX.'leave_date_range.end_date');
+		$res = $this->db->get()->result_array();
+
+        $insertData = array();
+		foreach($res as $r){
+			$this->db->where('range_id',$r['range_id']);
+			$this->db->where('event_id',$r['event_id']);
+			$this->db->delete(DB_PREFIX.'calendar_collisions');
+			array_push($insertData,array(
+				'range_id'=>$r['range_id'],
+				'event_id'=>$r['event_id']
+			));
+		}
+        if(count($insertData)>0)
+			$this->db->insert_batch(DB_PREFIX.'calendar_collisions',$insertData);
 	}
 
     public function getEmployee($employeeNo){
@@ -280,11 +305,42 @@ class Employee_Leaves_Model extends MY_Model{
         $res = $this->db->get(DB_PREFIX."leaves")->result_array();
 
 		foreach($res as $leave){
+            //$subquery = 'select count(range_id) from '.DB_PREFIX.'calendar_collisions where range_id='.DB_PREFIX.'leave_date_range.range_id';
+            /*$this->db->select(DB_PREFIX.'leave_date_range.*,('.$subquery.') as holiday_conflicts');
+            $this->db->from(DB_PREFIX.'leave_date_range');
 			$this->db->where("leave_id",$leave['leave_id']);
 			array_push($leaves,array(
 				'info'=>$leave,
-				'date_ranges'=>$this->db->get(DB_PREFIX."leave_date_range")->result_array()
-			));
+				'date_ranges'=>$this->db->get()->result_array()
+			));*/
+
+            $this->db->where('leave_id',$leave['leave_id']);
+            $dateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();
+
+            $outDateRanges = array();
+            foreach($dateRanges as $dateRange){ //Make sure holiday conflicts have unique dates
+                $this->db->select(DB_PREFIX.'calendar_collisions.*,'.DB_PREFIX.'calendar_events.date');
+                $this->db->from(DB_PREFIX.'calendar_collisions');
+                $this->db->join(DB_PREFIX.'calendar_events',DB_PREFIX.'calendar_events.event_id = '.DB_PREFIX.'calendar_collisions.event_id');
+                $this->db->where('range_id',$dateRange['range_id']);
+                $this->db->where('is_suspension',false);
+                $events = $this->db->get()->result_array();
+                $holidays = 0;
+                $prevDates = array();
+                foreach($events as $event){
+                    if(array_search($event['date'],$prevDates)===false){
+                        array_push($prevDates,$event['date']);
+                        $holidays++;
+                    }
+                }
+                $dateRange['holiday_conflicts'] = $holidays;
+                array_push($outDateRanges,$dateRange);
+            }
+
+            array_push($leaves,array(
+                'info'=>$leave,
+                'date_ranges'=>$outDateRanges
+            ));
 		}
         return $leaves;
     }
@@ -295,10 +351,40 @@ class Employee_Leaves_Model extends MY_Model{
         if(count($res)<1){
             return 'No such leave';
         }
-        $this->db->where('leave_id',$leaveID);
+        /*$subquery = 'select count(range_id) from '.DB_PREFIX.'calendar_collisions where range_id='.DB_PREFIX.'leave_date_range.range_id';
+        $this->db->select(DB_PREFIX.'leave_date_range.*,('.$subquery.') as holiday_conflicts');
+        $this->db->from(DB_PREFIX.'leave_date_range');
+        $this->db->where("leave_id",$leaveID);
         $leave = array(
             'info'=>$res[0],
-            'date_ranges'=>$this->db->get(DB_PREFIX."leave_date_range")->result_array()
+            'date_ranges'=>$this->db->get()->result_array()
+        );*/
+        $this->db->where('leave_id',$res[0]['leave_id']);
+        $dateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();
+
+        $outDateRanges = array();
+        foreach($dateRanges as $dateRange){ //Make sure holiday conflicts have unique dates
+            $this->db->select(DB_PREFIX.'calendar_collisions.*,'.DB_PREFIX.'calendar_events.date');
+            $this->db->from(DB_PREFIX.'calendar_collisions');
+            $this->db->join(DB_PREFIX.'calendar_events',DB_PREFIX.'calendar_events.event_id = '.DB_PREFIX.'calendar_collisions.event_id');
+            $this->db->where('range_id',$dateRange['range_id']);
+            $this->db->where('is_suspension',false);
+            $events = $this->db->get()->result_array();
+            $holidays = 0;
+            $prevDates = array();
+            foreach($events as $event){
+                if(array_search($event['date'],$prevDates)===false){
+                    array_push($prevDates,$event['date']);
+                    $holidays++;
+                }
+            }
+            $dateRange['holiday_conflicts'] = $holidays;
+            array_push($outDateRanges,$dateRange);
+        }
+
+        $leave = array(
+            'info'=>$res[0],
+            'date_ranges'=>$outDateRanges
         );
 
         return $leave;
@@ -369,7 +455,11 @@ class Employee_Leaves_Model extends MY_Model{
         $id = $this->db->insert_id();
         $this->db->insert_batch(DB_PREFIX.'leave_date_range',$dateRangeChecker);
 
-        return $this->getLeave($id);
+        $leave = $this->getLeave($id);
+        foreach($leave['date_ranges'] as $dateRange){
+            $this->checkForEventCollisions($dateRange['range_id']);
+        }
+        return $leave;
 
     }
 

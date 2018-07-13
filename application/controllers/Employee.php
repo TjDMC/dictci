@@ -26,8 +26,8 @@ class Employee extends MY_Controller{
             show_404();
         }
         $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
-		
-		$events = $this->calendar_model->getEvents(null);
+
+		$events = $this->calendar_model->getEvents();
 
         $this->html(
             function() use ($employee,$leaves,$events){
@@ -127,7 +127,7 @@ class Employee extends MY_Controller{
             show_404();
         }
         $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
-		
+
 		$this->html(
 			function() use ($employee,$leaves){
 				$this->load->view('employee/form',array(
