@@ -878,7 +878,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         }
         $scope.events = newEvents;
         /*end events*/
-        
+
 		console.log($scope.events);
     }
 
@@ -921,7 +921,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         angular.element('#addOrEditLeaveModal').modal('show');
 	});
 
-    var getTotalDays = function(index){
+    var getTotalDays = function(index,checkForHolidays = false){
         var days =  Math.round(moment($scope.leave.date_ranges[index].end_date).diff($scope.leave.date_ranges[index].start_date,'days'))+1;
 		if($scope.leave.info.type=="Maternity") return days;
         //Removing weekends and holidays
@@ -937,11 +937,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                 }else if(recurringEventAtDate && recurringEventAtDate!='suspension'){  //Check for recurring events
                     days--;
                 }
-				/*for(var i=0;i<events.length;i++){
-					if( startDate.isSameOrAfter(moment(new Date(events[i].date),$rootScope.dateFormat),'day') && startDate.isSameOrBefore(moment(new Date(events[i].date),$rootScope.dateFormat),'day') ){
-						days--;
-					}
-				}*/
 			}
             startDate.add(1,'days');
         }

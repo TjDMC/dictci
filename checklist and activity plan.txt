@@ -25,6 +25,7 @@ leave application
 	-make completely modal - done July 09, 2018
 	-rename to 'leave records' - done July 09, 2018
 	-rename 'employee' model to 'employee leaves' - done July 09, 2018
+	-convert hours and minutes storage to credits
 
 documentation
 
