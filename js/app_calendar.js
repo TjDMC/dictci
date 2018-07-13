@@ -103,10 +103,13 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
             function(response){
                 $rootScope.showCustomModal('Success',succMsg,function(){
                     succFunction(response);
-                    //$scope.calendar = $scope.getCalendar($scope.currentDate);
                     angular.element('#customModal').modal('hide');
                     angular.element('#addOrEditEventModal').modal('hide');
-                },function(){});
+                },function(){
+                    succFunction(response);
+                    angular.element('#customModal').modal('hide');
+                    angular.element('#addOrEditEventModal').modal('hide');
+                });
             },
             function(response){
                 $rootScope.showCustomModal('Error',response.msg,function(){angular.element('#customModal').modal('hide');});

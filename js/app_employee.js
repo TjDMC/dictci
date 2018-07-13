@@ -906,17 +906,26 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 		if($scope.leave.info.type=="Maternity") return days;
         //Removing weekends and holidays
         var startDate = moment($scope.leave.date_ranges[index].start_date,$rootScope.dateFormat).clone();
+        $scope.leave.date_ranges[index].event_deduction = 0;
         while(startDate.isSameOrBefore($scope.leave.date_ranges[index].end_date,'days')){
             if(startDate.day()===0 || startDate.day()===6){ //0 means sunday, 6 means saturday
                 days--;
             }else{
-                /*var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
+                var eventAtDate = $scope.events[startDate.format('YYYY-MM-DD')];
                 var recurringEventAtDate = $scope.events.recurring[startDate.format('MM-DD')];
                 if(eventAtDate && eventAtDate!='suspension'){ //Check for existence of an event at that date and make sure its not a suspension
-                    days--;
+                    if($scope.leave.date_ranges[index].event_deduction){
+                        $scope.leave.date_ranges[index].event_deduction--;
+                    }else{
+                        $scope.leave.date_ranges[index].event_deduction=-1;
+                    }
                 }else if(recurringEventAtDate && recurringEventAtDate!='suspension'){  //Check for recurring events
-                    days--;
-                }*/
+                    if($scope.leave.date_ranges[index].event_deduction){
+                        $scope.leave.date_ranges[index].event_deduction--;
+                    }else{
+                        $scope.leave.date_ranges[index].event_deduction=-1;
+                    }
+                }
 			}
             startDate.add(1,'days');
         }
