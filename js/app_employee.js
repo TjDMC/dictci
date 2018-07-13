@@ -718,7 +718,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			$scope.range_end_date = moment($empfday,$rootScope.dateFormat).endOf('year');
 		}
     $scope.leaveFiltered = $scope.printForm($leaves);
-    console.log($leaves);
 	}
 
 	$scope.endDateBeforeRender = function($view, $dates, $empfday) {
@@ -758,24 +757,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
   }
 
 	$scope.dateRangeFilter = function(item){
-		if((moment(item.start_date,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).day(0))&&(moment(item.start_date,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))){
+		if((moment(item.start,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).day(0))&&(moment(item.start,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))&&(moment(item.bal_month,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).endOf('month'))&&(moment(item.bal_month,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))){
 			return item;
 		}
 	}
 
-  $scope.leaveFiltered = [{
-    type:'',
-    remarks:'',
-    is_wop:'',
-    balance:'',
-    date_range:[{
-      start:'',
-      end:'',
-      hours:'',
-      minutes:'',
-      credits:''
-    }]
-  }];
+  $scope.leaveFiltered;
 
   $scope.printForm = function(input){
     var container = angular.copy(input.slice().reverse());
@@ -790,11 +777,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         end:'',
         hours:'',
         minutes:'',
-        credits:''
+        credits:'',
+        bal_month:''
       }]
     }];
-    var prev = moment(container[0].date_ranges[0].end_date);
-    container.forEach(function(leave,i){
+    var prev = moment(container[0].date_ranges[0].end_date,$rootScope.dateFormat);
+    console.log(container.length);
+    container.forEach(function(leave,i){ console.log(i+" :    i");
       if(i==0){
         temp[i].type = leave.info.type;
         temp[i].remarks = leave.info.remarks;
@@ -806,37 +795,43 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
           is_wop:leave.info.is_without_pay,
           vac_bal:'',
           sick_bal:'',
-          date_range:[{start:'',end:'',hours:'',minutes:'',credits:''}]
+          date_range:[{start:'',end:'',hours:'',minutes:'',credits:'',bal_month:''}]
         });
       }
-      leave.date_ranges.forEach(function(range,j){
+      leave.date_ranges.forEach(function(range,j){  console.log(j+" : j");
         if(j==0){
-          temp[temp.length-1].date_range[j].start = moment(range.start_date);
-          temp[temp.length-1].date_range[j].end = moment(range.end_date);
+          temp[temp.length-1].date_range[j].start = moment(range.start_date,$rootScope.dateFormat);
+          temp[temp.length-1].date_range[j].end = moment(range.end_date,$rootScope.dateFormat);
           temp[temp.length-1].date_range[j].hours = range.hours;
           temp[temp.length-1].date_range[j].minutes = range.minutes;
           temp[temp.length-1].date_range[j].credits = range.credits;
-        }else if(prev.month()!=moment(range.end_date).month()){
-          temp.push({
+        }else{
+          temp[temp.length-1].date_range.push({start:moment(range.start_date,$rootScope.dateFormat),
+            end:moment(range.end_date,$rootScope.dateFormat),
+            hours:range.hours,
+            minutes:range.minutes,
+            credits:range.credits
+          });
+        }
+        if(prev.month()!=moment(range.end_date,$rootScope.dateFormat).month()){
+          temp.splice(temp.length-1,0,{
             type:'',
             remarks:'bal. as of '+prev.format('MMMM')+', '+prev.year(),
             is_wop:'',
             vac_bal:'1.25',
             sick_bal:'1.25',
-            date_range:[{start:'',end:'',hours:'',minutes:'',credits:''}]
+            date_range:[{start:'',end:'',hours:'',minutes:'',credits:'',bal_month:prev}]
           });
-          temp[temp.length-1].date_range.push({start:moment(range.start_date),
-            end:moment(range.end_date),
-            hours:range.hours,
-            minutes:range.minutes,
-            credits:range.credits
-          });
-        }else{
-          temp[temp.length-1].date_range.push({start:moment(range.start_date),
-            end:moment(range.end_date),
-            hours:range.hours,
-            minutes:range.minutes,
-            credits:range.credits
+          prev = moment(range.end_date,$rootScope.dateFormat);
+        } if((i==container.length-1)&&(j==leave.date_ranges.length-1)){ console.log("GAT!");
+          temp.splice(temp.length,0,{
+            type:'',
+            remarks:'bal. as of '+prev.format('MMMM')+', '+prev.year(),
+            is_wop:'',
+            vac_bal:'1.25',
+            sick_bal:'1.25',
+            bal_month:range.end_date,
+            date_range:[{start:'',end:'',hours:'',minutes:'',credits:'',bal_month:range.end_date}]
           });
         }
       });

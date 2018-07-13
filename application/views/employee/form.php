@@ -114,7 +114,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<th style="vertical-align:middle">SICK</th>
 			</tr>
 			<tbody ng-repeat="leave in leaveFiltered">
-				<tr ng-repeat="range in leave.date_range">
+				<tr ng-repeat="range in leave.date_range | filter:dateRangeFilter">
 					<td style="vertical-align:middle"><font size="2">{{leave.vac_bal}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{leave.sick_bal}}</font></td>
 					<td style="vertical-align:middle"><font size="2">{{shortDate(range.start) +' - '+ shortDate(range.end)}}</font></td>
