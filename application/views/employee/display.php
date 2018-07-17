@@ -104,54 +104,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 
-    <div class="modal fade" id="computationsModal" tabindex="-1" role="dialog" aria-labelledby="computationsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="computationsModalLabel">Computations</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <p>Vacation</p>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Amount</th>
-                                <th>Remarks</th>
-                                <th>Date</th>
-                            </tr>
-                            <tr ng-repeat="com in computationsCopy.vacation">
-                                <td>{{com.amount/1000}}</td>
-                                <td>{{com.remarks}}</td>
-                                <td>{{com.date}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="table-responsive">
-                        <p>Sick</p>
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Amount</th>
-                                <th>Remarks</th>
-                                <th>Date</th>
-                            </tr>
-                            <tr ng-repeat="com in computationsCopy.sick">
-                                <td>{{com.amount/1000}}</td>
-                                <td>{{com.remarks}}</td>
-                                <td>{{com.date}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="computeBalModal" tabindex="-1" role="dialog" aria-labelledby="computeBalModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
@@ -194,11 +146,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="table-responsive">
                             <table class="table table-bordered text-left">
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Credit Type</th>
-                                    <th colspan="2">Amount Added/Deducted</th>
-                                    <th colspan="2">Balance</th>
-                                    <th>Remarks</th>
+                                    <th rowspan="2" class="align-middle text-center">Date</th>
+                                    <th rowspan="2" class="align-middle text-center">Credit Type</th>
+                                    <th colspan="2" class="align-middle text-center">Amount Added/Deducted</th>
+                                    <th colspan="2" class="align-middle text-center">Balance</th>
+                                    <th rowspan="2" class="align-middle text-center">Remarks</th>
+                                </tr>
+                                <tr>
+                                    <th class="align-middle text-center">Vac</th>
+                                    <th class="align-middle text-center">Sick</th>
+                                    <th class="align-middle text-center">Vac</th>
+                                    <th class="align-middle text-center">Sick</th>
                                 </tr>
                                 <tbody ng-repeat="(monthName,month) in computations.table">
                                     <tr class="bg-light">

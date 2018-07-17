@@ -4,9 +4,8 @@ CHECKLIST
 leave credit computations
 	-suspension of work
 	-optimization - done(?) July 11, 2018
-	-visualization
-	-update credits on add/edit event
-		or computations done on display
+	-visualization - done July 17, 2018
+	-update credits on add/edit holiday - done July 13, 2018
 
 Calendar
 	-add recurring field - done July 12, 2018
@@ -25,7 +24,7 @@ leave application
 	-make completely modal - done July 09, 2018
 	-rename to 'leave records' - done July 09, 2018
 	-rename 'employee' model to 'employee leaves' - done July 09, 2018
-	-convert hours and minutes storage to credits
+	-convert hours and minutes storage to credits - done July 13, 2018
 
 documentation
 

@@ -170,11 +170,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
     /* end Monetization */
 
-    $scope.showComputationsModal = function(){
-        $scope.computationsCopy = angular.copy($scope.computations);
-        angular.element('#computationsModal').modal('show');
-    }
-
     $scope.deleteLeave = function(leaveID){
         $rootScope.showCustomModal(
             'Warning',
@@ -344,7 +339,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			firstMC = creditByHalfDay[firstMC] - (keep*1.25/30);
 			currV += firstMC; currS += firstMC;
 			earned.v += firstMC; earned.s += firstMC;
-            $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:firstMC,s:firstMC},balance:{v:currV,s:currS},remarks:'Accumulation.',date:dateStart.clone().endOf('month')});
+            $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:firstMC,s:firstMC},balance:{v:currV,s:currS},remarks:'End of Month Accumulation.',date:dateStart.clone().endOf('month')});
             $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')] = {vac:currV,sick:currS};
             dateStart.add(1,'month');
 		}
@@ -485,13 +480,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				currS += lastCredit;
 				earned.v += lastCredit;
 				earned.s += lastCredit;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:lastCredit,s:lastCredit},balance:{s:currS,v:currV},remarks:'Accumulation - Last Credit',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:lastCredit,s:lastCredit},balance:{s:currS,v:currV},remarks:'End of Month Accumulation',date:dateStart.clone()});
 			}else{
 				currV += 1250;
 				currS += 1250;
 				earned.v += 1250;
 				earned.s += 1250;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:1250,s:1250},balance:{s:currS,v:currV},remarks:'Accumulation',date:dateStart.clone().endOf('month')});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:1250,s:1250},balance:{s:currS,v:currV},remarks:'End of Month Accumulation',date:dateStart.clone().endOf('month')});
 			}
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
                 currV = currV-fLeave;
