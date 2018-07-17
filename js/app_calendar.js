@@ -215,11 +215,11 @@ app.controller('event_display',function($scope,$rootScope,$window){
 
 	$scope.actionEvent = function(action){
 		$scope.modalEvent.is_suspension = $scope.suspension;
-        //$scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
         var url='';
         var succMsg='';
         var data = $scope.modalEvent;
         var succFunction = function(response){};
+		data.date = moment(data.date,$rootScope.dateFormat);
         switch(action){
             case 'add':
                 url = $rootScope.baseURL+'calendar/actionevents/add';
