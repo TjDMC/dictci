@@ -48,7 +48,7 @@ class Calendar extends MY_Controller
     }
 
 	public function manageHolidays(){
-		$events = $this->calendar_model->getEvents(0);
+		$events = $this->calendar_model->getEvents(false);
 		$this->html(
 			function() use($events){
 				$this->load->view('calendar/holiday',array(
@@ -59,7 +59,7 @@ class Calendar extends MY_Controller
 	}
 
 	public function suspendWork(){
-        $events = $this->calendar_model->getEvents(1);
+        $events = $this->calendar_model->getEvents(true);
 		$this->html(
 			function() use ($events){
 				$this->load->view('calendar/suspend',array(
@@ -68,6 +68,16 @@ class Calendar extends MY_Controller
 			}
 		);
 	}
+
+    public function manageCollisions(){
+        $this->html(
+            function(){
+                $this->load->view('calendar/collisions',array(
+                    'collisions'=>$this->calendar_model->getCollisions()
+                ));
+            }
+        );
+    }
 
 }
 

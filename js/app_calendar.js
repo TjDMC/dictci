@@ -211,7 +211,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
         $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
     }
-	
+
 	$scope.actionEvent = function(action){
         $scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
         var url='';
@@ -276,7 +276,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
             }
         );
     }
-	
+
 	$scope.differentModal = function(dateEvent){
 		$scope.modalDate = moment(dateEvent.date,$rootScope.dateFormat).clone();
 		$scope.modalEvent = angular.copy(dateEvent);
@@ -342,5 +342,12 @@ app.controller('event_display',function($scope,$rootScope,$window){
         }
 
         return calendar;
+    }
+});
+
+app.controller('calendar_collisions',function($scope,$rootScope){
+    $scope.collisions = [];
+    $scope.init = function(collisions){
+        $scope.collisions = collisions;
     }
 });

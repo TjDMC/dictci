@@ -86,6 +86,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<li>
 							<a href="<?= base_url().'calendar/suspendWork' ?>">Suspended Work</a>
 						</li>
+						<li>
+							<a href="<?= base_url().'calendar/manageCollisions' ?>">Manage Collisions</a>
+						</li>
 					</ul>
 				</li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Admin Settings" ng-if="<?=$this->ion_auth->is_admin()?1:0?>==true">

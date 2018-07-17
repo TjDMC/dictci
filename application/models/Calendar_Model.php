@@ -112,6 +112,14 @@ class Calendar_Model extends MY_Model
 		$this->db->where('event_id',$eventID)->delete(DB_PREFIX.'calendar_events');
 	}
 
+	public function getCollisions(){
+		$this->db->select('*');
+		$this->db->from(DB_PREFIX.'calendar_collisions');
+		//$this->db
+		//$this->db->where('');
+		return array();
+	}
+
 }
 
 ?>

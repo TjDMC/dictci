@@ -6,6 +6,9 @@ $segments = $this->uri->segment_array();
 //custom url names
 $urlnames = array(
     //'leaveapplication'=>'Leave Application'
+    'manageholidays'=>'Manage Holidays',
+    'suspendwork'=>'Suspend Work',
+    'managecollisions'=>'Manage Collisions'
 );
 
 $breadcrumbs = '<a href="'.base_url().'">Home</a>';
@@ -24,7 +27,7 @@ if(count($segments)>0){
             if(isset($urlnames[strtolower($segment)])){
                 $segmentNameString = $urlnames[strtolower($segment)];
             }else{
-                $segmentNameArray = preg_split('/_/',$segment);
+                $segmentNameArray = preg_split('/-/',$segment);
                 foreach($segmentNameArray as $segmentName){
                     $segmentNameString.=ucfirst($segmentName);
                 }
