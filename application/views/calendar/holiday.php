@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
-<div ng-controller="event_display" ng-init='init(<?=isset($events)?$events:''?>)'>
+<div ng-controller="event_display" ng-init='init(<?=isset($events)?$events:''?>,false)'>
 	<div class="card-body">
 		<h1>Holiday list</h1>
 		<div class="form-group">
@@ -35,12 +35,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body">
                     <form ng-submit="actionEvent(modalEvent.hasOwnProperty('event_id')?'edit':'add')">
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" id="isSuspension" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_suspension"></input>
-                                <label for="isSuspension">Suspension</label>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input" id="isRecurring" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_recurring"></input>

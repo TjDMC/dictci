@@ -205,13 +205,16 @@ app.controller('event_display',function($scope,$rootScope,$window){
 	
 	$scope.modalEvent={};
 	
-	$scope.dateEvent = {};
+	$scope.suspension;
 
-    $scope.init = function(events){
+    $scope.init = function(events,suspension){
         $scope.events = events;
+		$scope.suspension = suspension;
+		//$modalEvent.is_suspension = suspension;
     }
 
 	$scope.actionEvent = function(action){
+		$scope.modalEvent.is_suspension = $scope.suspension;
         //$scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
         var url='';
         var succMsg='';
