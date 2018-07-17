@@ -219,7 +219,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
         var succMsg='';
         var data = $scope.modalEvent;
         var succFunction = function(response){};
-		data.date = moment(data.date,$rootScope.dateFormat);
+		data.date = moment(data.date,$rootScope.dateFormat).format('YYYY-MM-DD');
         switch(action){
             case 'add':
                 url = $rootScope.baseURL+'calendar/actionevents/add';
@@ -235,7 +235,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
                         if($scope.events[i].event_id == $scope.modalEvent.event_id){
-                            $scope.events[i] = $scope.modalEvent; //edit global events
+                            $scope.events[i] = angular.copy($scope.modalEvent); //edit global events
                         }
                     }
                 }
