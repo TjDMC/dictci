@@ -189,7 +189,6 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
 });
 
 app.controller('event_display',function($scope,$rootScope,$window){
-	$scope.currentDate = '';
     /*Structure of events:
         events:[
             {
@@ -203,17 +202,20 @@ app.controller('event_display',function($scope,$rootScope,$window){
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
     */
     $scope.events = [];
+	
+	$scope.modalEvent={};
+	
+	$scope.suspension;
 
-    $scope.calendar;
-
-    $scope.init = function(events){
+    $scope.init = function(events,suspension){
         $scope.events = events;
-        $scope.currentDate = moment();
-        $scope.calendar = $scope.getCalendar();
+		$scope.suspension = suspension;
+		//$modalEvent.is_suspension = suspension;
     }
 
 	$scope.actionEvent = function(action){
-        $scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
+		$scope.modalEvent.is_suspension = $scope.suspension;
+        //$scope.modalEvent.date = $scope.modalDate.format('YYYY-MM-DD');
         var url='';
         var succMsg='';
         var data = $scope.modalEvent;
@@ -223,9 +225,8 @@ app.controller('event_display',function($scope,$rootScope,$window){
                 url = $rootScope.baseURL+'calendar/actionevents/add';
                 succMsg = 'Added event successfully.';
                 succFunction = function(response){
-                    $scope.modalEvent.id = response.id;
+                    $scope.modalEvent.event_id = response.event_id;
                     $scope.events.push($scope.modalEvent); //add to global events
-                    cache.date.events.push($scope.modalEvent); //add to cache. cache refers to the modal that pops up
                 }
                 break;
             case 'edit':
@@ -233,30 +234,28 @@ app.controller('event_display',function($scope,$rootScope,$window){
                 succMsg = 'Edited event successfully.';
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
-                        if($scope.events[i].id == $scope.modalEvent.id){
+                        if($scope.events[i].event_id == $scope.modalEvent.event_id){
                             $scope.events[i] = $scope.modalEvent; //edit global events
                         }
                     }
-                    cache.date.events[cache.index] = $scope.modalEvent; //edit cache
                 }
                 break;
             case 'delete':
                 url = $rootScope.baseURL+'calendar/actionevents/delete';
                 succMsg = 'Event deleted.';
-                data = $scope.modalEvent.id;
+                data = $scope.modalEvent.event_id;
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
-                        if($scope.events[i].id == $scope.modalEvent.id){
+                        if($scope.events[i].event_id == $scope.modalEvent.event_id){
                             $scope.events.splice(i,1); //delete from global events
                         }
                     }
-                    cache.date.events.splice(cache.index,1); //delete from cache
                 }
                 break;
             default:
                 return;
         }
-
+		
         $rootScope.post(
             url,
             data,
@@ -277,72 +276,16 @@ app.controller('event_display',function($scope,$rootScope,$window){
         );
     }
 
-	$scope.differentModal = function(dateEvent){
-		$scope.modalDate = moment(dateEvent.date,$rootScope.dateFormat).clone();
-		$scope.modalEvent = angular.copy(dateEvent);
+	$scope.showModal = function(dateEvent){
+		if(dateEvent==null){
+			$scope.modalEvent = null;
+		}else{
+			console.log(dateEvent.date);
+			$scope.modalEvent = angular.copy(dateEvent);
+		}
+		console.log($scope.modalEvent);
 		angular.element('#addOrEditEventModal').modal('show');
 	}
-
-    $scope.getCalendar = function(date = null){
-        date = date? moment(date):moment();
-
-        if(!date.isValid())
-            throw "Invalid date";
-
-        var calendar = [];
-        // starting day
-        var start = date.clone().startOf('month');
-
-        var row = [];
-        var prevMonth = date.clone().add(-1,'month').endOf('month');
-
-        //get days of previous month that are included in the first week of this month
-        for (var i = start.day(); i > 0; i--){
-            row.push(prevMonth.clone().add(-(i-1),'day'));
-        }
-        var endOfMonth = start.clone().endOf('month');
-        var nextMonth = date.clone().add(1,'month').startOf('month');
-
-        while(start.isSameOrBefore(endOfMonth)){
-            if(row.length>=7){
-                calendar.push(row);
-                row = [];
-            }
-            row.push(start.clone());
-            start.add(1,'day');
-        }
-
-        //Fill in the calendar to make 6 columns
-        var nextMonthDay = nextMonth.clone();
-        while(calendar.length<6){
-            while(row.length<7){
-                row.push(nextMonthDay.clone());
-                nextMonthDay.add(1,'day');
-            }
-            calendar.push(row);
-            row = [];
-        }
-
-        //Associate events to dates
-        for(var i = 0 ; i<calendar.length ; i++){
-            for(var j = 0 ; j < calendar[i].length ; j++){
-                calendar[i][j].events = [];
-                for(var k = 0 ; k<$scope.events.length ; k++){
-                    if($scope.events[k].is_recurring){
-                        if(calendar[i][j].dayOfYear()==moment($scope.events[k].date).dayOfYear()){
-                            calendar[i][j].events.push($scope.events[k]);
-                        }
-                    }else{
-                        if(calendar[i][j].isSame(moment($scope.events[k].date),'day')){
-                            calendar[i][j].events.push($scope.events[k]);
-                        }
-                    }
-                }
-            }
-        }
-
-        return calendar;
-    }
 });
 
 app.controller('calendar_collisions',function($scope,$rootScope,$window){
