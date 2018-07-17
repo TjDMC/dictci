@@ -128,8 +128,8 @@ class Employee extends MY_Controller{
 		$this->html(
 			function() use ($employee,$leaves){
 				$this->load->view('employee/form',array(
-                        "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
-						"leaves"=>json_encode($leaves,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
+                    "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
+					"leaves"=>json_encode($leaves,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
                 ));
 			}
 		);

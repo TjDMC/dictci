@@ -345,9 +345,76 @@ app.controller('event_display',function($scope,$rootScope,$window){
     }
 });
 
-app.controller('calendar_collisions',function($scope,$rootScope){
+app.controller('calendar_collisions',function($scope,$rootScope,$window){
     $scope.collisions = [];
+    $scope.moment = moment;
     $scope.init = function(collisions){
         $scope.collisions = collisions;
+        for(var i = 0 ; i<$scope.collisions.length ; i++){
+            $scope.collisions[i].leave.info.leave_id = parseInt($scope.collisions[i].leave.info.leave_id);
+        }
+    }
+
+    $scope.openLeaveModal = function(event_id,leave){
+        for(var i = 0 ; i<leave.date_ranges.length ; i++){
+            leave.date_ranges[i].range_id = parseInt(leave.date_ranges[i].range_id);
+            leave.date_ranges[i].start_date = moment(leave.date_ranges[i].start_date).format($rootScope.dateFormat);
+            leave.date_ranges[i].end_date = moment(leave.date_ranges[i].end_date).format($rootScope.dateFormat);
+            leave.date_ranges[i].credits = parseFloat(leave.date_ranges[i].credits);
+            leave.date_ranges[i].hours = $rootScope.creditsToTime(leave.date_ranges[i].credits).hours;
+            leave.date_ranges[i].minutes = $rootScope.creditsToTime(leave.date_ranges[i].credits).minutes;
+        }
+        leave.collision_event_id = event_id;
+        $scope.$broadcast('openLeaveModal',leave);
+	}
+
+    var markAsResolved = function(collision){
+        var data = {};
+
+        if(Array.isArray(collision)){
+            data.collision = collision;
+            data.batch = true;
+        }else{
+            data = {
+                event_id:collision.event_id,
+                range_id:collision.range_id
+            }
+        }
+        $rootScope.post(
+            $rootScope.baseURL+'calendar/managecollisions',
+            data,
+            function(){
+                $rootScope.showCustomModal('Success','Successfully resolved collision.',function(){
+                    $window.location.reload();
+                },function(){
+                    $window.location.reload();
+                });
+            },
+            function(response){
+                $rootScope.showCustomModal('Error',response.msg,function(){
+                    angular.element('#customModal').modal('hide');
+                },function(){});
+            }
+        );
+    }
+
+    $scope.$on('editLeave',function(event,leave){ //Coming from employee_leave_records
+        var data = [];
+        for(var i = 0 ; i<leave.date_ranges.length ; i++){
+            data.push({
+                event_id:leave.collision_event_id,
+                range_id:leave.date_ranges[i].range_id
+            });
+        }
+        markAsResolved(data);
+    });
+
+    $scope.promptResolve = function(index){
+        $rootScope.showCustomModal('Warning','Are you sure you want to dismiss this collision without editing the leave record?',function(){
+            markAsResolved({
+                event_id:$scope.collisions[index].event_id,
+                range_id:$scope.collisions[index].range_id
+            });
+        },function(){});
     }
 });

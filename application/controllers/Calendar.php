@@ -70,13 +70,30 @@ class Calendar extends MY_Controller
 	}
 
     public function manageCollisions(){
-        $this->html(
-            function(){
-                $this->load->view('calendar/collisions',array(
-                    'collisions'=>json_encode($this->calendar_model->getCollisions(),JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
-                ));
+        $input = $this->input->post('data');
+        if($input == null){
+            $this->html(
+                function(){
+                    $this->load->view('calendar/collisions',array(
+                        'collisions'=>json_encode($this->calendar_model->getCollisions(),JSON_HEX_APOS|JSON_HEX_QUOT)
+                    ));
+                }
+            );
+        }else{
+            $data = parse_custom_post($input);
+            log_message('DEBUG','BAAM'.print_r($data,true));
+            if(isset($data['batch']) && $data['batch']){
+                $res = $this->calendar_model->resolveCollisionBatch($data['collision']);
+            }else{
+                $res = $this->calendar_model->resolveCollision($data);
             }
-        );
+
+            if($res !== null){
+                custom_response(false,$res);
+            }else{
+                custom_response(true,'Success');
+            }
+        }
     }
 
 }

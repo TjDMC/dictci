@@ -32,6 +32,19 @@ class Calendar_Model extends MY_Model
 		)
 	);
 
+	private $resolutionFields = array(
+		array(
+			'field_name'=>"range_id",
+			'field_title'=>'Range ID',
+			'required'=>true
+		),
+		array(
+			'field_name'=>"event_id",
+			'field_title'=>'Event ID',
+			'required'=>true
+		)
+	);
+
 	public function createTable(){
 		$this->dbforge->add_field("event_id int unsigned not null primary key auto_increment");
 		$this->dbforge->add_field("title varchar(50)");
@@ -113,6 +126,7 @@ class Calendar_Model extends MY_Model
 	}
 
 	public function getCollisions(){
+		$this->load->model('employee_leaves_model');
 		$this->db->select('*');
 		$this->db->from(DB_PREFIX.'calendar_collisions');
 		$this->db->join(DB_PREFIX.'calendar_events',DB_PREFIX.'calendar_collisions.event_id = '.DB_PREFIX.'calendar_events.event_id');
@@ -126,17 +140,43 @@ class Calendar_Model extends MY_Model
 			$this->db->where('range_id',$event['range_id']);
 			$leaveID = $this->db->get()->result_array()[0]['leave_id'];
 
+			//employee info
+			$this->db->select(DB_PREFIX.'employee.*');
+			$this->db->from(DB_PREFIX.'leaves');
+			$this->db->join(DB_PREFIX.'employee',DB_PREFIX.'leaves.emp_no = '.DB_PREFIX.'employee.emp_no');
 			$this->db->where('leave_id',$leaveID);
-			$leaveInfo = $this->db->get(DB_PREFIX.'leaves')->result_array()[0];
-			$this->db->where('leave_id',$leaveID);
-			$leaveDateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();
-			$event['leave'] = array(
-				'info'=>$leaveInfo,
-				'date_ranges'=>$leaveDateRanges
-			);
+			$employeeInfo = $this->db->get()->result_array()[0];
+
+			$event['leave'] = $this->employee_leaves_model->getLeave($leaveID);
+			$event['employee']=$employeeInfo;
 			array_push($output,$event);
 		}
 		return $output;
+	}
+
+	public function resolveCollision($data){
+
+		$checker = $this->checkFields($this->resolutionFields,$data);
+		if(!is_array($checker)){
+			return $checker;
+		}
+		$this->db->set('is_resolved',true);
+		$this->db->where($data);
+		$this->db->update(DB_PREFIX.'calendar_collisions');
+	}
+
+	public function resolveCollisionBatch($data){
+		foreach($data as $d){
+			$checker = $this->checkFields($this->resolutionFields,$d);
+			if(!is_array($checker)){
+				return $checker;
+			}
+
+			$this->db->set('is_resolved',true);
+			$this->db->where($d);
+			$this->db->update(DB_PREFIX.'calendar_collisions');
+
+		}
 	}
 
 }

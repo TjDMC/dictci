@@ -81,12 +81,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         //Sort Leaves
         $scope.sortAndFormatLeaves();
 
-        $scope.sick_bal_date = moment().endOf("month");
-        $scope.vac_bal_date = moment().endOf("month");
         $scope.employee.first_day = moment($scope.employee.first_day).format($rootScope.dateFormat);
     }
 
-    $scope.sortAndFormatLeaves = function(format){
+    $scope.sortAndFormatLeaves = function(){
         $scope.leaves.sort(function(a,b){
             return moment(b.date_ranges[b.date_ranges.length-1].start_date).diff(moment(a.date_ranges[a.date_ranges.length-1].start_date));
         });
@@ -933,7 +931,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 		minutes:0
 	};
 
-    $scope.init = function(employee=null,events=null){
+    $scope.init = function(events=null){
         $scope.addOrDeleteRange(0);
 		$scope.events = events===null?$scope.events:events;
 
@@ -950,7 +948,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                     newEvents.recurring[moment(event.date).format('MM-DD')] = event;
                 }
             }else{
-                newEvents[moment(event.date).format('YYYY-MM-DD')] = event;
                 if(event.is_suspension && !newEvents[moment(event.date).format('YYYY-MM-DD')]){
                     newEvents[moment(event.date).format('YYYY-MM-DD')] = 'suspension';
                 }else{
@@ -963,10 +960,10 @@ app.controller('employee_leave_records',function($scope,$rootScope){
     }
 
 	$scope.$on('openLeaveModal',function(event, leave=null){
-        $scope.leave = {
-            info:{},
-            date_ranges:[]
-        }
+
+        $scope.leave.info = {};
+        $scope.leave.date_ranges = [];
+
         if(leave !== null){
             leaveReference = leave;
     		$scope.leave = angular.copy(leave);
@@ -996,6 +993,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         for(var i = 0 ; i<leaveTypes.length ; i++){
             angular.element('#leaveType'+leaveTypes[i]).removeClass('active');
         }
+
         angular.element('#addOrEditLeaveModal').modal('show');
 	});
 
@@ -1124,6 +1122,11 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                 succFunc = function(response){
                     leaveReference.info = response.leave.info;
                     leaveReference.date_ranges = response.leave.date_ranges;
+
+                    if($scope.leave.hasOwnProperty('collision_event_id')){  //emit to calendar_collisions
+                        response.leave.collision_event_id = $scope.leave.collision_event_id;
+                        $scope.$emit('editLeave',response.leave);
+                    }
                 }
                 data.action='edit';
                 break;
@@ -1184,14 +1187,14 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             data,
             function(response){
                 //returning date ranges to their original format
-                for(var i = 0 ; i<$scope.leaves.length ; i++){
+                /*for(var i = 0 ; i<$scope.leaves.length ; i++){
         			var leave = $scope.leaves[i];
                     for(var j = 0 ; j<leave.date_ranges.length ; j++){
         				var date_range = leave.date_ranges[j];
         				date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
         				date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
         			}
-                }
+                }*/
                 succFunc(response);
                 $scope.sortAndFormatLeaves(); //From parent
                 $scope.changeDateFilter(); //Updating filters

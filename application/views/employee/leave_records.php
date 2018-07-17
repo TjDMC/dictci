@@ -1,9 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-if(!isset($employee)){
-    $employee= '""';
-}
 if(!isset($events)){
     $events= '""';
 }
@@ -46,7 +43,7 @@ if(!isset($events)){
 }
 </style>
 
-<div ng-controller="employee_leave_records" ng-init='init(<?=$employee?>,<?=$events?>)'>
+<div ng-controller="employee_leave_records" ng-init='init(<?=$events?>)'>
     <form ng-submit="submit(leave.info.leave_id?'edit':'add')" autocomplete="off">
 		<div class="form-group" style="overflow-x: auto">
             <p>Leave Type:</p>
@@ -158,9 +155,7 @@ if(!isset($events)){
 					<td></td>
 					<td></td>
 					<td></td>
-					<td></td>
-					<td></td>
-					<td colspan="2">Total Credits: {{getTotalCredits()|number:3}}</td>
+					<td colspan="4">Total Credits: {{getTotalCredits()|number:3}}</td>
 				</tr>
             </table>
 			<button class="btn btn-secondary form-group" type="button" ng-click="addOrDeleteRange(0)"><span>Add Range</span></button>
@@ -171,7 +166,7 @@ if(!isset($events)){
             <input class="form-control" type="textarea" ng-model="leave.info.remarks"/>
 		</div>
         <p>
-			<button ng-disabled="busy" type="submit" class="btn btn-primary">Submit</button>
+			<button ng-disabled="busy" type="submit" class="btn btn-primary"><?=isset($submit_button) ? $submit_button:'Submit'?></button>
             <button type="button" ng-if="leave.info.leave_id" ng-click="deleteLeave(leave.info.leave_id)" class="btn btn-danger">Delete Leave</button>
         </p>
     </form>
