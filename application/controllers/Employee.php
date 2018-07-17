@@ -16,7 +16,6 @@ class Employee extends MY_Controller{
     }
 
     public function display($employeeNo=null){
-
         if($employeeNo == null){
             $this->index();
             return;
@@ -84,7 +83,6 @@ class Employee extends MY_Controller{
             );
         }else{
             $data = parse_custom_post($input);
-
             if(isset($data['info']["type"]) && $data['info']["type"] == "Others"){
                 if(!isset($data['info']['type_others'])){
                     custom_response(false,"Please specify the leave type.");
@@ -100,7 +98,6 @@ class Employee extends MY_Controller{
             }else{
                 $response = $this->employee_leaves_model->addLeaves($data);
             }
-
             if(!is_array($response)){ //if response is not an array, it is a string containing an error msg.
                 custom_response(false, $response);
             }else{

@@ -35,7 +35,7 @@ class Calendar_Model extends MY_Model
 	public function createTable(){
 		$this->dbforge->add_field("event_id int unsigned not null primary key auto_increment");
 		$this->dbforge->add_field("title varchar(50)");
-		$this->dbforge->add_field("date datetime not null");
+		$this->dbforge->add_field("date date not null");
 		$this->dbforge->add_field("description varchar(300) not null");
 		$this->dbforge->add_field("is_suspension boolean not null default false");
 		$this->dbforge->add_field("is_recurring boolean not null default false");
@@ -43,6 +43,7 @@ class Calendar_Model extends MY_Model
 
 		$this->dbforge->add_field('range_id int unsigned not null');
 		$this->dbforge->add_field('event_id int unsigned not null');
+		$this->dbforge->add_field('is_resolved boolean not null default false'); //Used for suspension only
 		$this->dbforge->add_field("foreign key (range_id) references ".DB_PREFIX."leave_date_range(range_id) on update cascade on delete cascade");
 		$this->dbforge->add_field("foreign key (event_id) references ".DB_PREFIX."calendar_events(event_id) on update cascade on delete cascade");
 		$this->dbforge->create_table(DB_PREFIX.'calendar_collisions',true);
@@ -100,7 +101,7 @@ class Calendar_Model extends MY_Model
 		if(!is_array($checker)){
 			return $checker;
 		}
-		
+
 		$this->db->where('event_id',$checker['event_id'])->update(DB_PREFIX.'calendar_events',$checker);
 		$this->checkForDateCollisions($checker['event_id']);
 	}
