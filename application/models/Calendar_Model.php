@@ -115,9 +115,28 @@ class Calendar_Model extends MY_Model
 	public function getCollisions(){
 		$this->db->select('*');
 		$this->db->from(DB_PREFIX.'calendar_collisions');
-		//$this->db
-		//$this->db->where('');
-		return array();
+		$this->db->join(DB_PREFIX.'calendar_events',DB_PREFIX.'calendar_collisions.event_id = '.DB_PREFIX.'calendar_events.event_id');
+		$this->db->where('is_suspension',true);
+		$this->db->where('is_resolved',false);
+		$events = $this->db->get()->result_array();
+		$output = array();
+		foreach($events as $event){
+			$this->db->select('leave_id');
+			$this->db->from(DB_PREFIX.'leave_date_range');
+			$this->db->where('range_id',$event['range_id']);
+			$leaveID = $this->db->get()->result_array()[0]['leave_id'];
+
+			$this->db->where('leave_id',$leaveID);
+			$leaveInfo = $this->db->get(DB_PREFIX.'leaves')->result_array()[0];
+			$this->db->where('leave_id',$leaveID);
+			$leaveDateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();
+			$event['leave'] = array(
+				'info'=>$leaveInfo,
+				'date_ranges'=>$leaveDateRanges
+			);
+			array_push($output,$event);
+		}
+		return $output;
 	}
 
 }

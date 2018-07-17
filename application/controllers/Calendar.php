@@ -73,7 +73,7 @@ class Calendar extends MY_Controller
         $this->html(
             function(){
                 $this->load->view('calendar/collisions',array(
-                    'collisions'=>$this->calendar_model->getCollisions()
+                    'collisions'=>json_encode($this->calendar_model->getCollisions(),JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
                 ));
             }
         );
