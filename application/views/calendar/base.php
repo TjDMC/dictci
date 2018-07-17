@@ -53,7 +53,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <tr ng-repeat="row in calendar">
                     <td class="date-cells p-2" ng-repeat="date in row" style="height:120px;width:14%;{{(moment().format('YYYY-MM-DD') == date.format('YYYY-MM-DD')) ? 'background-color:#cccccc':''}} " ng-click="showModal(date)">
                         <p class="text-right" ng-class="{'extra-days':date.month()!==currentDate.month()}" >{{date.date()}}</p>
-                        <div ng-repeat="event in date.events" style="color:#ffffff;border-radius:5px;padding-left:5px" ng-class="{'bg-success':event.is_recurring,'bg-dark':!event.is_recurring}">
+                        <div ng-repeat="event in date.events" style="color:#ffffff;border-radius:5px;padding-left:5px" ng-class="{'bg-success':event.is_recurring,'bg-danger':event.is_suspension,'bg-dark':!event.is_suspension}">
                             <p class="font-italic">{{event.title}}</p>
                         </div>
                     </td>
