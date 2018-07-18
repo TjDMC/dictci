@@ -210,7 +210,6 @@ app.controller('event_display',function($scope,$rootScope,$window){
     $scope.init = function(events,suspension){
         $scope.events = events;
 		$scope.suspension = suspension;
-		//$modalEvent.is_suspension = suspension;
     }
 
 	$scope.actionEvent = function(action){
@@ -282,6 +281,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
 		}else{
 			console.log(dateEvent.date);
 			$scope.modalEvent = angular.copy(dateEvent);
+			$scope.modalEvent.date = new Date($scope.modalEvent.date);
 		}
 		console.log($scope.modalEvent);
 		angular.element('#addOrEditEventModal').modal('show');

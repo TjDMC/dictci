@@ -2,9 +2,11 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
-<div ng-controller="event_display" ng-init='init(<?=isset($events)?$events:''?>,false)'>
-	<div class="card-body">
+<div ng-controller="event_display" ng-init='init(<?=isset($events)?$events:''?>,false)' class="card">
+	<div class="card-header">
 		<h1>Holiday list</h1>
+	</div>
+	<div class="card-body">
 		<div class="form-group">
             <button title="Edit Holidays" ng-click="showModal(null)" class="btn btn-primary">Add Holidays</button>
         </div>
