@@ -22,7 +22,7 @@ class Employee_Leaves_Model extends MY_Model{
         array(
             "field_name"=>"middle_name",
             "field_title"=>"Middle Name",
-            "required"=>true
+            "required"=>false
         ),
         array(
             "field_name"=>"first_day",
@@ -111,7 +111,7 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->add_field("emp_no char(7) not null unique");
             $this->dbforge->add_field("last_name varchar(20) not null");
             $this->dbforge->add_field("first_name varchar(20) not null");
-            $this->dbforge->add_field("middle_name varchar(20) not null");
+            $this->dbforge->add_field("middle_name varchar(20)");
             $this->dbforge->add_field("first_day date not null");
             $this->dbforge->add_field("position varchar(50)");
             $this->dbforge->add_field("salary decimal(8,2)");
