@@ -138,14 +138,13 @@ class Calendar_Model extends MY_Model
 		$this->db->from(DB_PREFIX.'leaves as l');
 		$this->db->join(DB_PREFIX.'leave_date_range as ldr','l.leave_id = ldr.leave_id');
 		foreach($events as $event){
-			$this->db->where('ldr.range_id',$event['range_id']);
+			$this->db->or_where('ldr.range_id',$event['range_id']);
 		}
 		$leaveIDsRaw = $this->db->get()->result_array();
 		$leaveIDs = array();
 		foreach($leaveIDsRaw as $leaveIDRaw){
 			array_push($leaveIDs,$leaveIDRaw['leave_id']);
 		}
-
 		//get associated employees
 		$output['leaves']=array();
 		foreach($leaveIDs as $leaveID){
@@ -161,24 +160,6 @@ class Calendar_Model extends MY_Model
 			));
 		}
 
-		/*foreach($events as $event){
-			$this->db->select('leave_id');
-			$this->db->from(DB_PREFIX.'leave_date_range');
-			$this->db->where('range_id',$event['range_id']);
-			$leaveID = $this->db->get()->result_array()[0]['leave_id'];
-
-			//employee info
-			$this->db->select(DB_PREFIX.'employee.emp_no,last_name,middle_name,first_name');
-			$this->db->from(DB_PREFIX.'leaves');
-			$this->db->join(DB_PREFIX.'employee',DB_PREFIX.'leaves.emp_no = '.DB_PREFIX.'employee.emp_no');
-			$this->db->where('leave_id',$leaveID);
-			$employeeInfo = $this->db->get()->result_array()[0];
-			$leave = $this->employee_leaves_model->getLeave($leaveID);
-			array_push($output,array(
-				'leave'=>$leave,
-				'employee'=>$employeeInfo
-			));
-		}*/
 		$output['events']=$events;
 		return $output;
 	}
