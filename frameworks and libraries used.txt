@@ -6,3 +6,4 @@ Angular-Chart.js 1.1.1
 JQuery 3.3.1
 BootStrap 4.1.1
 FontAwesome 5.0.13
+NgTableToCsv 0.3.3
