@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
-    <footer class="sticky-footer">
+    <footer class="sticky-footer none-printable">
         <div class="container">
             <div class="text-center">
                 <small>Copyright © 2018. All Rights Reserved</small>

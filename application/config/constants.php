@@ -85,4 +85,4 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
-defined('DB_PREFIX')      OR define('DB_PREFIX', 'dict_leaves_');
+defined('DB_PREFIX')      OR define('DB_PREFIX', 'dictlcc_');

@@ -20,7 +20,7 @@ Loading Overlay - done July 09, 2018
 
 layouting and of leave History
 	- layout
-	- export to xls/csv
+	- export to xls/csv - done July 18, 2018
 
 leave application
 	-make completely modal - done July 09, 2018
