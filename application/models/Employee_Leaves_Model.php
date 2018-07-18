@@ -322,7 +322,7 @@ class Employee_Leaves_Model extends MY_Model{
 			$this->db->where("leave_id",$leave['leave_id']);
 			array_push($leaves,array(
 				'info'=>$leave,
-				'date_ranges'=>$this->db->get()->result_array()
+				'date_ranges'=>$this->db->order_by("start_date","desc")->get()->result_array()
 			));
 
             /*Method 2. Multiple queries
