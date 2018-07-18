@@ -280,9 +280,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
 
 		// First Month Computation
-		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')  &&  currV!=0 && currS!=0){
-			earned.v = currV;
-			earned.s = currS;
+		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')){
+		//if(dateStart.isSame(dateStart.clone().startOf('month'),'day') && currV!=0 && currS!=0){
+			//earned.v = currV;
+			//earned.s = currS;
 		}else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
 			var firstMC;
@@ -342,7 +343,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             dateStart.add(1,'month');
 		}
 		// #first_month_computation
-
+		
+		earned.v = currV;
+		earned.s = currS;
 
 		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
@@ -353,9 +356,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
 			monetized=false;
 			var mLWOP = 0;	// month's without pays
-			for(var i=0;i<leaves.length;i++){
+			for(var i=leaves.length-1;i>=0;i--){
 				var leave = leaves[i];
-				for(var j=0;j<leave.date_ranges.length;j++){
+				for(var j=leave.date_ranges.length-1;j>=0;j--){
 					var range = leave.date_ranges[j];
 					if( moment(range.end_date,$rootScope.dateFormat).isBefore(dateStart.clone().startOf('month')) ||  moment(range.start_date,$rootScope.dateFormat).isAfter(dateStart.clone().endOf('month')) )
 						continue;
@@ -372,6 +375,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 							lwop += creditUsed;
 						else
 							mLWOP += creditUsed;
+						leave.date_ranges.splice(j,1);
 						continue;
 					}
 
@@ -380,22 +384,22 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type=="Undertime"){
 						currV -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Undertime',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Undertime',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type=="Sick"){
 						//	Sick Leaves
 						currS -= creditUsed;
 						enjoyed.s += creditUsed;
-                        $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						// Temporal Solution for Monetization of Leaves
 						monetized=true;
 						currV -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 						if(currV<5000){
 							if(!leave.info.type.toLowerCase().includes('special')){
 								$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -406,11 +410,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                                     currS += currV;
 									enjoyed.v += currV;
 									enjoyed.s -= currV;
-                                    $scope.computations.factors.push({type:'Sick',amount:{s:currV,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                                    $scope.computations.factors.push({type:'Sick',amount:{s:currV,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
                                 }
 							}
 							currV=5000;
-                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 						}
 						// #temporal_solution_for_monetization_of_leaves
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
@@ -419,7 +423,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						if(spLeave<0){
 							currV+=spLeave;
 							enjoyed.v -= spLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 							spLeave=0;
 						}
 					}else if(leave.info.type.toLowerCase().includes('parental')){
@@ -428,16 +432,14 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						if(pLeave<0){
 							currV+=pLeave;
 							enjoyed.v -= pLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:dateStart.clone(),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 							pLeave=0;
 						}
 					}
 					leave.date_ranges.splice(j,1);
-					j--;
 				}
 				if(leave.date_ranges.length==0){
 					leaves.splice(i,1);
-					i--;
 				}
 			}
 			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
@@ -464,14 +466,14 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 				if(currV<0){
 					currV=0;
-                    $scope.computations.factors.push({type:'Vacation',amount:{v:0,s:0},balance:{s:currS,v:currV},remarks:'Vacation leave balance is negative. Incurring absence without pay.',date:dateStart.clone()});
+                    $scope.computations.factors.push({type:'Vacation',amount:{v:0,s:0},balance:{s:currS,v:currV},remarks:'Vacation leave balance is negative. Incurring absence without pay.',date:dateStart.clone().endOf('month')});
                 }
 				var tmp = Math.floor(creditByHalfDay[60-absent]-(rem*cpd));
 				currV += tmp;
 				currS += tmp;
 				earned.v += tmp;
 				earned.s += tmp;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'Accumulation - Absence without pay',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'Accumulation - Absence without pay',date:dateStart.clone().endOf('month')});
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
 				currV += lastCredit;
@@ -489,7 +491,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
                 currV = currV-fLeave;
 				enjoyed.v += fLeave;
-                $scope.computations.factors.push({type:'Vacation',amount:-fLeave,balance:currV,remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
+                $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
             }
             $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')]={vac:currV, sick:currS};
 			dateStart.add(1,'month');
