@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="form-group">
                 <label>Middle Name: </label>
-                <input class="form-control" type="text" ng-model="employee.middle_name" required>
+                <input class="form-control" type="text" ng-model="employee.middle_name">
             </div>
             <div class="dropdown form-group" style="max-width:400px">
                 <label>First Day:</label>

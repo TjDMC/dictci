@@ -231,10 +231,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.computations.initial={vacation:$scope.employee.vac_leave_bal,sick:$scope.employee.sick_leave_bal}
         $scope.computations.factors=[];
         $scope.computations.bal_history={};
-		var t1 = performance.now();
 		var hold = $scope.computeBal($scope.bal_date);
-		var t2 = performance.now();
-		console.log(t2-t1);
         $scope.computations.year_filter = moment();
         $scope.computations.table = $scope.getComputationsTable(moment().year());
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
@@ -746,10 +743,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
 	$scope.printAll = function($empfday,$lastLeaveDate){
-    $scope.range_start_date = moment($empfday).day(0);
-    $scope.range_end_date = moment($lastLeaveDate).endOf('month');
-    $scope.startDateOnSetTime();
-  }
+		$scope.range_start_date = moment($empfday).day(0);
+		$scope.range_end_date = moment($lastLeaveDate).endOf('month');
+		$scope.startDateOnSetTime();
+	}
 
 	$scope.dateRangeFilter = function(item){
 		if((moment(item.start,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).day(0))&&(moment(item.start,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))&&(moment(item.bal_month,$rootScope.dateFormat) >= moment($scope.range_start_date,$rootScope.dateFormat).endOf('month'))&&(moment(item.bal_month,$rootScope.dateFormat) <= moment($scope.range_end_date,$rootScope.dateFormat).endOf('month'))){
