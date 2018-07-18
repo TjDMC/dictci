@@ -343,7 +343,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             dateStart.add(1,'month');
 		}
 		// #first_month_computation
-		
+
 		earned.v = currV;
 		earned.s = currS;
 
@@ -473,11 +473,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				currS += tmp;
 				earned.v += tmp;
 				earned.s += tmp;
-<<<<<<< HEAD
                 $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'End of Month Accumulation w/ Absence Without Pay',date:dateStart.clone().endOf('month')});
-=======
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'Accumulation - Absence without pay',date:dateStart.clone().endOf('month')});
->>>>>>> f530653539104e16d5f957b5834b7275b3aae1b1
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
 				currV += lastCredit;
