@@ -202,9 +202,9 @@ app.controller('event_display',function($scope,$rootScope,$window){
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
     */
     $scope.events = [];
-	
+
 	$scope.modalEvent={};
-	
+
 	$scope.suspension;
 
     $scope.init = function(events,suspension){
@@ -254,7 +254,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
             default:
                 return;
         }
-		
+
         $rootScope.post(
             url,
             data,
@@ -289,16 +289,33 @@ app.controller('event_display',function($scope,$rootScope,$window){
 });
 
 app.controller('calendar_collisions',function($scope,$rootScope,$window){
-    $scope.collisions = [];
+    $scope.collisions = {};
     $scope.moment = moment;
     $scope.init = function(collisions){
-        $scope.collisions = collisions;
-        for(var i = 0 ; i<$scope.collisions.length ; i++){
-            $scope.collisions[i].leave.info.leave_id = parseInt($scope.collisions[i].leave.info.leave_id);
+        if(!collisions.events) return;
+        for(var i = 0 ;i<collisions.leaves.length ; i++){
+            var leave = collisions.leaves[i].leave;
+            leave.info.leave_id = parseInt(leave.info.leave_id);
+            leave.collision_events = []; //stores all collision events of all its date ranges
+            for(var j=0;j<leave.date_ranges.length;j++){
+                var date_range = leave.date_ranges[j];
+                for(var k=0;k<collisions.events.length;k++){
+                    var event = collisions.events[k];
+                    date_range.collision_events = []; //stores all collision events of itself
+                    if(date_range.range_id == event.range_id){
+                        date_range.collision_events.push(event.event_id);
+                        if(leave.collision_events.indexOf(event)==-1){
+                            leave.collision_events.push(event);
+                        }
+                    }
+                }
+            }
         }
+        $scope.collisions = collisions;
     }
 
-    $scope.openLeaveModal = function(event_id,leave){
+    $scope.openLeaveModal = function(leaveData){
+        var leave = angular.copy(leaveData);
         for(var i = 0 ; i<leave.date_ranges.length ; i++){
             leave.date_ranges[i].range_id = parseInt(leave.date_ranges[i].range_id);
             leave.date_ranges[i].start_date = moment(leave.date_ranges[i].start_date).format($rootScope.dateFormat);
@@ -307,22 +324,11 @@ app.controller('calendar_collisions',function($scope,$rootScope,$window){
             leave.date_ranges[i].hours = $rootScope.creditsToTime(leave.date_ranges[i].credits).hours;
             leave.date_ranges[i].minutes = $rootScope.creditsToTime(leave.date_ranges[i].credits).minutes;
         }
-        leave.collision_event_id = event_id;
         $scope.$broadcast('openLeaveModal',leave);
 	}
 
-    var markAsResolved = function(collision){
-        var data = {};
-
-        if(Array.isArray(collision)){
-            data.collision = collision;
-            data.batch = true;
-        }else{
-            data = {
-                event_id:collision.event_id,
-                range_id:collision.range_id
-            }
-        }
+    var markAsResolved = function(leave_id){
+        var data = {leave_id:leave_id};
         $rootScope.post(
             $rootScope.baseURL+'calendar/managecollisions',
             data,
@@ -342,22 +348,13 @@ app.controller('calendar_collisions',function($scope,$rootScope,$window){
     }
 
     $scope.$on('editLeave',function(event,leave){ //Coming from employee_leave_records
-        var data = [];
-        for(var i = 0 ; i<leave.date_ranges.length ; i++){
-            data.push({
-                event_id:leave.collision_event_id,
-                range_id:leave.date_ranges[i].range_id
-            });
-        }
-        markAsResolved(data);
+        console.log(leave);
+        markAsResolved(leave.info.leave_id);
     });
 
-    $scope.promptResolve = function(index){
+    $scope.promptResolve = function(leave_id){
         $rootScope.showCustomModal('Warning','Are you sure you want to dismiss this collision without editing the leave record?',function(){
-            markAsResolved({
-                event_id:$scope.collisions[index].event_id,
-                range_id:$scope.collisions[index].range_id
-            });
+            markAsResolved(leave_id);
         },function(){});
     }
 });

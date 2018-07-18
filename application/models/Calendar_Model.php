@@ -34,13 +34,8 @@ class Calendar_Model extends MY_Model
 
 	private $resolutionFields = array(
 		array(
-			'field_name'=>"range_id",
-			'field_title'=>'Range ID',
-			'required'=>true
-		),
-		array(
-			'field_name'=>"event_id",
-			'field_title'=>'Event ID',
+			'field_name'=>"leave_id",
+			'field_title'=>'Leave ID',
 			'required'=>true
 		)
 	);
@@ -134,49 +129,81 @@ class Calendar_Model extends MY_Model
 		$this->db->where('is_resolved',false);
 		$events = $this->db->get()->result_array();
 		$output = array();
+		if(count($events)<1){
+			return $output;
+		}
+
+		//get distinct leave ids
+		$this->db->select('distinct l.leave_id',false);
+		$this->db->from(DB_PREFIX.'leaves as l');
+		$this->db->join(DB_PREFIX.'leave_date_range as ldr','l.leave_id = ldr.leave_id');
 		foreach($events as $event){
+			$this->db->where('ldr.range_id',$event['range_id']);
+		}
+		$leaveIDsRaw = $this->db->get()->result_array();
+		$leaveIDs = array();
+		foreach($leaveIDsRaw as $leaveIDRaw){
+			array_push($leaveIDs,$leaveIDRaw['leave_id']);
+		}
+
+		//get associated employees
+		$output['leaves']=array();
+		foreach($leaveIDs as $leaveID){
+			$this->db->select(DB_PREFIX.'employee.*');
+			$this->db->from(DB_PREFIX.'leaves');
+			$this->db->join(DB_PREFIX.'employee',DB_PREFIX.'leaves.emp_no = '.DB_PREFIX.'employee.emp_no');
+			$this->db->where('leave_id',$leaveID);
+			$employeeInfo = $this->db->get()->result_array()[0];
+			$leave = $this->employee_leaves_model->getLeave($leaveID);
+			array_push($output['leaves'],array(
+				'leave'=>$leave,
+				'employee'=>$employeeInfo
+			));
+		}
+
+		/*foreach($events as $event){
 			$this->db->select('leave_id');
 			$this->db->from(DB_PREFIX.'leave_date_range');
 			$this->db->where('range_id',$event['range_id']);
 			$leaveID = $this->db->get()->result_array()[0]['leave_id'];
 
 			//employee info
-			$this->db->select(DB_PREFIX.'employee.*');
+			$this->db->select(DB_PREFIX.'employee.emp_no,last_name,middle_name,first_name');
 			$this->db->from(DB_PREFIX.'leaves');
 			$this->db->join(DB_PREFIX.'employee',DB_PREFIX.'leaves.emp_no = '.DB_PREFIX.'employee.emp_no');
 			$this->db->where('leave_id',$leaveID);
 			$employeeInfo = $this->db->get()->result_array()[0];
-
-			$event['leave'] = $this->employee_leaves_model->getLeave($leaveID);
-			$event['employee']=$employeeInfo;
-			array_push($output,$event);
-		}
+			$leave = $this->employee_leaves_model->getLeave($leaveID);
+			array_push($output,array(
+				'leave'=>$leave,
+				'employee'=>$employeeInfo
+			));
+		}*/
+		$output['events']=$events;
 		return $output;
 	}
 
 	public function resolveCollision($data){
-
 		$checker = $this->checkFields($this->resolutionFields,$data);
 		if(!is_array($checker)){
 			return $checker;
 		}
-		$this->db->set('is_resolved',true);
-		$this->db->where($data);
-		$this->db->update(DB_PREFIX.'calendar_collisions');
-	}
 
-	public function resolveCollisionBatch($data){
-		foreach($data as $d){
-			$checker = $this->checkFields($this->resolutionFields,$d);
-			if(!is_array($checker)){
-				return $checker;
-			}
-
-			$this->db->set('is_resolved',true);
-			$this->db->where($d);
-			$this->db->update(DB_PREFIX.'calendar_collisions');
-
+		//get all range_id
+		$this->db->select('range_id');
+		$this->db->where('leave_id',$data['leave_id']);
+		$dateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();
+		if(count($dateRanges)<1){
+			return;
 		}
+
+		//set as resolved
+		$this->db->set('is_resolved',true);
+		foreach($dateRanges as $dateRange){
+			$this->db->or_where('range_id',$dateRange['range_id']);
+		}
+		$this->db->update(DB_PREFIX.'calendar_collisions');
+
 	}
 
 }

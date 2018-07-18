@@ -81,12 +81,7 @@ class Calendar extends MY_Controller
             );
         }else{
             $data = parse_custom_post($input);
-            log_message('DEBUG','BAAM'.print_r($data,true));
-            if(isset($data['batch']) && $data['batch']){
-                $res = $this->calendar_model->resolveCollisionBatch($data['collision']);
-            }else{
-                $res = $this->calendar_model->resolveCollision($data);
-            }
+            $res = $this->calendar_model->resolveCollision($data);
 
             if($res !== null){
                 custom_response(false,$res);

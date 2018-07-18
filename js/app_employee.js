@@ -471,14 +471,14 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				currS += tmp;
 				earned.v += tmp;
 				earned.s += tmp;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'Accumulation - Absence without pay',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'End of Month Accumulation w/ Absence Without Pay',date:dateStart.clone().endOf('month')});
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
 				currV += lastCredit;
 				currS += lastCredit;
 				earned.v += lastCredit;
 				earned.s += lastCredit;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:lastCredit,s:lastCredit},balance:{s:currS,v:currV},remarks:'End of Month Accumulation',date:dateStart.clone()});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:lastCredit,s:lastCredit},balance:{s:currS,v:currV},remarks:'End of Month Accumulation',date:dateStart.clone().endOf('month')});
 			}else{
 				currV += 1250;
 				currS += 1250;
@@ -1123,7 +1123,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
                     leaveReference.info = response.leave.info;
                     leaveReference.date_ranges = response.leave.date_ranges;
 
-                    if($scope.leave.hasOwnProperty('collision_event_id')){  //emit to calendar_collisions
+                    if($scope.leave.hasOwnProperty('collision_events')){  //emit to calendar_collisions
                         response.leave.collision_event_id = $scope.leave.collision_event_id;
                         $scope.$emit('editLeave',response.leave);
                     }

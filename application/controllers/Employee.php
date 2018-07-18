@@ -101,7 +101,6 @@ class Employee extends MY_Controller{
             if(!is_array($response)){ //if response is not an array, it is a string containing an error msg.
                 custom_response(false, $response);
             }else{
-                log_message('debug',print_r($response,true));
                 custom_response(true,"Success",array('leave'=>$response));
             }
         }

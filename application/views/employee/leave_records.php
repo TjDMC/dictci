@@ -100,7 +100,10 @@ if(!isset($events)){
                     <th>Holiday Conflicts</th>
 				</tr>
                 <tr ng-repeat="date_range in leave.date_ranges track by $index">
-                    <td style="width:40px"><button class="btn btn-light" type="button" ng-click="addOrDeleteRange(1,$index)"><i class="fas fa-times"></i></button></td>
+                    <td style="width:40px">
+
+                        <button class="btn btn-light" type="button" ng-click="addOrDeleteRange(1,$index)"><i class="fas fa-times"></i></button>
+                    </td>
                     <td>
                         <div class="dropdown" style="min-width:200px;max-width:400px">
                             <a id="startdate{{$index}}" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
@@ -149,6 +152,9 @@ if(!isset($events)){
                     </td>
                     <td class="align-middle">
                         {{date_range.holiday_conflicts}}
+                    </td>
+                    <td style="border:none" class="text-warning align-middle" ng-if="date_range.collision_events && date_range.collision_events.length>0">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </td>
                 </tr>
                 <tr>
