@@ -1189,14 +1189,14 @@ app.controller('employee_leave_records',function($scope,$rootScope){
             data,
             function(response){
                 //returning date ranges to their original format
-                /*for(var i = 0 ; i<$scope.leaves.length ; i++){
+                for(var i = 0 ; i<$scope.leaves.length ; i++){
         			var leave = $scope.leaves[i];
                     for(var j = 0 ; j<leave.date_ranges.length ; j++){
         				var date_range = leave.date_ranges[j];
         				date_range.start_date = moment(date_range.start_date,$rootScope.dateFormat);
         				date_range.end_date = moment(date_range.end_date,$rootScope.dateFormat);
         			}
-                }*/
+                }
                 succFunc(response);
                 $scope.sortAndFormatLeaves(); //From parent
                 $scope.changeDateFilter(); //Updating filters
