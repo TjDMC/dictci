@@ -24,6 +24,9 @@ app.controller('employee_nav',function($scope,$rootScope){
 	$scope.employeesToArray = function(employees){
 		var result = [];
 		for(var i = 0 ; i<employees.length ; i++){
+			if(employees[i].middle_name==null){
+				employees[i].middle_name = '';
+			}
 			result.push({
 				emp_no:employees[i].emp_no,
 				emp_name:employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
