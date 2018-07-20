@@ -139,8 +139,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 {
                     start_date:moment($scope.monetize.date,$rootScope.dateFormat).format('YYYY/MM/DD'),
                     end_date:moment($scope.monetize.date,$rootScope.dateFormat).format('YYYY/MM/DD'),
-                    hours:parseInt($scope.monetize.credits)*8,
-                    minutes:($scope.monetize.credits - parseInt($scope.monetize.credits))*60*8
+                    credits:$scope.monetize.credits
                 }
             ]
         }
@@ -371,10 +370,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					//	#for_testing_only
 
 					if(leave.info.is_without_pay){
-						if(leave.info.type=="Sick")
+						if(leave.info.type=="Sick"){
 							lwop += creditUsed;
-						else
+                            $scope.computations.factors.push({type:'Sick',amount:{v:0,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves (WOP)',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        }else{
 							mLWOP += creditUsed;
+                            $scope.computations.factors.push({type:leave.info.type,amount:{v:0,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves (WOP)',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        }
 						leave.date_ranges.splice(j,1);
 						continue;
 					}
@@ -685,23 +687,72 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     /*Record Of Leaves*/
     $scope.rol = {
         start_date:null,
-        end_date:null
+        end_date:null,
+        bal_history:[]
     }
     $scope.initRecordOfLeaves = function(){
         $scope.rol.start_date = moment().startOf('year').isBefore(moment($scope.employee.first_day,$rootScope.dateFormat),'months') ? moment($scope.employee.first_day,$rootScope.dateFormat):moment().startOf('year');
         $scope.rol.end_date = $scope.rol.start_date.clone().endOf('year');
+        updateROL();
     }
 
     $scope.setAllTime = function(){
         $scope.rol.start_date = moment($scope.employee.first_day,$rootScope.dateFormat);
         $scope.rol.end_date = moment().endOf('year');
+        updateROL();
+    }
+
+    var updateROL = function(){
+        $rootScope.longComputation($scope.rol,'factors',function(){
+            $scope.computeBal($scope.rol.end_date);
+            return formatROL(angular.copy($scope.computations.factors));
+        });
+    }
+
+    var formatROL = function(factors){
+        var rol = [];
+        var leaves = {};
+        for(var i = 0;i<factors.length;i++){
+            var factor = factors[i];
+            if(!factor.leave_info && !factor.remarks.toLowerCase().includes("accumulation") && !factor.remarks.toLowerCase().includes("forced"))
+                continue; //skip factors without leave info, not an accumulation, and not a forced leave
+            factor.date = moment(factor.date);
+            if(factor.leave_info){
+                if(leaves[leave_info.leave_id]){
+                    leaves[leave_info.leave_id].push(factor);
+                }else{
+                    leaves[leave_info.leave_id] = [factor];
+                }
+            }
+
+        }
+        return factors;
+    }
+
+    var addToROL = function(rol,year,month,factor){
+        if(rol.hasOwnProperty(year)){
+            if(rol.year.hasOwnProperty(month)){
+                rol.year.month.push(factor);
+            }else{
+                rol.year.month = [factor];
+                rol.year.month.sort(function(a,b){
+                    a.date.diff(b.date,'day');
+                });
+            }
+        }else{
+            rol.year = {
+                month:[factor]
+            };
+        }
     }
 
     $scope.rolStartDateSet = function(){
         $scope.$broadcast('rol-start-date-set');
+        updateROL();
     }
     $scope.rolEndDateSet = function(){
         $scope.$broadcast('rol-end-date-set');
+        updateROL();
     }
 
     $scope.rolStartDateRender = function($view,$dates) {
