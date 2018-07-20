@@ -231,11 +231,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
         			<h5 class="font-weight-bold mb-3">Select printing range</h5>
-                    <div>
-                        <p ng-repeat="factor in rol.factors">
-                            {{factor}} {{factor.date.format('MMM. DD, YYYY')}}
-                        </p>
-                    </div>
         			<table class="table">
         				<tr>
         					<th>From</th>
@@ -323,8 +318,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         					<tr>
         						<th colspan="2" rowspan="2" >Leave Earned</th>
         						<th rowspan="3" >WHEN TAKEN</th>
-        						<th colspan="2" rowspan="2" >LEAVES TAKEN</th>
-        						<th colspan="3">UNDERTIME</th>
+        						<th colspan="2" rowspan="2" style="font-size:0.85em">LEAVES TAKEN</th>
+        						<th colspan="3" style="font-size:0.85em">UNDERTIME</th>
         						<th rowspan="2" colspan="3" >W/O PAY</th>
         						<th colspan="2" rowspan="2" >BALANCE</th>
         						<th rowspan="3" >REMARK</th>
@@ -346,6 +341,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         						<th>VAC</th>
         						<th>SICK</th>
         					</tr>
+                            <tbody ng-repeat="months in rol.factors[2018]">
+                                <tr ng-repeat="factor in months">
+                                    <td>{{factor.leaves_earned.v}}</td>
+                                    <td>{{factor.leaves_earned.s}}</td>
+                                    <td>{{factor.when_taken}}</td>
+                                    <td>{{factor.leaves_taken.v}}</td>
+                                    <td>{{factor.leaves_taken.s}}</td>
+                                    <td>{{factor.undertime.hour}}</td>
+                                    <td>{{factor.undertime.min}}</td>
+                                    <td>{{factor.undertime.total}}</td>
+                                    <td>{{factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.min}}</td>
+                                    <td>{{factor.without_pay.total}}</td>
+                                    <td>{{factor.balance.v}}</td>
+                                    <td>{{factor.balance.s}}</td>
+                                    <td>{{factor.remarks}}</td>
+                                </tr>
+                            </tbody>
         				</table>
                     </div>
                 </div>

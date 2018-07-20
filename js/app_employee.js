@@ -688,7 +688,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.rol = {
         start_date:null,
         end_date:null,
-        bal_history:[]
+        factors:{}
     }
     $scope.initRecordOfLeaves = function(){
         $scope.rol.start_date = moment().startOf('year').isBefore(moment($scope.employee.first_day,$rootScope.dateFormat),'months') ? moment($scope.employee.first_day,$rootScope.dateFormat):moment().startOf('year');
@@ -703,6 +703,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     var updateROL = function(){
+        console.log('test');
         $rootScope.longComputation($scope.rol,'factors',function(){
             $scope.computeBal($scope.rol.end_date);
             return formatROL(angular.copy($scope.computations.factors));
@@ -717,47 +718,43 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             if(!factor.leave_info && !factor.remarks.toLowerCase().includes("accumulation") && !factor.remarks.toLowerCase().includes("forced"))
                 continue; //skip factors without leave info, not an end-of-month-accumulation, and not a forced leave
             factor.date = moment(factor.date);
+            console.log(factor.date.format('MMMM DD YYYY'));
             if(factor.leave_info){
-                if(leaveROL[factor.leave_info.leave_id]){
-                    leaveROL[factor.leave_info.leave_id].push(factor);
-                }else{
-                    leaveROL[factor.leave_info.leave_id] = [factor];
-                }
+                addToROL(leaveROL,factor.date.year(),factor.date.format('MMMM'),factor);
             }else if(factor.remarks.toLowerCase().includes("accumulation")){
                 addToROL(rol,factor.date.year(),factor.date.format('MMMM'),{
-                    leaves_earned:factor.amount,
+                    leaves_earned:{v:(factor.amount.v/1000).toFixed(3),s:(factor.amount.s/1000).toFixed(3)},
                     when_taken:'',
                     leaves_taken:{v:'',s:''},
                     undertime:{hour:'',min:'',total:''},
                     without_pay:{hour:'',min:'',total:''},
-                    balance:factor.balance,
+                    balance:{v:(factor.balance.v/1000).toFixed(3),s:(factor.balance.s/1000).toFixed(3)},
                     remarks:'bal. As of '+factor.date.format('MMM. DD, YYYY')
                 });
             }else if(factor.remarks.toLowerCase().includes("forced")){
                 addToROL(rol,factor.date.year(),factor.date.format('MMMM'),factor);
             }
-
         }
-        return factors;
+        return rol;
     }
 
     var addToROL = function(rol,year,month,factor){
         if(rol.hasOwnProperty(year)){
-            if(rol.year.hasOwnProperty(month)){
-                rol.year.month.push(factor);
+            if(rol[year].hasOwnProperty(month)){
+                rol[year][month].push(factor);
             }else{
-                rol.year.month = [factor];
+                rol[year][month] = [factor];
             }
         }else{
-            rol.year = {
-                month:[factor]
+            rol[year] = {
+                [month]:[factor]
             };
         }
     }
 
     $scope.printROLTable = function(){
         var printContents = document.getElementById('rolTable').innerHTML;
-        var popupWin = window.open('', '_blank', 'width=600,height=400');
+        var popupWin = window.open('', '_blank', 'width=1000,height=700');
         popupWin.document.open();
         popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="'+$rootScope.baseURL+'css/print.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
         popupWin.document.close();
