@@ -682,10 +682,50 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
     /* end Terminal Benefit Computations*/
 
-	// datetimepicker section for form printing
-    $scope.printInformation = function(){
-
+    /*Record Of Leaves*/
+    $scope.rol = {
+        start_date:null,
+        end_date:null
     }
+    $scope.initRecordOfLeaves = function(){
+        $scope.rol.start_date = moment().startOf('year').isBefore(moment($scope.employee.first_day,$rootScope.dateFormat),'months') ? moment($scope.employee.first_day,$rootScope.dateFormat):moment().startOf('year');
+        $scope.rol.end_date = $scope.rol.start_date.clone().endOf('year');
+    }
+
+    $scope.setAllTime = function(){
+        $scope.rol.start_date = moment($scope.employee.first_day,$rootScope.dateFormat);
+        $scope.rol.end_date = moment().endOf('year');
+    }
+
+    $scope.rolStartDateSet = function(){
+        $scope.$broadcast('rol-start-date-set');
+    }
+    $scope.rolEndDateSet = function(){
+        $scope.$broadcast('rol-end-date-set');
+    }
+
+    $scope.rolStartDateRender = function($view,$dates) {
+		var limitDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1,$view).add(1,'minute');
+        var activeDate = moment($scope.rol.end_date);
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf() ||  date.localDateValue() > activeDate.valueOf();
+		}).forEach(function (date) {
+			date.selectable = false;
+		});
+	}
+
+	$scope.rolEndDateRender = function($view, $dates) {
+		var limitDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1,$view).add(1,'minute');
+        var activeDate = moment($scope.rol.start_date).subtract(1, $view).add(1, 'minute');
+		$dates.filter(function (date) {
+			return date.localDateValue() < limitDate.valueOf() || date.localDateValue() <= activeDate.valueOf();
+		}).forEach(function (date) {
+			date.selectable = false;
+		});
+	}
+    /*end Record Of Leaves*/
+
+	// datetimepicker section
 	$scope.startDateOnSetTime = function() {
 		console.log("start on set");
 		$scope.$broadcast('start-date-changed');

@@ -7,14 +7,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h1>Employee Information</h1>
     </div>
     <div class="card-body">
-        <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
-        <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
-        <p><span class="font-weight-bold">First Day:</span> {{employee.first_day}}</p>
-        <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
+        <div class="alert alert-dark">
+            <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
+            <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
+            <p><span class="font-weight-bold">First Day:</span> {{employee.first_day}}</p>
+            <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
+        </div>
 
-        <div class="dropdown form-group" style="max-width:400px">
+        <div class="form-group">
             <button class="btn btn-success" data-toggle="modal" data-target="#computeBalModal" ng-click="longComputation(this,'balance',getBalance)">Leave Credits Balance</button>
             <button class="btn btn-success" data-toggle="modal" data-target="#leaveCreditStatisticsModal" ng-click="$broadcast('openStatisticsModal')" type="button">Leave Credits Statistics</button>
+            <button class="btn btn-success" data-toggle="modal" data-target="#recordOfLeavesModal" ng-click="initRecordOfLeaves()" type="button">Print Record of Leaves</button>
         </div>
 
         <div class="form-group">
@@ -209,6 +212,79 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             chart-labels="statistics.labels" chart-options="statistics.options" chart-series="statistics.series" chart-colors="statistics.colors">
                         </canvas>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="recordOfLeavesModal" tabindex="-1" role="dialog" aria-labelledby="recordOfLeavesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recordOfLeavesModalLabel">Record Of Leaves</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+        			<h5 class="font-weight-bold mb-3">Select printing range</h5>
+        			<table class="table">
+        				<tr>
+        					<th>From</th>
+        					<th>To</th>
+        					<th></th>
+        				</tr>
+        				<tr>
+        					<td>
+        						<div class="dropdown">
+        							<a id="startDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+        								<div class="input-group">
+        									<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.start_date" required>
+        									<div class="input-group-append">
+        										<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+        									</div>
+        								</div>
+        							</a>
+        							<ul class="dropdown-menu">
+        								<datetimepicker
+        									data-ng-model="rol.start_date"
+        									data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month',renderOn:'rol-end-date-set'}"
+        									data-on-set-time="rolStartDateSet()"
+        									data-before-render="rolStartDateRender($view,$dates)"></datetimepicker>
+        							</ul>
+        						</div>
+        					</td>
+        					<td>
+        						<div class="dropdown">
+        							<a id="endDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+        								<div class="input-group">
+        									<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.end_date" required>
+        									<div class="input-group-append">
+        										<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+        									</div>
+        								</div>
+        							</a>
+        							<ul class="dropdown-menu">
+        								<datetimepicker
+        									data-ng-model="rol.end_date"
+        									data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month',renderOn:'rol-start-date-set'}"
+        									data-on-set-time="rolEndDateSet()"
+        									data-before-render="rolEndDateRender($view,$dates)"></datetimepicker>
+        							</ul>
+        						</div>
+        					</td>
+        					<td>
+        						<button class="btn btn-success" ng-click="setAllTime()">All Time</button>
+        					</td>
+        				</tr>
+        			</table>
+        			<div class="text-center">
+        				<button class="btn btn-primary" onclick="window.print()">Print</button>
+        				<a class="btn btn-primary" style="color:white" ng-click="form.generate()" ng-href="{{form.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
+        			</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
