@@ -305,7 +305,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						firstMC -= creditUsed;
 						lwop += creditUsed;
 						wopCtr += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Vacation, Forced, Mandatory, and Sick Leaves (WOP)',date:dateStart.clone(),leave_info:leave.info,date_range:range});
+                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Vacation, Forced, Mandatory, and Sick Leaves (WOP)',date:moment(range.start_date,$rootScope.dateFormat),leave_info:leave.info,date_range:range});
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						$rootScope.showCustomModal('Error','Employee may not monetize yet.',function(){angular.element('#customModal').modal('hide');},function(){});
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
@@ -315,13 +315,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 							firstMC+=spLeave;
 							spLeave=0;
 						}
-                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Special Priviledge Leave (WOP)',date:dateStart.clone(),leave_info:leave.info,date_range:range});
+                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Special Priviledge Leave (WOP)',date:moment(range.start_date,$rootScope.dateFormat),leave_info:leave.info,date_range:range});
 					}else if(leave.info.type.toLowerCase().includes('parental')){
 						//	Parental Leaves	(For Solo Parents)
 						pLeave -= creditUsed;
 						if(pLeave<0){
 							firstMC+=pLeave;
-                            $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Parental Leave (WOP)',date:dateStart.clone(),leave_info:leave.info,date_range:range});
+                            $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Parental Leave (WOP)',date:moment(range.start_date,$rootScope.dateFormat),leave_info:leave.info,date_range:range});
 							pLeave=0;
 						}
 					}
@@ -384,22 +384,22 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						currV -= creditUsed;
 						fLeave -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Vacation and Forced Leaves',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type=="Undertime"){
 						currV -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Undertime',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{v:-creditUsed,s:0},balance:{v:currV,s:currS},remarks:'Undertime',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type=="Sick"){
 						//	Sick Leaves
 						currS -= creditUsed;
 						enjoyed.s += creditUsed;
-                        $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						// Temporal Solution for Monetization of Leaves
 						monetized=true;
 						currV -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                        $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 						if(currV<5000){
 							if(!leave.info.type.toLowerCase().includes('special')){
 								$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -410,11 +410,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                                     currS += currV;
 									enjoyed.v += currV;
 									enjoyed.s -= currV;
-                                    $scope.computations.factors.push({type:'Sick',amount:{s:currV,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                                    $scope.computations.factors.push({type:'Sick',amount:{s:currV,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
                                 }
 							}
 							currV=5000;
-                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 						}
 						// #temporal_solution_for_monetization_of_leaves
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
@@ -423,7 +423,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						if(spLeave<0){
 							currV+=spLeave;
 							enjoyed.v -= spLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 							spLeave=0;
 						}
 					}else if(leave.info.type.toLowerCase().includes('parental')){
@@ -432,7 +432,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						if(pLeave<0){
 							currV+=pLeave;
 							enjoyed.v -= pLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:moment(range.end_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Vacation',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:moment(range.start_date,$rootScope.dateFormat),date_range:range,leave_info:leave.info});
 							pLeave=0;
 						}
 					}
@@ -683,6 +683,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     /* end Terminal Benefit Computations*/
 
 	// datetimepicker section for form printing
+    $scope.printInformation = function(){
+
+    }
 	$scope.startDateOnSetTime = function() {
 		console.log("start on set");
 		$scope.$broadcast('start-date-changed');
