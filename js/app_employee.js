@@ -442,6 +442,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					leaves.splice(i,1);
 				}
 			}
+			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
+                currV = currV-fLeave;
+				enjoyed.v += fLeave;
+                $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
+            }
 			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
 				currV += currS;
 				fLeave += currS;
@@ -488,11 +493,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				earned.s += 1250;
                 $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:1250,s:1250},balance:{s:currS,v:currV},remarks:'End of Month Accumulation',date:dateStart.clone().endOf('month')});
 			}
-			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
-                currV = currV-fLeave;
-				enjoyed.v += fLeave;
-                $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
-            }
             $scope.computations.bal_history[dateStart.clone().endOf('month').format('YYYY-MM-DD')]={vac:currV, sick:currS};
 			dateStart.add(1,'month');
 		}
