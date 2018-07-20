@@ -287,9 +287,67 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         				</tr>
         			</table>
         			<div class="text-center">
-        				<button class="btn btn-primary" onclick="window.print()">Print</button>
-        				<a class="btn btn-primary" style="color:white" ng-click="form.generate()" ng-href="{{form.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
+        				<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
+        				<a class="btn btn-primary" style="color:white" ng-click="roltable.generate()" ng-href="{{roltable.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
         			</div>
+                    <div class="mt-3" id="rolTable">
+                        <div style="text-align:center">
+            				<h4 style="font-weight:bold;margin:0">RECORD OF LEAVES OF ABSENCE</h4>
+            				<p style="font-weight:bold">(UNDER R.A. 2266)</p>
+            			</div>
+            			<div>
+            				<div style="width:auto;float:left">
+            					<p style="font-size:18px"><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span><p>
+            				</div>
+            				<div style="width:auto;float:right">
+            					<p style="font-size:18px"><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
+            				</div>
+            			</div>
+                        <table class="rol-table" export-csv="form" export-csv="roltable" style="text-align:center;width:100%">
+        					<colgroup>
+        						<col width="5%">
+        						<col width="5%">
+        						<col width="22%">
+        						<col width="6%">
+        						<col width="6%">
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="6%">
+        						<col width="6%">
+        						<col width="20%">
+        					</colgroup>
+        					<tr>
+        						<th colspan="2" rowspan="2" >Leave Earned</th>
+        						<th rowspan="3" >WHEN TAKEN</th>
+        						<th colspan="2" rowspan="2" >LEAVES TAKEN</th>
+        						<th colspan="3">UNDERTIME</th>
+        						<th rowspan="2" colspan="3" >W/O PAY</th>
+        						<th colspan="2" rowspan="2" >BALANCE</th>
+        						<th rowspan="3" >REMARK</th>
+        					</tr>
+        					<tr>
+        						<th colspan="3">VAC</th>
+        					</tr>
+        					<tr style="font-size:0.7em;">
+        						<th>VAC</th>
+        						<th>SICK</th>
+        						<th>VAC</th>
+        						<th>SICK</th>
+        						<th>HOUR</th>
+        						<th>MIN</th>
+        						<th>TOTAL</th>
+        						<th>HOUR</th>
+        						<th>MIN</th>
+        						<th>TOTAL</th>
+        						<th>VAC</th>
+        						<th>SICK</th>
+        					</tr>
+        				</table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

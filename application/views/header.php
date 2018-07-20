@@ -16,6 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link href="<?= base_url() ?>css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>css/datetimepicker/datetimepicker.css" type="text/css" rel="stylesheet">
 	<link href="<?= base_url() ?>css/style.css" type="text/css" rel="stylesheet">
+	<link href="<?= base_url() ?>css/print.css" type="text/css" rel="stylesheet">
 
 	<script src="<?= base_url().'js/jquery.min.js' ?>"></script>
 	<script src="<?= base_url().'js/moment.min.js' ?>"></script>

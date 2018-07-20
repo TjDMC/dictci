@@ -1,0 +1,14 @@
+.rol-table{
+    padding:0;
+    margin:0;
+    border-collapse:collapse;
+}
+
+.rol-table th{
+    border:1px solid gray;
+    font-weight:bold;
+}
+.rol-table td{
+    border:1px solid gray;
+    font-weight:normal;
+}

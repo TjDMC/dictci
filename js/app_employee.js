@@ -710,19 +710,31 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     var formatROL = function(factors){
-        var rol = [];
-        var leaves = {};
+        var rol = {};
+        var leaveROL = {}; //leaves are temporarily stored in leaveROL before going into rol because it needs to be formatted.
         for(var i = 0;i<factors.length;i++){
             var factor = factors[i];
             if(!factor.leave_info && !factor.remarks.toLowerCase().includes("accumulation") && !factor.remarks.toLowerCase().includes("forced"))
-                continue; //skip factors without leave info, not an accumulation, and not a forced leave
+                continue; //skip factors without leave info, not an end-of-month-accumulation, and not a forced leave
             factor.date = moment(factor.date);
             if(factor.leave_info){
-                if(leaves[leave_info.leave_id]){
-                    leaves[leave_info.leave_id].push(factor);
+                if(leaveROL[factor.leave_info.leave_id]){
+                    leaveROL[factor.leave_info.leave_id].push(factor);
                 }else{
-                    leaves[leave_info.leave_id] = [factor];
+                    leaveROL[factor.leave_info.leave_id] = [factor];
                 }
+            }else if(factor.remarks.toLowerCase().includes("accumulation")){
+                addToROL(rol,factor.date.year(),factor.date.format('MMMM'),{
+                    leaves_earned:factor.amount,
+                    when_taken:'',
+                    leaves_taken:{v:'',s:''},
+                    undertime:{hour:'',min:'',total:''},
+                    without_pay:{hour:'',min:'',total:''},
+                    balance:factor.balance,
+                    remarks:'bal. As of '+factor.date.format('MMM. DD, YYYY')
+                });
+            }else if(factor.remarks.toLowerCase().includes("forced")){
+                addToROL(rol,factor.date.year(),factor.date.format('MMMM'),factor);
             }
 
         }
@@ -735,15 +747,20 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 rol.year.month.push(factor);
             }else{
                 rol.year.month = [factor];
-                rol.year.month.sort(function(a,b){
-                    a.date.diff(b.date,'day');
-                });
             }
         }else{
             rol.year = {
                 month:[factor]
             };
         }
+    }
+
+    $scope.printROLTable = function(){
+        var printContents = document.getElementById('rolTable').innerHTML;
+        var popupWin = window.open('', '_blank', 'width=600,height=400');
+        popupWin.document.open();
+        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="'+$rootScope.baseURL+'css/print.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+        popupWin.document.close();
     }
 
     $scope.rolStartDateSet = function(){
