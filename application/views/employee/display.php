@@ -221,7 +221,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
     <div class="modal fade" id="recordOfLeavesModal" tabindex="-1" role="dialog" aria-labelledby="recordOfLeavesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width:1100px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="recordOfLeavesModalLabel">Record Of Leaves</h5>
@@ -231,6 +231,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
         			<h5 class="font-weight-bold mb-3">Select printing range</h5>
+                    <div>
+                        <p ng-repeat="factor in rol.factors">
+                            {{factor}} {{factor.date.format('MMM. DD, YYYY')}}
+                        </p>
+                    </div>
         			<table class="table">
         				<tr>
         					<th>From</th>
