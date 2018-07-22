@@ -229,62 +229,64 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body text-center">
-        			<h5 class="font-weight-bold mb-3">Select printing range</h5>
-        			<table class="table">
-        				<tr>
-        					<th>From</th>
-        					<th>To</th>
-        					<th></th>
-        				</tr>
-        				<tr>
-        					<td>
-        						<div class="dropdown">
-        							<a id="startDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
-        								<div class="input-group">
-        									<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.start_date" required>
-        									<div class="input-group-append">
-        										<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-        									</div>
-        								</div>
-        							</a>
-        							<ul class="dropdown-menu">
-        								<datetimepicker
-        									data-ng-model="rol.start_date"
-        									data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month',renderOn:'rol-end-date-set'}"
-        									data-on-set-time="rolStartDateSet()"
-        									data-before-render="rolStartDateRender($view,$dates)"></datetimepicker>
-        							</ul>
-        						</div>
-        					</td>
-        					<td>
-        						<div class="dropdown">
-        							<a id="endDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
-        								<div class="input-group">
-        									<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.end_date" required>
-        									<div class="input-group-append">
-        										<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-        									</div>
-        								</div>
-        							</a>
-        							<ul class="dropdown-menu">
-        								<datetimepicker
-        									data-ng-model="rol.end_date"
-        									data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month',renderOn:'rol-start-date-set'}"
-        									data-on-set-time="rolEndDateSet()"
-        									data-before-render="rolEndDateRender($view,$dates)"></datetimepicker>
-        							</ul>
-        						</div>
-        					</td>
-        					<td>
-        						<button class="btn btn-success" ng-click="setAllTime()">All Time</button>
-        					</td>
-        				</tr>
-        			</table>
-        			<div class="text-center">
-        				<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
-        				<a class="btn btn-primary" style="color:white" ng-click="roltable.generate()" ng-href="{{roltable.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
-        			</div>
+                <div class="modal-body">
+					<div class="alert alert-info">
+						<h5 class="font-weight-bold mb-3">Select display range</h5>
+						<table class="table">
+							<tr>
+								<th>From</th>
+								<th>To</th>
+								<th></th>
+							</tr>
+							<tr>
+								<td>
+									<div class="dropdown">
+										<a id="startDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+											<div class="input-group">
+												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.start_date" required>
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+												</div>
+											</div>
+										</a>
+										<ul class="dropdown-menu">
+											<datetimepicker
+												data-ng-model="rol.start_date"
+												data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month',renderOn:'rol-end-date-set'}"
+												data-on-set-time="rolStartDateSet()"
+												data-before-render="rolStartDateRender($view,$dates)"></datetimepicker>
+										</ul>
+									</div>
+								</td>
+								<td>
+									<div class="dropdown">
+										<a id="endDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+											<div class="input-group">
+												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.end_date" required>
+												<div class="input-group-append">
+													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+												</div>
+											</div>
+										</a>
+										<ul class="dropdown-menu">
+											<datetimepicker
+												data-ng-model="rol.end_date"
+												data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month',renderOn:'rol-start-date-set'}"
+												data-on-set-time="rolEndDateSet()"
+												data-before-render="rolEndDateRender($view,$dates)"></datetimepicker>
+										</ul>
+									</div>
+								</td>
+								<td>
+									<button class="btn btn-success" ng-click="setAllTime()">All Time</button>
+								</td>
+							</tr>
+						</table>
+						<div class="text-center">
+							<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
+							<a class="btn btn-primary" style="color:white" ng-click="roltable.generate()" ng-href="{{roltable.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
+						</div>
+					</div>
                     <div class="mt-3" id="rolTable">
                         <div style="text-align:center">
             				<h4 style="font-weight:bold;margin:0">RECORD OF LEAVES OF ABSENCE</h4>
@@ -298,7 +300,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             					<p style="font-size:18px"><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
-                        <table class="rol-table" export-csv="form" export-csv="roltable" style="text-align:center;width:100%">
+                        <table class="rol-table" export-csv="roltable" style="width:100%">
         					<colgroup>
         						<col width="5%">
         						<col width="5%">
@@ -315,7 +317,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         						<col width="6%">
         						<col width="20%">
         					</colgroup>
-        					<tr>
+        					<tr style="text-align:center">
         						<th colspan="2" rowspan="2" >Leave Earned</th>
         						<th rowspan="3" >WHEN TAKEN</th>
         						<th colspan="2" rowspan="2" style="font-size:0.85em">LEAVES TAKEN</th>
@@ -327,7 +329,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         					<tr>
         						<th colspan="3">VAC</th>
         					</tr>
-        					<tr style="font-size:0.7em;">
+        					<tr style="font-size:0.6em;text-align:center;">
         						<th>VAC</th>
         						<th>SICK</th>
         						<th>VAC</th>
@@ -341,8 +343,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         						<th>VAC</th>
         						<th>SICK</th>
         					</tr>
-                            <tbody ng-repeat="months in rol.factors[2018]">
-                                <tr ng-repeat="factor in months">
+                            <tbody ng-repeat="month in rol.factors" style="font-size:0.7em;">
+                                <tr ng-repeat="factor in month">
                                     <td>{{factor.leaves_earned.v}}</td>
                                     <td>{{factor.leaves_earned.s}}</td>
                                     <td>{{factor.when_taken}}</td>

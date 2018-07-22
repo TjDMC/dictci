@@ -135,17 +135,17 @@ if(!isset($events)){
                             </ul>
                         </div>
                     </td>
-                    <td>
+                    <td style="max-width:200px;min-width:100px;">
                         <div class="input-group">
                             <input class="form-control" min="0" step="0.001" type="number" ng-change="updateCredits(date_range,'credits')" ng-model="date_range.credits" ng-disabled="!date_range.start_date" required>
                         </div>
 					</td>
-                    <td style="max-width:200px">
+                    <td style="max-width:200px;min-width:100px;">
                         <div class="input-group">
                             <input class="form-control" min="0" step="1" type="number" ng-change="updateCredits(date_range,'time')" ng-model="date_range.hours" ng-disabled="!date_range.start_date" required>
                         </div>
                     </td>
-                    <td style="max-width:200px;margin-left:10px">
+                    <td style="max-width:200px;min-width:100px;">
                         <div class="input-group">
                             <input class="form-control" min="0" step="1" type="number" ng-change="updateCredits(date_range,'time')" ng-model="date_range.minutes" ng-disabled="!date_range.start_date" required>
                         </div>

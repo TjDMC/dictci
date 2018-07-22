@@ -43,6 +43,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 
 <body>
+	<noscript>
+		<div class="card" style="position: fixed; top: 0px; left: 0px; z-index: 10000; 
+					height: 100%; width: 100%; background-color: #FFFFFF">
+			<div class="card-body" style="height:100%">
+				<h1 class="text-center" style="padding-top:30vh">This site requires JavaScript.</h1>
+			</div>
+		</div>
+	</noscript>
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color:black">
 		<a class="navbar-brand" href="<?=base_url()?>">
 			<span><img src="<?=base_url()?>/favicon.png" width="25" height="25" alt="DICT Logo" /></span>
