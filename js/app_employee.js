@@ -610,12 +610,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     /*Section 2.5 Terminal Benefit computations */
 	// Checking difference between the two
-    $scope.terBenefit = null;
-    $scope.terBenefit2 = null;
+    $scope.terBenefit = {};
+    $scope.terBenefit2 = {};
     $scope.setTerminalDate = function(date){
         $scope.terminal_date = moment(date);
-        $rootScope.longComputation($scope,'terBenefit',$scope.terminalBenefit);
-        $rootScope.longComputation($scope,'terBenefit2',$scope.terminalBenefit2);
+        $rootScope.longComputation($scope.terBenefit,'value',$scope.terminalBenefit);
+        $rootScope.longComputation($scope.terBenefit2,'value',$scope.terminalBenefit2);
     }
 	$scope.terminalBenefit = function(){
 		var t1 = performance.now();
@@ -625,6 +625,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
+        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits+" * "+constantFactor+" = "+(tlb/100).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 1: "+(t2-t1));
 		return (tlb/100).toFixed(2);
@@ -682,6 +683,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
+        $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 2: "+(t2-t1));
 		return (tlb/100000).toFixed(2);

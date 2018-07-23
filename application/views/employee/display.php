@@ -500,10 +500,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </tr>
                     </table>
 
-                    <div>
-                        computations</br>
-						{{terBenefit}}</br>
-						{{terBenefit2}}
+                    <div class=" alert alert-dark">
+                        <p class="font-weight-bold">Computations:</p>
+						<p class="font-weight-bold text-center">{{terBenefit.computation}}</p>
+						<p class="font-weight-bold text-center">{{terBenefit2.computation}}</p>
                     </div>
                 </div>
                 <div class="modal-footer">
