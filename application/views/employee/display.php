@@ -354,17 +354,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         					</tr>
                             <tbody ng-repeat="month in rol.factors" style="font-size:0.7em;">
                                 <tr ng-repeat="factor in month track by $index" style="text-align:right;" ng-style="factor.eoma?{'border-bottom':'2px solid black','border-top':'2px solid black','font-weight':'bold'}:{}">
-                                    <td>{{factor.leaves_earned.v}}</td>
-                                    <td>{{factor.leaves_earned.s}}</td>
+                                    <td>{{factor.leaves_earned.v == '0.000' ? '':factor.leaves_earned.v}}</td>
+                                    <td>{{factor.leaves_earned.s == '0.000' ? '':factor.leaves_earned.s}}</td>
                                     <td style="text-align:left">{{factor.when_taken}}</td>
-                                    <td>{{factor.leaves_taken.v}}</td>
-                                    <td>{{factor.leaves_taken.s}}</td>
-                                    <td>{{factor.undertime.hour}}</td>
-                                    <td>{{factor.undertime.min}}</td>
-                                    <td>{{factor.undertime.total}}</td>
-                                    <td>{{factor.without_pay.hour}}</td>
-                                    <td>{{factor.without_pay.min}}</td>
-                                    <td>{{factor.without_pay.total}}</td>
+                                    <td>{{factor.leaves_taken.v == '0.000' ? '':factor.leaves_taken.v}}</td>
+                                    <td>{{factor.leaves_taken.s == '0.000' ? '':factor.leaves_taken.s}}</td>
+                                    <td>{{factor.undertime.hour == 0 ? '':factor.undertime.hour}}</td>
+                                    <td>{{factor.undertime.min == 0 ? '':factor.undertime.min}}</td>
+                                    <td>{{factor.undertime.total == '0.000' ? '':factor.undertime.total}}</td>
+                                    <td>{{factor.without_pay.hour == 0 ? '':factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.min == 0 ? '':factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.total == '0.000' ? '':factor.without_pay.total}}</td>
                                     <td>{{factor.balance.v}}</td>
                                     <td>{{factor.balance.s}}</td>
                                     <td style="text-align:left">{{factor.remarks}}</td>
