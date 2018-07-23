@@ -294,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span><p>
             				</div>
             				<div style="width:auto;float:right">
-            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
                         <table class="rol-table" id="rol-table" style="width:100%">
