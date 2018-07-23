@@ -218,7 +218,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
         var succMsg='';
         var data = $scope.modalEvent;
         var succFunction = function(response){};
-		data.date = moment(data.date,$rootScope.dateFormat).format('YYYY-MM-DD');
+		data.date = data.date.format('YYYY-MM-DD');
         switch(action){
             case 'add':
                 url = $rootScope.baseURL+'calendar/actionevents/add';
@@ -318,8 +318,8 @@ app.controller('calendar_collisions',function($scope,$rootScope,$window){
         var leave = angular.copy(leaveData);
         for(var i = 0 ; i<leave.date_ranges.length ; i++){
             leave.date_ranges[i].range_id = parseInt(leave.date_ranges[i].range_id);
-            leave.date_ranges[i].start_date = moment(leave.date_ranges[i].start_date).format($rootScope.dateFormat);
-            leave.date_ranges[i].end_date = moment(leave.date_ranges[i].end_date).format($rootScope.dateFormat);
+            leave.date_ranges[i].start_date = moment(leave.date_ranges[i].start_date);
+            leave.date_ranges[i].end_date = moment(leave.date_ranges[i].end_date);
             leave.date_ranges[i].credits = parseFloat(leave.date_ranges[i].credits);
             leave.date_ranges[i].hours = $rootScope.creditsToTime(leave.date_ranges[i].credits).hours;
             leave.date_ranges[i].minutes = $rootScope.creditsToTime(leave.date_ranges[i].credits).minutes;

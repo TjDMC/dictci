@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="alert alert-dark">
             <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
             <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
-            <p><span class="font-weight-bold">First Day:</span> {{employee.first_day}}</p>
+            <p><span class="font-weight-bold">First Day:</span> {{employee.first_day.format('MMMM DD, YYYY')}}</p>
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
         </div>
 
@@ -91,8 +91,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     					<tr ng-show="leave.expand && (filter.date.enabled?date_range.show:true)" ng-repeat="date_range in leave.date_ranges">
     						<td></td>
     						<td></td>
-    						<td>{{date_range.start_date}}</td>
-    						<td>{{date_range.end_date}}</td>
+    						<td>{{date_range.start_date.format('MMMM DD, YYYY')}}</td>
+    						<td>{{date_range.end_date.format('MMMM DD, YYYY')}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.hours}}</td>
     						<td>{{leave.info.type.toLowerCase().includes('monetization') ? '':date_range.minutes}}</td>
     						<td>{{leave.info.is_without_pay ? '(WOP)':getDeductedCredits(leave.info.type,date_range).toFixed(3)}}</td>
@@ -133,7 +133,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div class="text-center">
                         <div class="btn btn-group">
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(moment(employee.first_day,dateFormat),'year')" ng-click="computations.year_filter.add(-1,'year')  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day,'year')" ng-click="computations.year_filter.add(-1,'year')  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
                             <div class="btn-group">
                                 <a  class="btn btn-outline-primary dropdown-toggle" id="computationsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{computations.year_filter.year()}}</a>
                                 <ul class="dropdown-menu" role="menu">
@@ -194,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
                     <div class="btn btn-group mx-auto">
-                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= moment(employee.first_day,dateFormat).year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= employee.first_day.year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
                         <div class="btn-group">
                             <a  class="btn btn-outline-primary dropdown-toggle" id="statisticsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{year.year()}}</a>
                             <ul class="dropdown-menu" role="menu">
