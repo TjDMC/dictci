@@ -1113,7 +1113,7 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         }
         date_range.hours = hours;
         date_range.minutes = minutes;
-        date_range.credits = parseFloat(credits.toFixed(3));
+        date_range.credits = credits ? parseFloat(credits.toFixed(3)):null;
     }
 
 	$scope.addOrDeleteRange = function(action,index=-1){
