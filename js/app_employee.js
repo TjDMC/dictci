@@ -283,7 +283,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		// First Month Computation
 		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')){
-			
+
 		}else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
 			var firstMC;
@@ -811,13 +811,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
 			angular.forEach(leaveIDs,function(factor,leaveIDs){ //format factors for display
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
-				if(factor.balance.v<0){//negative balance
+                if(factor.balance.s<0){ //negative sick balance. deduct from vac
+					factor.balance.v+=factor.balance.s;
+					factor.balance.s = 0;
+				}
+				if(factor.balance.v<0){//negative vac balance
 					factor.without_pay.total-=factor.balance.v;
 					factor.balance.v = 0;
-				}
-				if(factor.balance.s<0){
-					factor.without_pay.total-=factor.balance.s;
-					factor.balance.s = 0;
 				}
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
@@ -1133,6 +1133,16 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         $scope.$broadcast('startDateSet');
 		$scope.leave.date_ranges[index].credits = getTotalDays(index);
         $scope.updateCredits($scope.leave.date_ranges[index],'credits');
+    }
+
+    $scope.startDateRender = function($view,$dates,index){
+        var activeDate = moment($scope.employee.first_day,$rootScope.dateFormat).subtract(1, $view).add(1, 'minute');
+
+        $dates.filter(function(date){
+            return date.localDateValue() <= activeDate.valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
     }
 
 	$scope.endDateSet = function(index){
