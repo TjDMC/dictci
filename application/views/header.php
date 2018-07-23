@@ -29,7 +29,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/datetimepicker.templates.js' ?>"></script>
 	<script src="<?= base_url().'js/datetimepicker/dateTimeInput.js' ?>"></script>
-	<script src="<?= base_url().'js/ng-table-to-csv.min.js' ?>"></script>
 
     <script src="<?= base_url().'js/app.js'?>"></script>
 	<script src="<?= base_url().'js/app_employee.js'?>"></script>
@@ -44,7 +43,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <body>
 	<noscript>
-		<div class="card" style="position: fixed; top: 0px; left: 0px; z-index: 10000; 
+		<div class="card" style="position: fixed; top: 0px; left: 0px; z-index: 10000;
 					height: 100%; width: 100%; background-color: #FFFFFF">
 			<div class="card-body" style="height:100%">
 				<h1 class="text-center" style="padding-top:30vh">This site requires JavaScript.</h1>

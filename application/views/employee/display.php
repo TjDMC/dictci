@@ -284,7 +284,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						</table>
 						<div class="text-center">
 							<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
-							<a class="btn btn-primary" style="color:white" ng-click="roltable.generate()" ng-href="{{roltable.link()}}" download="{{employee.last_name}}_{{moment().format('YYYY-MM-DD')}}_leaverecords.csv">Export As CSV</a>
+							<a class="btn btn-primary" style="color:white" ng-click="exportROLTable()">Export As CSV</a>
 						</div>
 					</div>
                     <div class="mt-3" id="rolTable">
@@ -300,7 +300,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
-                        <table class="rol-table" export-csv="roltable" style="width:100%">
+                        <table class="rol-table" id="rol-table" style="width:100%">
         					<colgroup>
         						<col width="5%">
         						<col width="5%">
@@ -329,7 +329,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <colgroup>
         						<col width="20%">
         					</colgroup>
-        					<tr style="text-align:center">
+        					<tr style="text-align:center;">
         						<th colspan="2" >Leave Earned</th>
         						<th rowspan="3" >WHEN TAKEN</th>
         						<th colspan="2" style="font-size:0.85em">LEAVES TAKEN</th>
