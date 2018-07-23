@@ -468,7 +468,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <th>Leave Without Pay</th>
                         </tr>
                         <tr>
-                            <td>{{employee.first_day}}</td>
+                            <td>{{employee.first_day.format('MMMM DD, YYYY')}}</td>
                             <td>
                                 <div class=" dropdown">
                                     <a id="terminationDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
