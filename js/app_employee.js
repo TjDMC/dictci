@@ -759,6 +759,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             }else if(factor.remarks.toLowerCase().includes("forced")){
                 addToROL(otherROL,factor.date.format('MMMM YYYY'),{
 					when_taken:factor.date.format('MMM. DD, YYYY'),
+					leaves_taken:{v:(factor.amount.v/1000).toFixed(3),s:(factor.amount.s/1000).toFixed(3)},
 					balance:{v:(factor.balance.v/1000).toFixed(3),s:(factor.balance.s/1000).toFixed(3)},
 					remarks:'Forced Leave'
 				});
