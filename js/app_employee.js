@@ -820,6 +820,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
                 if(factor.balance.s<0){ //negative sick balance. deduct from vac
 					factor.balance.v+=factor.balance.s;
+                    factor.leaves_taken.s+=factor.balance.s;
+                    factor.leaves_taken.v-=factor.balance.s; //add to leaves vac taken
 					factor.balance.s = 0;
 				}
 				if(factor.balance.v<0){//negative vac balance
