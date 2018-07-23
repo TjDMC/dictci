@@ -125,7 +125,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.submitMonetization = function(){
         //Validation code goes here
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
-		console.log($scope.monetize.credits);
 		var balance = $scope.computeBal($scope.monetize.date);
 		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>balance[0]+balance[1]-5 ) ){
 			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -704,10 +703,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     var updateROL = function(){
-        console.log('test');
         $rootScope.longComputation($scope.rol,'factors',function(){
             var ans = $scope.computeBal($scope.rol.end_date);
-			console.log(ans);
             return formatROL(angular.copy($scope.computations.factors));
         });
     }
@@ -811,13 +808,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
 			angular.forEach(leaveIDs,function(factor,leaveIDs){ //format factors for display
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
-				if(factor.balance.v<0){//negative balance
+                if(factor.balance.s<0){ //negative sick balance. deduct from vac
+					factor.balance.v+=factor.balance.s;
+					factor.balance.s = 0;
+				}
+				if(factor.balance.v<0){//negative vac balance
 					factor.without_pay.total-=factor.balance.v;
 					factor.balance.v = 0;
-				}
-				if(factor.balance.s<0){
-					factor.without_pay.total-=factor.balance.s;
-					factor.balance.s = 0;
 				}
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
@@ -1134,6 +1131,16 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         $scope.$broadcast('startDateSet');
 		$scope.leave.date_ranges[index].credits = getTotalDays(index);
         $scope.updateCredits($scope.leave.date_ranges[index],'credits');
+    }
+
+    $scope.startDateRender = function($view,$dates,index){
+        var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
+
+        $dates.filter(function(date){
+            return date.localDateValue() <= activeDate.valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
     }
 
 	$scope.endDateSet = function(index){
