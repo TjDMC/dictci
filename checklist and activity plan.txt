@@ -22,7 +22,7 @@ layouting and printing of leave History
 	- layout - done July 23, 2018
 	- export to xls/csv - done July 23, 2018
 
-refactor dates (use unformatted moment dates inside javascript)
+refactor dates (use unformatted moment dates inside javascript) - done(?) July 23, 2018
 
 leave application
 	-make completely modal - done July 09, 2018
