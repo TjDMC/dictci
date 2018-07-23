@@ -314,15 +314,15 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 							firstMC+=spLeave;
 							spLeave=0;
 						}
-                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Special Priviledge Leave (WOP)',date:range.start_date.clone(),leave_info:leave.info,date_range:range});
+                        $scope.computations.factors.push({type:'Special Priviledge',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Special Priviledge Leave (WOP)',date:range.start_date.clone(),leave_info:leave.info,date_range:range});
 					}else if(leave.info.type.toLowerCase().includes('parental')){
 						//	Parental Leaves	(For Solo Parents)
 						pLeave -= creditUsed;
 						if(pLeave<0){
 							firstMC+=pLeave;
-                            $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Parental Leave (WOP)',date:range.start_date.clone(),leave_info:leave.info,date_range:range});
 							pLeave=0;
 						}
+                        $scope.computations.factors.push({type:'Parental Leave',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Parental Leave (WOP)',date:range.start_date.clone(),leave_info:leave.info,date_range:range});
 					}
 					leave.date_ranges.splice(j,1);
 					j--;
@@ -425,18 +425,22 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						if(spLeave<0){
 							currV+=spLeave;
 							enjoyed.v -= spLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Special Priviledge',amount:{v:spLeave,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
 							spLeave=0;
-						}
+						}else{
+                            $scope.computations.factors.push({type:'Special Priviledge',amount:{v:0,s:0},balance:{s:currS,v:currV},remarks:'Special Priviledge Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                        }
 					}else if(leave.info.type.toLowerCase().includes('parental')){
 						//	Parental Leaves	(For Solo Parents)
 						pLeave -= creditUsed;
 						if(pLeave<0){
 							currV+=pLeave;
 							enjoyed.v -= pLeave;
-                            $scope.computations.factors.push({type:'Vacation',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                            $scope.computations.factors.push({type:'Parental Leave',amount:{v:pLeave,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
 							pLeave=0;
-						}
+						}else{
+                            $scope.computations.factors.push({type:'Parental Leave',amount:{v:0,s:0},balance:{s:currS,v:currV},remarks:'Parental Leave',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                        }
 					}
 					leave.date_ranges.splice(j,1);
 				}
@@ -705,6 +709,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     var updateROL = function(){
         $rootScope.longComputation($scope.rol,'factors',function(){
             var ans = $scope.computeBal($scope.rol.end_date);
+            console.log(angular.copy($scope.computations.factors));
             return formatROL(angular.copy($scope.computations.factors));
         });
     }
@@ -786,6 +791,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					without_pay.total=factors[i].date_range.credits;
 				}
 
+                var remarks = factors[i].leave_info.remarks ? factors[i].leave_info.remarks:"";
+                if(factors[i].leave_info.type.toLowerCase().includes("special"))
+                    remarks = "(Special)"+remarks;
+                if(factors[i].leave_info.type.toLowerCase().includes("parental"))
+                    remarks = "(Parental)"+remarks;
 				if(leaveIDs.hasOwnProperty(leave_id)){
 					leaveIDs[leave_id].when_taken+=when_taken;
 					leaveIDs[leave_id].leaves_taken.v+=leaves_taken.v;
@@ -801,7 +811,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						undertime:undertime,
 						without_pay:without_pay,
 						balance:factors[i].balance,
-						remarks:factors[i].leave_info.remarks,
+						remarks:remarks,
 						date:date
 					};
 				}
