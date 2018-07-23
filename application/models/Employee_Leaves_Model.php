@@ -374,7 +374,7 @@ class Employee_Leaves_Model extends MY_Model{
         //log_message('debug',print_r($this->db->get_compiled_select(),true));
         $leave = array(
             'info'=>$res[0],
-            'date_ranges'=>$this->db->get()->result_array()
+            'date_ranges'=>$this->db->order_by("start_date","desc")->get()->result_array()
         );
         /*$this->db->where('leave_id',$res[0]['leave_id']);
         $dateRanges = $this->db->get(DB_PREFIX.'leave_date_range')->result_array();

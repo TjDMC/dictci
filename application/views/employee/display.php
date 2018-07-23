@@ -289,65 +289,77 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					</div>
                     <div class="mt-3" id="rolTable">
                         <div style="text-align:center">
-            				<h4 style="font-weight:bold;margin:0">RECORD OF LEAVES OF ABSENCE</h4>
-            				<p style="font-weight:bold">(UNDER R.A. 2266)</p>
+            				<h4 style="font-weight:bold;margin:0;">RECORD OF LEAVES OF ABSENCE</h4>
+            				<p style="font-weight:bold;margin:0;font-size:0.8em;">(UNDER R.A. 2266)</p>
             			</div>
             			<div>
             				<div style="width:auto;float:left">
-            					<p style="font-size:18px"><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span><p>
+            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span><p>
             				</div>
             				<div style="width:auto;float:right">
-            					<p style="font-size:18px"><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
                         <table class="rol-table" export-csv="roltable" style="width:100%">
         					<colgroup>
         						<col width="5%">
         						<col width="5%">
+                            </colgroup>
+                            <colgroup>
         						<col width="22%">
+                            </colgroup>
+                            <colgroup>
         						<col width="6%">
         						<col width="6%">
+                            </colgroup>
+                            <colgroup>
         						<col width="4%">
         						<col width="4%">
         						<col width="4%">
+                            </colgroup>
+                            <colgroup>
         						<col width="4%">
         						<col width="4%">
         						<col width="4%">
+                            </colgroup>
+                            <colgroup>
         						<col width="6%">
         						<col width="6%">
+                            </colgroup>
+                            <colgroup>
         						<col width="20%">
         					</colgroup>
         					<tr style="text-align:center">
-        						<th colspan="2" rowspan="2" >Leave Earned</th>
+        						<th colspan="2" >Leave Earned</th>
         						<th rowspan="3" >WHEN TAKEN</th>
-        						<th colspan="2" rowspan="2" style="font-size:0.85em">LEAVES TAKEN</th>
+        						<th colspan="2" style="font-size:0.85em">LEAVES TAKEN</th>
         						<th colspan="3" style="font-size:0.85em">UNDERTIME</th>
         						<th rowspan="2" colspan="3" >W/O PAY</th>
-        						<th colspan="2" rowspan="2" >BALANCE</th>
+        						<th colspan="2" >BALANCE</th>
         						<th rowspan="3" >REMARK</th>
         					</tr>
-        					<tr>
+        					<tr style="text-align:center;font-size:0.8em;">
+                                <th rowspan="2">VAC</th>
+        						<th rowspan="2">SICK</th>
+                                <th rowspan="2">VAC</th>
+        						<th rowspan="2">SICK</th>
         						<th colspan="3">VAC</th>
+        						<th rowspan="2">VAC</th>
+        						<th rowspan="2">SICK</th>
         					</tr>
         					<tr style="font-size:0.6em;text-align:center;">
-        						<th>VAC</th>
-        						<th>SICK</th>
-        						<th>VAC</th>
-        						<th>SICK</th>
         						<th>HOUR</th>
         						<th>MIN</th>
         						<th>TOTAL</th>
         						<th>HOUR</th>
         						<th>MIN</th>
         						<th>TOTAL</th>
-        						<th>VAC</th>
-        						<th>SICK</th>
         					</tr>
                             <tbody ng-repeat="month in rol.factors" style="font-size:0.7em;">
-                                <tr ng-repeat="factor in month">
+                                <tr ng-repeat="factor in month" style="text-align:right;" ng-style="factor.eoma?{'border-bottom':'2px solid black','border-top':'2px solid black','font-weight':'bold'}:{}">
                                     <td>{{factor.leaves_earned.v}}</td>
                                     <td>{{factor.leaves_earned.s}}</td>
-                                    <td>{{factor.when_taken}}</td>
+                                    <td style="text-align:left">{{factor.when_taken}}</td>
                                     <td>{{factor.leaves_taken.v}}</td>
                                     <td>{{factor.leaves_taken.s}}</td>
                                     <td>{{factor.undertime.hour}}</td>
@@ -358,7 +370,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <td>{{factor.without_pay.total}}</td>
                                     <td>{{factor.balance.v}}</td>
                                     <td>{{factor.balance.s}}</td>
-                                    <td>{{factor.remarks}}</td>
+                                    <td style="text-align:left">{{factor.remarks}}</td>
                                 </tr>
                             </tbody>
         				</table>

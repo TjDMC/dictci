@@ -276,11 +276,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		$scope.totalDays.days = days;
 
 		dateStart = moment($scope.employee.first_day,$rootScope.dateFormat).clone();
-		
+
 		//(Side effect) Storage for computation factors
         $scope.computations.factors=[];
         $scope.computations.bal_history={};
-		
+
 		// First Month Computation
 		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')){
 		//if(dateStart.isSame(dateStart.clone().startOf('month'),'day') && currV!=0 && currS!=0){
@@ -732,8 +732,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			undertime:{hour:'',min:'',total:''},
 			without_pay:{hour:'',min:'',total:''},
 			balance:{v:$scope.employee.vac_leave_bal.toFixed(3),s:$scope.employee.sick_leave_bal.toFixed(3)},
-			remarks:'bal. As of '+moment($scope.employee.first_day,$rootScope.dateFormat).format('MMM. DD, YYYY'),
-			date:moment($scope.employee.first_day,$rootScope.dateFormat).format('MMMM YYYY')//not displayed
+			remarks:'bal. as of '+moment($scope.employee.first_day,$rootScope.dateFormat).format('MMM. DD, YYYY'),
+			date:moment($scope.employee.first_day,$rootScope.dateFormat).format('MMMM YYYY'),//not displayed
+            eoma:true //not displayed
 		};
         for(var i = 0;i<factors.length;i++){
             var factor = factors[i];
@@ -751,7 +752,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                     without_pay:{hour:'',min:'',total:''},
                     balance:{v:(factor.balance.v/1000).toFixed(3),s:(factor.balance.s/1000).toFixed(3)},
                     remarks:'bal. As of '+factor.date.format('MMM. DD, YYYY'),
-					date:factor.date.format('MMMM YYYY')//not displayed
+					date:factor.date.format('MMMM YYYY'),//not displayed,
+                    eoma:true //not displayed
                 };
 				if(factor.date.isBefore($scope.rol.start_date,'month'))
 					firstFactor = eoma;
@@ -765,7 +767,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				});
             }
         }
-		
+
 		//formatting leaveROL
 		var nLeaveROL = {};
 		angular.forEach(leaveROL,function(factors,date){
@@ -778,20 +780,20 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				var start_date = moment(factors[i].date_range.start_date,$rootScope.dateFormat);
 				var end_date = moment(factors[i].date_range.end_date,$rootScope.dateFormat);
 				var when_taken = start_date.isSame(end_date,'day') ? start_date.date()+',' : start_date.date()+'-'+end_date.date()+',';
-				
+
 				var leaves_taken ={v:-factors[i].amount.v,s:-factors[i].amount.s};
-				
+
 				var undertime={hour:0,min:0,total:0};
 				var ut_credits = factors[i].date_range.credits;
 				if(factors[i].leave_info.type.toLowerCase() == 'undertime'){ //undertime
 					undertime.total=factors[i].date_range.credits;
 				}
-				
+
 				var without_pay={hour:0,min:0,total:0};
 				if(factors[i].leave_info.is_without_pay){ //without pay
 					without_pay.total=factors[i].date_range.credits;
 				}
-				
+
 				if(leaveIDs.hasOwnProperty(leave_id)){
 					leaveIDs[leave_id].when_taken+=when_taken;
 					leaveIDs[leave_id].leaves_taken.v+=leaves_taken.v;
@@ -838,7 +840,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			});
 		});
 		leaveROL = nLeaveROL;
-		
+
 		//adding to rol
 		//leaveROL = {};
 		addToROL(rol,firstFactor.date,firstFactor);
@@ -872,10 +874,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
 			startDate.add(1,'month');
 		}
-		
+
         return rol;
     }
-	
+
     $scope.printROLTable = function(){
         var printContents = document.getElementById('rolTable').innerHTML;
         var popupWin = window.open('', '_blank', 'width=1000,height=700');

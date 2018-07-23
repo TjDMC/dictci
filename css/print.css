@@ -10,5 +10,8 @@
 }
 .rol-table td{
     border:1px solid gray;
-    font-weight:normal;
+}
+
+.rol-table colgroup{
+    border:2px solid black;
 }
