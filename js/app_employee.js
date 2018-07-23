@@ -766,12 +766,80 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         }
 		
 		//formatting leaveROL
-		angular.forEach(leaveROL,function(factor,date){
-			
+		var nLeaveROL = {};
+		angular.forEach(leaveROL,function(factors,date){
+			var leaveIDs = {};
+			/*factors.sort(function(a,b){
+				sorting
+			});*/
+			for(var i=0;i<factors.length;i++){ //group together all date ranges with the same leave id
+				var leave_id = factors[i].leave_info.leave_id;
+				var start_date = moment(factors[i].date_range.start_date,$rootScope.dateFormat);
+				var end_date = moment(factors[i].date_range.end_date,$rootScope.dateFormat);
+				var when_taken = start_date.isSame(end_date,'day') ? start_date.date()+',' : start_date.date()+'-'+end_date.date()+',';
+				
+				var leaves_taken ={v:-factors[i].amount.v,s:-factors[i].amount.s};
+				
+				var undertime={hour:0,min:0,total:0};
+				var ut_credits = factors[i].date_range.credits;
+				if(factors[i].leave_info.type.toLowerCase() == 'undertime'){ //undertime
+					undertime.total=factors[i].date_range.credits;
+				}
+				
+				var without_pay={hour:0,min:0,total:0};
+				if(factors[i].leave_info.is_without_pay){ //without pay
+					without_pay.total=factors[i].date_range.credits;
+				}
+				
+				if(leaveIDs.hasOwnProperty(leave_id)){
+					leaveIDs[leave_id].when_taken+=when_taken;
+					leaveIDs[leave_id].leaves_taken.v+=leaves_taken.v;
+					leaveIDs[leave_id].leaves_taken.s+=leaves_taken.s;
+					leaveIDs[leave_id].undertime.total+=undertime.total;
+					leaveIDs[leave_id].without_pay.total+=without_pay.total;
+					leaveIDs[leave_id].balance = factors[i].balance;
+				}else{
+					var start_date
+					leaveIDs[leave_id] = {
+						when_taken:factors[i].date.format('MMM. ')+when_taken,
+						leaves_taken:leaves_taken,
+						undertime:undertime,
+						without_pay:without_pay,
+						balance:factors[i].balance,
+						remarks:factors[i].leave_info.remarks,
+						date:date
+					};
+				}
+			}
+			angular.forEach(leaveIDs,function(factor,leaveIDs){
+				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
+				if(factor.balance.v<0){//negative balance
+					factor.without_pay.total-=factor.balance.v;
+					factor.balance.v = 0;
+				}
+				if(factor.balance.s<0){
+					factor.without_pay.total-=factor.balance.s;
+					factor.balance.s = 0;
+				}
+				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
+				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
+				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
+				factor.undertime.total = (factor.undertime.total/1000).toFixed(3);
+				factor.undertime.hour = ut_time.hours;
+				factor.undertime.min = ut_time.minutes;
+				var wp_time = $rootScope.creditsToTime(factor.without_pay.total/1000);
+				factor.without_pay.total=(factor.without_pay.total/1000).toFixed(3);
+				factor.without_pay.hour = wp_time.hours;
+				factor.without_pay.min = wp_time.minutes;
+				factor.balance.v = (factor.balance.v/1000).toFixed(3);
+				factor.balance.s = (factor.balance.s/1000).toFixed(3);
+				addToROL(nLeaveROL,date,factor);
+			});
 		});
+		leaveROL = nLeaveROL;
 		
 		//adding to rol
-		leaveROL = {};
+		//leaveROL = {};
 		addToROL(rol,firstFactor.date,firstFactor);
 		console.log(angular.copy(rol));
 		var startDate = $scope.rol.start_date.clone();
