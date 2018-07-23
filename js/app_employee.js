@@ -703,7 +703,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     $scope.setAllTime = function(){
-        $scope.rol.start_date = $scope.employee.first_day;
+        $scope.rol.start_date = $scope.employee.first_day.clone();
         $scope.rol.end_date = moment().endOf('year');
         updateROL();
     }
@@ -1330,7 +1330,7 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
     $scope.statisticsDateRender = function($view,$dates){
         $dates.filter(function(date){
-            return date.localDateValue()<$scope.employee.first_day.startOf('year').valueOf() || date.localDateValue() > moment().endOf('year').valueOf();
+            return date.localDateValue()<$scope.employee.first_day.clone().startOf('year').valueOf() || date.localDateValue() > moment().endOf('year').valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });
