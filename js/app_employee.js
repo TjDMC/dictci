@@ -283,9 +283,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		// First Month Computation
 		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')){
-		//if(dateStart.isSame(dateStart.clone().startOf('month'),'day') && currV!=0 && currS!=0){
-			//earned.v = currV;
-			//earned.s = currS;
+			
 		}else{
 			fLeave=5000; spLeave=3000; pLeave=7000;
 			var firstMC;
@@ -447,7 +445,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					leaves.splice(i,1);
 				}
 			}
-			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && !isDistinctEnd ){
+			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd )){
                 currV = currV-fLeave;
 				enjoyed.v += fLeave;
                 $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
