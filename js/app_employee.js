@@ -716,7 +716,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     var formatROL = function(factors){
         var rol = {};
-		var addToROL = function(rol,date,factor){
+		var addToROL = function(rol,date,factor){ // assign a computation factor to a date (MMMM YYYY)
 			if(rol.hasOwnProperty(date)){
 				rol[date].push(factor);
 			}else{
@@ -772,9 +772,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var nLeaveROL = {};
 		angular.forEach(leaveROL,function(factors,date){
 			var leaveIDs = {};
-			/*factors.sort(function(a,b){
-				sorting
-			});*/
 			for(var i=0;i<factors.length;i++){ //group together all date ranges with the same leave id
 				var leave_id = factors[i].leave_info.leave_id;
 				var start_date = moment(factors[i].date_range.start_date,$rootScope.dateFormat);
@@ -814,7 +811,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					};
 				}
 			}
-			angular.forEach(leaveIDs,function(factor,leaveIDs){
+			angular.forEach(leaveIDs,function(factor,leaveIDs){ //format factors for display
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
 				if(factor.balance.v<0){//negative balance
 					factor.without_pay.total-=factor.balance.v;
@@ -842,9 +839,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		leaveROL = nLeaveROL;
 
 		//adding to rol
-		//leaveROL = {};
 		addToROL(rol,firstFactor.date,firstFactor);
-		console.log(angular.copy(rol));
 		var startDate = $scope.rol.start_date.clone();
 		while(startDate.isSameOrBefore($scope.rol.end_date)){
 			var month = startDate.format('MMMM YYYY');
