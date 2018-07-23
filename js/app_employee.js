@@ -709,7 +709,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     var updateROL = function(){
         $rootScope.longComputation($scope.rol,'factors',function(){
             var ans = $scope.computeBal($scope.rol.end_date);
-            console.log(angular.copy($scope.computations.factors));
             return formatROL(angular.copy($scope.computations.factors));
         });
     }

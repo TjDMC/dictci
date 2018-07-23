@@ -354,7 +354,6 @@ app.controller('calendar_collisions',function($scope,$rootScope,$window){
     }
 
     $scope.$on('editLeave',function(event,leave){ //Coming from employee_leave_records
-        console.log(leave);
         markAsResolved(leave.info.leave_id);
     });
 
