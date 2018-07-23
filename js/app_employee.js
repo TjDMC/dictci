@@ -884,6 +884,26 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         popupWin.document.close();
     }
 
+    $scope.exportROLTable = function(){
+        function generateExcel(el) {
+            var clon = el.clone();
+            var html = clon.wrap('<div>').parent().html();
+
+            //add more symbols if needed...
+            while (html.indexOf('á') != -1) html = html.replace(/á/g, '&aacute;');
+            while (html.indexOf('é') != -1) html = html.replace(/é/g, '&eacute;');
+            while (html.indexOf('í') != -1) html = html.replace(/í/g, '&iacute;');
+            while (html.indexOf('ó') != -1) html = html.replace(/ó/g, '&oacute;');
+            while (html.indexOf('ú') != -1) html = html.replace(/ú/g, '&uacute;');
+            while (html.indexOf('º') != -1) html = html.replace(/º/g, '&ordm;');
+            var a = document.createElement('a');
+            a.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            a.download=$scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls";
+            a.click();
+        }
+        generateExcel($('#rol-table'));
+    }
+
     $scope.rolStartDateSet = function(){
 		$scope.rol.start_date = moment($scope.rol.start_date);
         $scope.$broadcast('rol-start-date-set');

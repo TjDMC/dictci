@@ -1,4 +1,4 @@
-var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput','chart.js','ngTableToCsv']);
+var app = angular.module("app",['ui.bootstrap.datetimepicker','ui.dateTimeInput','chart.js']);
 
 app.run(function($rootScope,$http,$httpParamSerializer,$timeout){
 	moment.tz.add("Asia/Manila|+08 +09|-80 -90|010101010|-1kJI0 AL0 cK10 65X0 mXB0 vX0 VK10 1db0|24e6");

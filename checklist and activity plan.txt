@@ -19,11 +19,11 @@ terminal leave benefits - done July 13, 2018
 Loading Overlay - done July 09, 2018
 
 layouting and printing of leave History
-	- layout
-	- export to xls/csv
+	- layout - done July 23, 2018
+	- export to xls/csv - done July 23, 2018
 
 refactor dates (use unformatted moment dates inside javascript)
-	
+
 leave application
 	-make completely modal - done July 09, 2018
 	-rename to 'leave records' - done July 09, 2018
