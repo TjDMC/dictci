@@ -11,7 +11,7 @@ Calendar
 	-add recurring field - done July 12, 2018
 
 Employee Page
-	-ui update
+	-ui update - done July 23, 2018
 	-more leave history filters - done July 11, 2018
 
 terminal leave benefits - done July 13, 2018

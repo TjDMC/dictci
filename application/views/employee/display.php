@@ -14,19 +14,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
         </div>
 
-        <div class="form-group">
+        <div class="form-group text-center">
             <button class="btn btn-success" data-toggle="modal" data-target="#computeBalModal" ng-click="longComputation(this,'balance',getBalance)">Leave Credits Balance</button>
             <button class="btn btn-success" data-toggle="modal" data-target="#leaveCreditStatisticsModal" ng-click="$broadcast('openStatisticsModal')" type="button">Leave Credits Statistics</button>
             <button class="btn btn-success" data-toggle="modal" data-target="#recordOfLeavesModal" ng-click="initRecordOfLeaves()" type="button">Print Record of Leaves</button>
         </div>
 
-        <div class="form-group">
+        <div class="form-group text-center">
             <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Add Leave Record</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" ng-click="setTerminalDate()" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
-			<a href="<?= base_url().'employee/form/'?>{{employee.emp_no}}">
-				<button type="button" class="btn btn-primary">Print Information</button>
-			</a>
         </div>
 
         <div>

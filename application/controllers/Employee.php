@@ -113,25 +113,4 @@ class Employee extends MY_Controller{
         custom_response(true,'Leave record deleted');
     }
 
-	public function form($employeeNo=null){
-		if($employeeNo == null){
-            $this->index();
-            return;
-        }
-		$employee = $this->employee_leaves_model->getEmployee($employeeNo);
-        if($employee==null){
-            show_404();
-        }
-        $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
-
-		$this->html(
-			function() use ($employee,$leaves){
-				$this->load->view('employee/form',array(
-                    "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
-					"leaves"=>json_encode($leaves,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
-                ));
-			}
-		);
-	}
-
 }
