@@ -207,8 +207,13 @@ app.controller('event_display',function($scope,$rootScope,$window){
 
 	$scope.suspension;
 
+    $scope.moment = moment;
+
     $scope.init = function(events,suspension){
         $scope.events = events;
+        $scope.events.forEach(function(event){
+            event.date = moment(event.date);
+        });
 		$scope.suspension = suspension;
     }
 
@@ -225,6 +230,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
                 succMsg = 'Added event successfully.';
                 succFunction = function(response){
                     $scope.modalEvent.event_id = response.event_id;
+                    $scope.modalEvent.date = moment($scope.modalEvent.date); //return modalevent date to moment
                     $scope.events.push($scope.modalEvent); //add to global events
                 }
                 break;
@@ -234,6 +240,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
                 succFunction = function(response){
                     for(var i = 0 ; i<$scope.events.length ; i++){
                         if($scope.events[i].event_id == $scope.modalEvent.event_id){
+                            $scope.modalEvent.date = moment($scope.modalEvent.date); //return modalevent date to moment
                             $scope.events[i] = angular.copy($scope.modalEvent); //edit global events
                         }
                     }
@@ -281,7 +288,6 @@ app.controller('event_display',function($scope,$rootScope,$window){
 		}else{
 			console.log(dateEvent.date);
 			$scope.modalEvent = angular.copy(dateEvent);
-			$scope.modalEvent.date = new Date($scope.modalEvent.date);
 		}
 		console.log($scope.modalEvent);
 		angular.element('#addOrEditEventModal').modal('show');

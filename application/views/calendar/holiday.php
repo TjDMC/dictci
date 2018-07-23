@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				<tr><th>Event</th><th>Date</th><th></th></tr>
 				<tr ng-repeat="event in events" ng-init=''>
 					<td>{{event.title}}</td>
-					<td>{{event.date}}</td>
+					<td>{{event.date.format('MMMM DD, YYYY')}}</td>
 					<td>
 						<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="showModal(event)">
 							<i class="fas fa-edit"></i>
@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</table>
 		</div>
 	</div>
-	
+
 	<div class="modal fade" id="addOrEditEventModal" tabindex="-1" role="dialog" aria-labelledby="addOrEditEventLabel" aria-hidden="true">
         <div class="modal-dialog  modal-dialog-centered modal" role="document">
             <div class="modal-content">
@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-ng-model="modalEvent.date" data-datetimepicker-config="{ dropdownSelector:'#eventdate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-on-set-time="modalEvent.date = moment(modalEvent.date)" data-ng-model="modalEvent.date" data-datetimepicker-config="{ dropdownSelector:'#eventdate',minView:'day' }"></datetimepicker>
                             </ul>
 						</div>
                         <div class="form-group">
