@@ -353,7 +353,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         						<th>TOTAL</th>
         					</tr>
                             <tbody ng-repeat="month in rol.factors" style="font-size:0.7em;">
-                                <tr ng-repeat="factor in month" style="text-align:right;" ng-style="factor.eoma?{'border-bottom':'2px solid black','border-top':'2px solid black','font-weight':'bold'}:{}">
+                                <tr ng-repeat="factor in month track by $index" style="text-align:right;" ng-style="factor.eoma?{'border-bottom':'2px solid black','border-top':'2px solid black','font-weight':'bold'}:{}">
                                     <td>{{factor.leaves_earned.v}}</td>
                                     <td>{{factor.leaves_earned.s}}</td>
                                     <td style="text-align:left">{{factor.when_taken}}</td>
