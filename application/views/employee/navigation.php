@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <span class="nav-button" ng-class="{disabled:(page>=getMaxPage())}" ng-click="page=getMaxPage()"><i class="fas fa-angle-double-right fa-fw"></i></span>
                     </span>
 
-                    <span class="col align-items-center text-xl-right text-sm-center" style="min-width:232px">
+                    <span class="col align-items-center text-xl-left text-sm-center" style="min-width:232px">
                         <span class="mr-1">Results Per Page:</span>
                         <select class="custom-select" ng-model="limit" style="max-width:75px;min-width:75px">
                             <option ng-value="5">5</option>
