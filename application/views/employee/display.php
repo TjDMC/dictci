@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     							{{leave.info.remarks}}
     						</td>
                             <td style="text-align:right">
-    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave"  ng-click="edit=true;$parent.$broadcast('openLeaveModal',leaves[$index])"> <!--$parent is required because of scoping issues with ng-repeat -->
+    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave"  ng-click="$parent.edit=true; $parent.$broadcast('openLeaveModal',leaves[$index])"> <!--$parent is required because of scoping issues with ng-repeat -->
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button ng-init="leave.expand=true" ng-click="leave.expand=!leave.expand" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.expand?'Collapse':'Expand'}}">
@@ -386,7 +386,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addOrEditLeaveLabel">{{edit}} {{edit?'Edit':'Add'}} Leave</h5>
+                    <h5 class="modal-title" id="addOrEditLeaveLabel">{{edit?'Edit':'Add'}} Leave</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
