@@ -762,7 +762,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             }else if(factor.remarks.toLowerCase().includes("forced")){
                 addToROL(otherROL,factor.date.format('MMMM YYYY'),{
 					when_taken:factor.date.format('MMM. DD, YYYY'),
-					leaves_taken:{v:(factor.amount.v/1000).toFixed(3),s:(factor.amount.s/1000).toFixed(3)},
+					leaves_taken:{v:(-factor.amount.v/1000).toFixed(3),s:(-factor.amount.s/1000).toFixed(3)},
 					balance:{v:(factor.balance.v/1000).toFixed(3),s:(factor.balance.s/1000).toFixed(3)},
 					remarks:'Forced Leave'
 				});
@@ -772,7 +772,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		//formatting leaveROL
 		var nLeaveROL = {};
 		angular.forEach(leaveROL,function(factors,date){
-			var leaveIDs = {};
+			var leaveIDs = new Map();
 			for(var i=0;i<factors.length;i++){ //group together all date ranges with the same leave id
 				var leave_id = factors[i].leave_info.leave_id;
 				var start_date = factors[i].date_range.start_date.clone();
@@ -793,31 +793,34 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 
                 var remarks = factors[i].leave_info.remarks ? factors[i].leave_info.remarks:"";
-                if(factors[i].leave_info.type.toLowerCase().includes("special"))
+                if(factors[i].leave_info.type.toLowerCase().includes("special")) //special and parental leaves
                     remarks = "(Special)"+remarks;
                 if(factors[i].leave_info.type.toLowerCase().includes("parental"))
                     remarks = "(Parental)"+remarks;
-				if(leaveIDs.hasOwnProperty(leave_id)){
-					leaveIDs[leave_id].when_taken+=when_taken;
-					leaveIDs[leave_id].leaves_taken.v+=leaves_taken.v;
-					leaveIDs[leave_id].leaves_taken.s+=leaves_taken.s;
-					leaveIDs[leave_id].undertime.total+=undertime.total;
-					leaveIDs[leave_id].without_pay.total+=without_pay.total;
-					leaveIDs[leave_id].balance = factors[i].balance;
+				if(leaveIDs.has(leave_id)){
+                    var factor_info = leaveIDs.get(leave_id);
+					factor_info.when_taken+=when_taken;
+					factor_info.leaves_taken.v+=leaves_taken.v;
+					factor_info.leaves_taken.s+=leaves_taken.s;
+					factor_info.undertime.total+=undertime.total;
+					factor_info.without_pay.total+=without_pay.total;
+					factor_info.balance = factors[i].balance;
 				}else{
-					var start_date
-					leaveIDs[leave_id] = {
+					leaveIDs.set(leave_id,{
 						when_taken:factors[i].date.format('MMM. ')+when_taken,
 						leaves_taken:leaves_taken,
 						undertime:undertime,
 						without_pay:without_pay,
 						balance:factors[i].balance,
 						remarks:remarks,
-						date:date
-					};
+						date:date,
+                        precise_date:factors[i].date
+					});
 				}
 			}
-			angular.forEach(leaveIDs,function(factor,leaveIDs){ //format factors for display
+            //sort leave ids
+            leaveIDs = new Map([...leaveIDs.entries()].sort( (a,b)=>(a.valueOf()-b.valueOf()) ));
+			leaveIDs.forEach(function(factor){ //format factors for display
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
                 if(factor.balance.s<0){ //negative sick balance. deduct from vac
 					factor.balance.v+=factor.balance.s;
