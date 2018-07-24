@@ -113,6 +113,16 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.sortAndFormatLeaves();
         $scope.employee.first_day = moment($scope.employee.first_day);
     }
+	
+	$scope.startDateRender = function($view,$dates){
+        var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
+
+        $dates.filter(function(date){
+            return date.localDateValue() <= activeDate.valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
+    }
 
     $scope.sortAndFormatLeaves = function(){
         $scope.leaves.sort(function(a,b){
