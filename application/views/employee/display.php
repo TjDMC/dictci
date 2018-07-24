@@ -41,13 +41,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </label>
                         </div>
                         <div ng-if="filter.date.enabled" class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'year'}" ng-click="(filter.date.precision='year')+changeDateFilter()">
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'year'}" ng-click="filter.date.precision='year';changeDateFilter()">
                                 <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='year'"> Year
                             </label>
-                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'month'}" ng-click="(filter.date.precision='month')+changeDateFilter()">
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'month'}" ng-click="filter.date.precision='month';changeDateFilter()">
                                 <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='month'"> Month
                             </label>
-                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'day'}" ng-click="(filter.date.precision='day')+changeDateFilter()">
+                            <label class="btn btn-outline-info" ng-class="{active:filter.date.precision == 'day'}" ng-click="filter.date.precision='day';changeDateFilter()">
                                 <input type="radio" name="leave_date_filter_precision" autocomplete="off" ng-checked="filter.date.precision=='day'"> Day
                             </label>
                         </div>
@@ -133,15 +133,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div class="text-center">
                         <div class="btn btn-group">
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day,'year')" ng-click="computations.year_filter.add(-1,'year')  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day,'year')" ng-click="computations.year_filter.add(-1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
                             <div class="btn-group">
                                 <a  class="btn btn-outline-primary dropdown-toggle" id="computationsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{computations.year_filter.year()}}</a>
                                 <ul class="dropdown-menu" role="menu">
                                     <datetimepicker data-ng-model="computations.year_filter" data-datetimepicker-config="{ dropdownSelector: '#computationsDate',minView:'year',startView:'year' }" data-before-render="computationsDateRender($view,$dates)"
-                                        data-on-set-time="(computations.year_filter = moment(computations.year_filter))  + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])"/>
+                                        data-on-set-time="computations.year_filter = moment(computations.year_filter);longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])"/>
                                 </ul>
                             </div>
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrAfter(bal_date,'year')" ng-click="computations.year_filter.add(1,'year') + longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-right"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrAfter(bal_date,'year')" ng-click="computations.year_filter.add(1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-right"></i></button>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered text-left">
