@@ -6,43 +6,6 @@ if(!isset($events)){
 }
 ?><!DOCTYPE html>
 
-<script>
- $('body') .on('show.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "visible"); }) .on('hide.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "auto"); });
-</script>
-
-<style>
-#search-results {
-	position: absolute;
-    max-width: 500px;
-    max-height: 200px;
-    border: 1px solid #dedede;
-    border-radius: 3px;
-    box-sizing: border-box;
-    overflow-y: auto;
-	top:100%;
-	left:15px;
-	right:15px;
-	z-index: 99;
-}
-
-.search-result {
-    background: white;
-    padding: 10px;
-}
-
-.search-result:nth-child(even) {
-    background: #fafafa;
-}
-
-.search-result.selected{
-    background: gray;
-}
-
-.search-result:hover{
-    cursor:pointer;
-}
-</style>
-
 <div ng-controller="employee_leave_records" ng-init='init(<?=$events?>)'>
     <form ng-submit="submit(leave.info.leave_id?'edit':'add')" autocomplete="off">
 		<div class="form-group" style="overflow-x: auto">

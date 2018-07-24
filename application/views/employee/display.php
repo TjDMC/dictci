@@ -29,12 +29,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div>
             <h3>Leave History</h3>
 			<div class="form-group row">
-				<div class="col btn-group btn-group-toggle" style="overflow-x:auto;min-width:300px">
+				<div class="col-12 col-md-6 btn-group btn-group-toggle table-responsive">
 					<label class="btn btn-outline-info" ng-class="{active:filter.type.every}" ng-click="reFilter('every')">All</label>
                     <label ng-init="initFilters()" ng-repeat="type_filter in type_filters" class="btn btn-outline-info text-capitalize" ng-class="{active:filter.type[type_filter]}" ng-click="reFilter(type_filter)">{{type_filter}}</label>
 				</div>
-                <div class="text-right">
-                    <div class="col btn-group">
+                <div class="col-12 col-md-6 text-right table-responsive">
+                    <div class="btn-group">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-outline-info">
                                 <input type="checkbox" ng-true-value=false ng-false-value=true ng-model="filter.date.enabled" autocomplete="off"/> All Time
