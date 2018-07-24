@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
 
         <div class="form-group text-center">
-            <button title="Edit Leave" ng-click="openLeaveModal()" class="btn btn-primary">Add Leave Record</button>
+            <button title="Edit Leave" ng-click="$broadcast('openLeaveModal')" class="btn btn-primary">Add Leave Record</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" ng-click="setTerminalDate()" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
         </div>
@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     							{{leave.info.remarks}}
     						</td>
                             <td style="text-align:right">
-    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="openLeaveModal($index)">
+    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave"  ng-click="$parent.$broadcast('openLeaveModal',leaves[$index])"> <!--$parent is required because of scoping issues with ng-repeat -->
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button ng-init="leave.expand=true" ng-click="leave.expand=!leave.expand" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.expand?'Collapse':'Expand'}}">

@@ -83,7 +83,7 @@ class Employee extends MY_Controller{
             );
         }else{
             $data = parse_custom_post($input);
-            if(isset($data['info']["type"]) && $data['info']["type"] == "Others"){
+            if(isset($data['info']["type"]) && $data['info']["type"] == "Others"){ //convert type_others to type
                 if(!isset($data['info']['type_others'])){
                     custom_response(false,"Please specify the leave type.");
                 }

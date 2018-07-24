@@ -1,17 +1,19 @@
 /**
 Table of Contents
 1.0 Employee Home Page - employee_nav
+2.0 Employee Addition - employee_add
 2.0 Employee Display Page - employee_display
     2.1 Leave Credit Monetization
     2.2 Leave Credit Computation Visualization
     2.3 Leave Credit Computation
     2.4 Leave History Filters
     2.5 Terminal Benefit Computations
+    3.6 Record of Leaves
 3.0 Employee Leave Records - employee_leave_records
 4.0 Employee Statistics -  employee_statistics
 **/
 
-
+//<editor-fold> Section 1.0 Employee Home Page
 app.controller('employee_nav',function($scope,$rootScope){
     $scope.employees = [];
 	$scope.limit = 10;
@@ -56,23 +58,47 @@ app.controller('employee_nav',function($scope,$rootScope){
         return result;
     }
 });
+//</editor-fold> end Employee Home Page*/
 
+//<editor-fold> Section 2.0 Employee Addition
+app.controller('employee_add',function($scope,$rootScope,$window){
+    $scope.employee={};
+    $scope.add = function(){
+        $scope.employee.first_day = moment($scope.employee.first_day).format('YYYY-MM-DD');
+        $rootScope.post(
+            $rootScope.baseURL+"employee/add/",
+            $scope.employee,
+            function (response){
+                $rootScope.showCustomModal(
+                    'Success',
+                    response.msg,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                        $window.location.reload();
+                    },
+                    'OK'
+                );
+            },
+            function(response){
+                $rootScope.showCustomModal(
+                    'Error',
+                    response.msg,
+                    function(){angular.element('#customModal').modal('hide');},
+                    function(){}
+                );
+            }
+        );
+    }
+})
+//</editor-fold> end Employee Addition
+
+//<editor-fold> Section 3.0 Employee Display
 app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
+    //#region Section 3.1 Initialization/
     $scope.employee = {};
     $scope.leaves = [];
-    $scope.bal_date = '';
-	$scope.terminal_date = '';
-	$scope.lwop = [];		/* 0: total lwop; 1: lwop due to currV<0 */
-	$scope.cEnjoyed = {};	/* 0: vacation; 1: sick */
-	$scope.cEarned = {};		/* 0: vacation; 1: sick */
-	$scope.totalDays = {years:0,months:0,days:0};
-    $scope.computations = {
-        initial:{}, //initial leave credits
-        factors:[/*type:(either vacation or sick),amount:number,start_date:(date),end_date:(date)*/],
-        bal_history:{},
-        year_filter:moment()
-    };
-    $scope.moment = moment;
     $scope.init = function(employee,leaves){
         $scope.employee = employee;
 		$scope.employee.vac_leave_bal = parseFloat($scope.employee.vac_leave_bal);
@@ -85,7 +111,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.bal_date = moment().subtract(1,'month').endOf('month');
         //Sort Leaves
         $scope.sortAndFormatLeaves();
-
         $scope.employee.first_day = moment($scope.employee.first_day);
     }
 
@@ -106,138 +131,25 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
         }
     }
+    //#endregion end Initialization
 
-	$scope.openLeaveModal = function(index = null){
-        if(index == null){
-    		$scope.$broadcast('openLeaveModal',null);
-        }else{
-            $scope.$broadcast('openLeaveModal',$scope.leaves[index]);
-        }
-	}
-
-    /*Section 2.1 Monetization */
-    $scope.monetize = {
-        date:moment(),
-        credits:0,
-        special:false
-    }
-
-    $scope.submitMonetization = function(){
-        //Validation code goes here
-        $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
-		var balance = $scope.computeBal($scope.monetize.date);
-		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>balance[0]+balance[1]-5 ) ){
-			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
-			return;
-		}
-        var data = {
-            info:{
-                type:($scope.monetize.special?'Special ':'')+'Monetization',
-                remarks:$scope.monetize.remarks ? $scope.monetize.remarks:'',
-                emp_no:$scope.employee.emp_no
-            },
-            date_ranges:[
-                {
-                    start_date:$scope.monetize.date.format('YYYY/MM/DD'),
-                    end_date:$scope.monetize.date.format('YYYY/MM/DD'),
-                    credits:$scope.monetize.credits
-                }
-            ]
-        }
-
-        $rootScope.post(
-            $rootScope.baseURL+"/employee/leaverecords",
-            data,
-            function(response){
-                $rootScope.showCustomModal('Success',response.msg,
-                    function(){
-                        $window.location.reload();
-                    },
-                    function(){
-                        $window.location.reload();
-                    }
-                );
-            },
-            function(response){
-                $rootScope.showCustomModal('Error',response.msg,
-                    function(){
-                        angular.element('#customModal').modal('hide');
-                    },
-                    function(){
-                    }
-                );
-            }
-        );
-    }
-    /* end Monetization */
-
-    $scope.deleteLeave = function(leaveID){
-        $rootScope.showCustomModal(
-            'Warning',
-            'Are you sure you want to delete this leave record?',
-            function(){
-                $rootScope.post(
-                    $rootScope.baseURL+'employee/deleteLeave',
-                    leaveID,
-                    function(){
-                        $window.location.reload();
-                    },
-                    function(){
-                    }
-                );
-            },
-            function(){
-            },
-            'Yes',
-            'No'
-        );
-    }
-
-    /*Section 2.2 Computation visualization*/
-    $scope.getComputationsTable = function(year){
-        var factorsCopy = angular.copy($scope.computations.factors);
-        var table = factorsCopy.filter(function(factor){
-            return factor.date.year() == year;
-        });
-        var months = {};
-        for(var i = 0 ; i<12 ; i++){
-            var monthName = moment(i+1,'MM').format('MMMM');
-            months[monthName] = [];
-            for(var j = 0 ; j<table.length ; j++){
-                if(table[j].date.month()==i){
-                    months[monthName].push(table[j]);
-                    table.splice(j,1);
-                    j--;
-                }
-            }
-        }
-
-        angular.forEach(months,function(month,key){
-            if(month.length == 0){
-                delete months[key];
-            }
-        });
-
-        return months;
-    }
-
-    $scope.computationsDateRender = function($view,$dates){
-        $dates.filter(function(date){
-            return date.localDateValue()<$scope.employee.first_day.clone().startOf('year').valueOf() || date.localDateValue() > $scope.bal_date.valueOf();
-        }).forEach(function(date){
-            date.selectable = false;
-        });
-    }
-    /*end computation visualization */
-
-	$scope.getBalance = function(){
+    //#region Section 3.2 Leave Credit Computation
+    $scope.computations = {
+        factors:[/*type:(either vacation or sick),amount:number,start_date:(date),end_date:(date)*/],
+        bal_history:{},
+        year_filter:moment()
+    };
+    $scope.bal_date = '';
+	$scope.lwop = [];		/* 0: total lwop; 1: lwop due to currV<0 */
+	$scope.cEnjoyed = {};	/* 0: vacation; 1: sick */
+	$scope.cEarned = {};		/* 0: vacation; 1: sick */
+	$scope.totalDays = {years:0,months:0,days:0};
+    $scope.getBalance = function(){
 		var hold = $scope.computeBal($scope.bal_date);
         $scope.computations.year_filter = moment();
         $scope.computations.table = $scope.getComputationsTable(moment().year());
 		return "Vacation: " + hold[0] + ", Sick: " + hold[1];
 	}
-
-    /*Section 2.3 Leave Credit Computation*/
 	$scope.computeBal = function(enDate){
 		/*
 				The numbers are converted to integer for computational accuracy. Displayed and saved values are converted back to three(3) decimal places
@@ -515,182 +427,47 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
         return [(currV/1000).toFixed(3),(currS/1000).toFixed(3)];
     }
-    /*end Leave Credit Computation*/
-
     $scope.balDateSet = function(){
         $scope.bal_date = moment($scope.bal_date).endOf('month');
         $rootScope.longComputation(this,'balance',$scope.getBalance);
     }
-
-    $scope.getDeductedCredits = function(type,date_range){
-		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
-			return date_range.credits - date_range.holiday_conflicts < 0 ? 0 :date_range.credits-date_range.holiday_conflicts;
-		}else{
-			return 0;
-		}
-    }
-
-    /*Section 2.4 leave history filters */
-    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
-    $scope.filter = {
-        type:{
-            every:true
-        },
-        date:{
-            enabled:true,
-            precision:'year', //year, month, or day
-            date:moment(),
-            format:'YYYY'
-        }
-    };
-    $scope.initFilters = function(){
-        for(var i = 0 ; i<$scope.type_filters.length ; i++){
-            $scope.filter.type[$scope.type_filters[i]] = true;
-        }
-        for(var i=0;i<$scope.leaves.length;i++){
-            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
-                $scope.leaves[i].date_ranges[j].show = true;
-            }
-        }
-        $scope.changeDateFilter();
-    }
-    $scope.filterLeave = function(leave){ //returns true if leave can be shown
-        if($scope.type_filters.indexOf(leave.info.type.toLowerCase())>-1){
-            return $scope.filter.type[leave.info.type.toLowerCase()];
-        }else{
-            return $scope.filter.type['others'];
-        }
-    }
-
-    $scope.changeDateFilter = function(){
-        switch($scope.filter.date.precision){
-            case 'year':
-                $scope.filter.date.format = 'YYYY';
-                break;
-            case 'month':
-                $scope.filter.date.format = 'MMMM YYYY';
-                break;
-            case 'day':
-                $scope.filter.date.format = 'MMMM DD, YYYY';
-                break;
-        }
-        $scope.filter.date.date = moment($scope.filter.date.date);
-        for(var i=0;i<$scope.leaves.length;i++){
-            var show = false;
-            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
-                if(!$scope.leaves[i].date_ranges[j].start_date.isSame($scope.filter.date.date,$scope.filter.date.precision)){
-                    $scope.leaves[i].date_ranges[j].show = false;
-                }else {
-                    $scope.leaves[i].date_ranges[j].show = true;
+    $scope.getComputationsTable = function(year){
+        var factorsCopy = angular.copy($scope.computations.factors);
+        var table = factorsCopy.filter(function(factor){
+            return factor.date.year() == year;
+        });
+        var months = {};
+        for(var i = 0 ; i<12 ; i++){
+            var monthName = moment(i+1,'MM').format('MMMM');
+            months[monthName] = [];
+            for(var j = 0 ; j<table.length ; j++){
+                if(table[j].date.month()==i){
+                    months[monthName].push(table[j]);
+                    table.splice(j,1);
+                    j--;
                 }
-                show = show||$scope.leaves[i].date_ranges[j].show;
             }
-            $scope.leaves[i].show = show;
         }
-        $scope.$broadcast('configDateFilter');
+
+        angular.forEach(months,function(month,key){
+            if(month.length == 0){
+                delete months[key];
+            }
+        });
+
+        return months;
     }
 
-	$scope.reFilter = function(type_filter){
-		if(type_filter=='every'){
-            $scope.filter.type.every = !$scope.filter.type.every;
-            for(var i=0 ; i<$scope.type_filters.length ; i++){
-                $scope.filter.type[$scope.type_filters[i]] = $scope.filter.type.every;
-            }
-        }else{
-            if($scope.type_filters.indexOf(type_filter)>-1)
-                $scope.filter.type[type_filter] = !$scope.filter.type[type_filter];
-            var every = true;
-            for(var i = 0; i<$scope.type_filters.length ; i++){
-                every = every && $scope.filter.type[$scope.type_filters[i]];
-            }
-            $scope.filter.type.every = every;
-        }
-	}
-    /*end Leave history filters*/
-
-    /*Section 2.5 Terminal Benefit computations */
-	// Checking difference between the two
-    $scope.terBenefit = {};
-    $scope.terBenefit2 = {};
-    $scope.setTerminalDate = function(date){
-        $scope.terminal_date = moment(date);
-        $rootScope.longComputation($scope.terBenefit,'value',$scope.terminalBenefit);
-        $rootScope.longComputation($scope.terBenefit2,'value',$scope.terminalBenefit2);
+    $scope.computationsDateRender = function($view,$dates){
+        $dates.filter(function(date){
+            return date.localDateValue()<$scope.employee.first_day.clone().startOf('year').valueOf() || date.localDateValue() > $scope.bal_date.valueOf();
+        }).forEach(function(date){
+            date.selectable = false;
+        });
     }
-	$scope.terminalBenefit = function(){
-		var t1 = performance.now();
-		var salary = 100*$scope.employee.salary;
-		var balance = $scope.computeBal($scope.terminal_date);
-		var credits = Number(balance[0]) + Number(balance[1]);
-		var constantFactor = 0.0481927;
+    //#endregion end Leave Credit Computation
 
-		var tlb = salary * credits * constantFactor;
-        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits+" * "+constantFactor+" = "+(tlb/100).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 1: "+(t2-t1));
-		return (tlb/100).toFixed(2);
-	}
-
-	$scope.terminalBenefit2 = function(){
-		var t1 = performance.now();
-		var balance = $scope.computeBal($scope.terminal_date);
-		//	Credits Earned
-		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
-
-		var dateStart = $scope.employee.first_day.clone().subtract(1, 'days');
-		var dateEnd = $scope.terminal_date.clone();
-
-		var years = $scope.totalDays.years;
-
-		var months = $scope.totalDays.months;
-
-		var days = $scope.totalDays.days;
-		days -= $scope.lwop[0];
-
-		while(days<0){
-			months--;
-			days += 30;
-		}
-		while(months<0){
-			years--;
-			months += 12;
-		}
-
-		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
-		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
-
-		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)];
-		//	#credits_earned
-
-		//	Credits Used
-		var creditsUsed = ($scope.cEnjoyed.v + $scope.cEnjoyed.s)*1000;
-		/*var creditsUsed = 0;
-		for(var i=0;i<$scope.leaves.length;i++){
-			var leave = $scope.leaves[i];
-			for(var j=0;j<leave.date_ranges.length;j++){
-				var range = leave.date_ranges[j];
-				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
-					creditsUsed += range.hours*125 + range.minutes*25/12;
-				}
-			}
-		}
-		creditsUsed -= $scope.lwop[1]*1000;*/
-		//	#credits_used
-
-		var credits = 2*leaveEarned + currV + currS;
-		credits -= creditsUsed;
-		var salary = 100*$scope.employee.salary;
-		var constantFactor = 0.0481927;
-
-		var tlb = salary * credits * constantFactor;
-        $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 2: "+(t2-t1));
-		return (tlb/100000).toFixed(2);
-	}
-    /* end Terminal Benefit Computations*/
-
-    /*Record Of Leaves*/
+    //#region Section 3.3 Record Of Leaves
     $scope.rol = {
         start_date:null,
         end_date:null,
@@ -818,9 +595,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					});
 				}
 			}
-            //sort leave ids
+            //sort leaves
             leaveIDs = new Map([...leaveIDs.entries()].sort( (a,b)=>(a.valueOf()-b.valueOf()) ));
-			leaveIDs.forEach(function(factor){ //format factors for display
+
+            //format factors for display
+			leaveIDs.forEach(function(factor){
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
                 if(factor.balance.s<0){ //negative sick balance. deduct from vac
 					factor.balance.v+=factor.balance.s;
@@ -942,45 +721,235 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			date.selectable = false;
 		});
 	}
-    /*end Record Of Leaves*/
+    //#endregion end Record Of Leaves
 
-});
+    //#region Section 3.4 Monetization
+    $scope.monetize = {
+        date:moment(),
+        credits:0,
+        special:false
+    }
 
-app.controller('employee_add',function($scope,$rootScope,$window){
-    $scope.employee={};
-    $scope.add = function(){
-        $scope.employee.first_day = moment($scope.employee.first_day).format('YYYY-MM-DD');
+    $scope.submitMonetization = function(){
+        //Validation code goes here
+        $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
+		var balance = $scope.computeBal($scope.monetize.date);
+		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>balance[0]+balance[1]-5 ) ){
+			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
+			return;
+		}
+        var data = {
+            info:{
+                type:($scope.monetize.special?'Special ':'')+'Monetization',
+                remarks:$scope.monetize.remarks ? $scope.monetize.remarks:'',
+                emp_no:$scope.employee.emp_no
+            },
+            date_ranges:[
+                {
+                    start_date:$scope.monetize.date.format('YYYY/MM/DD'),
+                    end_date:$scope.monetize.date.format('YYYY/MM/DD'),
+                    credits:$scope.monetize.credits
+                }
+            ]
+        }
+
         $rootScope.post(
-            $rootScope.baseURL+"employee/add/",
-            $scope.employee,
-            function (response){
-                $rootScope.showCustomModal(
-                    'Success',
-                    response.msg,
+            $rootScope.baseURL+"/employee/leaverecords",
+            data,
+            function(response){
+                $rootScope.showCustomModal('Success',response.msg,
                     function(){
                         $window.location.reload();
                     },
                     function(){
                         $window.location.reload();
-                    },
-                    'OK'
+                    }
                 );
             },
             function(response){
-                $rootScope.showCustomModal(
-                    'Error',
-                    response.msg,
-                    function(){angular.element('#customModal').modal('hide');},
-                    function(){}
+                $rootScope.showCustomModal('Error',response.msg,
+                    function(){
+                        angular.element('#customModal').modal('hide');
+                    },
+                    function(){
+                    }
                 );
             }
         );
     }
-})
+    //#endregion end Monetization
 
+    //#region Section 3.5 Terminal Benefit computations
+	$scope.terminal_date = '';
+	// Checking difference between the two
+    $scope.terBenefit = {};
+    $scope.terBenefit2 = {};
+    $scope.setTerminalDate = function(date){
+        $scope.terminal_date = moment(date);
+        $rootScope.longComputation($scope.terBenefit,'value',$scope.terminalBenefit);
+        $rootScope.longComputation($scope.terBenefit2,'value',$scope.terminalBenefit2);
+    }
+	$scope.terminalBenefit = function(){
+		var t1 = performance.now();
+		var salary = 100*$scope.employee.salary;
+		var balance = $scope.computeBal($scope.terminal_date);
+		var credits = Number(balance[0]) + Number(balance[1]);
+		var constantFactor = 0.0481927;
+
+		var tlb = salary * credits * constantFactor;
+        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits+" * "+constantFactor+" = "+(tlb/100).toFixed(2);
+		var t2 = performance.now();
+		console.log(" Method 1: "+(t2-t1));
+		return (tlb/100).toFixed(2);
+	}
+
+	$scope.terminalBenefit2 = function(){
+		var t1 = performance.now();
+		var balance = $scope.computeBal($scope.terminal_date);
+		//	Credits Earned
+		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
+
+		var dateStart = $scope.employee.first_day.clone().subtract(1, 'days');
+		var dateEnd = $scope.terminal_date.clone();
+
+		var years = $scope.totalDays.years;
+
+		var months = $scope.totalDays.months;
+
+		var days = $scope.totalDays.days;
+		days -= $scope.lwop[0];
+
+		while(days<0){
+			months--;
+			days += 30;
+		}
+		while(months<0){
+			years--;
+			months += 12;
+		}
+
+		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
+		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
+
+		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)];
+		//	#credits_earned
+
+		//	Credits Used
+		var creditsUsed = ($scope.cEnjoyed.v + $scope.cEnjoyed.s)*1000;
+		/*var creditsUsed = 0;
+		for(var i=0;i<$scope.leaves.length;i++){
+			var leave = $scope.leaves[i];
+			for(var j=0;j<leave.date_ranges.length;j++){
+				var range = leave.date_ranges[j];
+				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
+					creditsUsed += range.hours*125 + range.minutes*25/12;
+				}
+			}
+		}
+		creditsUsed -= $scope.lwop[1]*1000;*/
+		//	#credits_used
+
+		var credits = 2*leaveEarned + currV + currS;
+		credits -= creditsUsed;
+		var salary = 100*$scope.employee.salary;
+		var constantFactor = 0.0481927;
+
+		var tlb = salary * credits * constantFactor;
+        $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
+		var t2 = performance.now();
+		console.log(" Method 2: "+(t2-t1));
+		return (tlb/100000).toFixed(2);
+	}
+    //#endregion end Terminal Benefit Computations
+
+    //#region Section 3.6 leave history
+    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
+    $scope.filter = {
+        type:{
+            every:true
+        },
+        date:{
+            enabled:true,
+            precision:'year', //year, month, or day
+            date:moment(),
+            format:'YYYY'
+        }
+    };
+    $scope.initFilters = function(){
+        for(var i = 0 ; i<$scope.type_filters.length ; i++){
+            $scope.filter.type[$scope.type_filters[i]] = true;
+        }
+        for(var i=0;i<$scope.leaves.length;i++){
+            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
+                $scope.leaves[i].date_ranges[j].show = true;
+            }
+        }
+        $scope.changeDateFilter();
+    }
+    $scope.filterLeave = function(leave){ //returns true if leave can be shown
+        if($scope.type_filters.indexOf(leave.info.type.toLowerCase())>-1){
+            return $scope.filter.type[leave.info.type.toLowerCase()];
+        }else{
+            return $scope.filter.type['others'];
+        }
+    }
+
+    $scope.changeDateFilter = function(){
+        switch($scope.filter.date.precision){
+            case 'year':
+                $scope.filter.date.format = 'YYYY';
+                break;
+            case 'month':
+                $scope.filter.date.format = 'MMMM YYYY';
+                break;
+            case 'day':
+                $scope.filter.date.format = 'MMMM DD, YYYY';
+                break;
+        }
+        $scope.filter.date.date = moment($scope.filter.date.date);
+        for(var i=0;i<$scope.leaves.length;i++){
+            var show = false;
+            for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
+                if(!$scope.leaves[i].date_ranges[j].start_date.isSame($scope.filter.date.date,$scope.filter.date.precision)){
+                    $scope.leaves[i].date_ranges[j].show = false;
+                }else {
+                    $scope.leaves[i].date_ranges[j].show = true;
+                }
+                show = show||$scope.leaves[i].date_ranges[j].show;
+            }
+            $scope.leaves[i].show = show;
+        }
+        $scope.$broadcast('configDateFilter');
+    }
+
+	$scope.reFilter = function(type_filter){
+		if(type_filter=='every'){
+            $scope.filter.type.every = !$scope.filter.type.every;
+            for(var i=0 ; i<$scope.type_filters.length ; i++){
+                $scope.filter.type[$scope.type_filters[i]] = $scope.filter.type.every;
+            }
+        }else{
+            if($scope.type_filters.indexOf(type_filter)>-1)
+                $scope.filter.type[type_filter] = !$scope.filter.type[type_filter];
+            var every = true;
+            for(var i = 0; i<$scope.type_filters.length ; i++){
+                every = every && $scope.filter.type[$scope.type_filters[i]];
+            }
+            $scope.filter.type.every = every;
+        }
+	}
+    $scope.getDeductedCredits = function(type,date_range){
+		if(type=='Vacation'||type=='Sick'||type.toLowerCase().includes('force')||type.toLowerCase().includes('mandatory')||type.toLowerCase().includes('monet')||type=='Undertime'){
+			return date_range.credits - date_range.holiday_conflicts < 0 ? 0 :date_range.credits-date_range.holiday_conflicts;
+		}else{
+			return 0;
+		}
+    }
+    //#endregion end Leave history
+});
+//</editor-fold> end Employee Display
 
 /*Requires parent controller: employee_display*/
-
 app.controller('employee_leave_records',function($scope,$rootScope){
     $scope.leave = {
         info:{},
@@ -1025,7 +994,6 @@ app.controller('employee_leave_records',function($scope,$rootScope){
     }
 
 	$scope.$on('openLeaveModal',function(event, leave=null){
-
         $scope.leave.info = {};
         $scope.leave.date_ranges = [];
 
@@ -1133,6 +1101,28 @@ app.controller('employee_leave_records',function($scope,$rootScope){
 				return;
 		}
 	}
+
+    $scope.deleteLeave = function(leaveID){
+        $rootScope.showCustomModal(
+            'Warning',
+            'Are you sure you want to delete this leave record?',
+            function(){
+                $rootScope.post(
+                    $rootScope.baseURL+'employee/deleteLeave',
+                    leaveID,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                    }
+                );
+            },
+            function(){
+            },
+            'Yes',
+            'No'
+        );
+    }
 
     $scope.startDateSet = function (index) {
         $scope.leave.date_ranges[index].start_date = moment($scope.leave.date_ranges[index].start_date);

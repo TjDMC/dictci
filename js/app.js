@@ -111,6 +111,8 @@ app.run(function($rootScope,$http,$httpParamSerializer,$timeout){
 		minutes = parseInt(minutes);
 		return $rootScope.hourCreditTable[hours%8]+parseInt(hours/8)+$rootScope.minuteCreditTable[minutes%60]+parseInt(minutes/60);
 	}
+
+	$rootScope.moment = moment; //for access of moment.js in html
 });
 
 app.controller('initializer',function($scope,$rootScope){
