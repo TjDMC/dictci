@@ -22,10 +22,8 @@ app.controller('calendar_display',function($scope,$rootScope,$window){
         $scope.currentDate = moment();
         $scope.calendar = $scope.getCalendar();
     }
-
     $scope.modalDate = {};
     $scope.modalEvent = {};
-    $scope.moment = moment;
     var cache = { //used for refreshing the page without reloading
         date:'',
         index:''
@@ -202,12 +200,8 @@ app.controller('event_display',function($scope,$rootScope,$window){
         Date is formatted as: yyyy-mm-dd when coming into and out of angular
     */
     $scope.events = [];
-
 	$scope.modalEvent={};
-
 	$scope.suspension;
-
-    $scope.moment = moment;
 
     $scope.init = function(events,suspension){
         $scope.events = events;
@@ -296,7 +290,6 @@ app.controller('event_display',function($scope,$rootScope,$window){
 
 app.controller('calendar_collisions',function($scope,$rootScope,$window){
     $scope.collisions = {};
-    $scope.moment = moment;
     $scope.init = function(collisions){
         if(!collisions.events) return;
         for(var i = 0 ;i<collisions.leaves.length ; i++){

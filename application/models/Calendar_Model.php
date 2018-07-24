@@ -58,10 +58,13 @@ class Calendar_Model extends MY_Model
 	}
 
 	public function checkForDateCollisions($eventID){
-		$this->db->select('*');
+		$this->db->select('range_id,event_id');
 		$this->db->from(DB_PREFIX.'calendar_events');
 		$this->db->where('event_id',$eventID);
+		$this->db->where(DB_PREFIX.'leaves.type !=','Monetization'); //exclude monetization
+        $this->db->where(DB_PREFIX.'leaves.type !=','Special Monetization');
 		$this->db->join(DB_PREFIX.'leave_date_range',DB_PREFIX.'leave_date_range.start_date <= '.DB_PREFIX.'calendar_events.date and '.DB_PREFIX.'leave_date_range.end_date >= '.DB_PREFIX.'calendar_events.date');
+        $this->db->join(DB_PREFIX.'leaves',DB_PREFIX.'leaves.leave_id = '.DB_PREFIX.'leave_date_range.leave_id');
 		$res = $this->db->get()->result_array();
 
 		$insertData = array();

@@ -425,7 +425,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-on-set-time="moment(monetize.date)" data-before-render="startDateRender($view,$dates,$index)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-on-set-time="monetize.date = moment(monetize.date)" data-before-render="startDateRender($view,$dates,$index)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
                             </ul>
                         </div>
                         <div class="form-group">

@@ -2,15 +2,15 @@
 Table of Contents
 1.0 Employee Home Page - employee_nav
 2.0 Employee Addition - employee_add
-2.0 Employee Display Page - employee_display
-    2.1 Leave Credit Monetization
-    2.2 Leave Credit Computation Visualization
-    2.3 Leave Credit Computation
-    2.4 Leave History Filters
-    2.5 Terminal Benefit Computations
-    3.6 Record of Leaves
-3.0 Employee Leave Records - employee_leave_records
-4.0 Employee Statistics -  employee_statistics
+3.0 Employee Display Page - employee_display
+    3.1 Initialization
+    3.2 Leave Credit Computation
+    3.3 Record of Leaves
+    3.4 Monetization
+    3.5 Terminal Benefit Computations
+    3.6 Leave History
+4.0 Employee Leave Records - employee_leave_records
+5.0 Employee Statistics -  employee_statistics
 **/
 
 //<editor-fold> Section 1.0 Employee Home Page
@@ -313,7 +313,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						monetized=true;
 						currV -= creditUsed;
 						enjoyed.v += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
 						if(currV<5000){
 							if(!leave.info.type.toLowerCase().includes('special')){
 								$rootScope.showCustomModal('Error','Limit for leave monetization exceeded.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -324,12 +323,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                                     currS += currV;
 									enjoyed.v += currV;
 									enjoyed.s -= currV;
-                                    $scope.computations.factors.push({type:'Sick',amount:{s:currV,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                                    $scope.computations.factors.push({type:'Vacation and Sick',amount:{s:currV,v:-creditUsed-5000},balance:{s:currS,v:5000},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
                                 }
 							}
 							currV=5000;
-                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:0},balance:{s:currS,v:currV},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
-						}
+						}else{
+                            $scope.computations.factors.push({type:'Vacation',amount:{s:0,v:-creditUsed},balance:{v:currV,s:currS},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                        }
 						// #temporal_solution_for_monetization_of_leaves
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
 						//	Special Priviledge Leaves
@@ -570,10 +570,16 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 
                 var remarks = factors[i].leave_info.remarks ? factors[i].leave_info.remarks:"";
-                if(factors[i].leave_info.type.toLowerCase().includes("special")) //special and parental leaves
+                if(factors[i].leave_info.type.toLowerCase().includes("special leave")) //remarks for special and parental leaves and monetization
                     remarks = "(Special)"+remarks;
                 if(factors[i].leave_info.type.toLowerCase().includes("parental"))
                     remarks = "(Parental)"+remarks;
+                if(factors[i].leave_info.type.toLowerCase().includes("special monetization")){
+                    remarks = "(Spl. Monetization)"+remarks;
+                }else if(factors[i].leave_info.type.toLowerCase().includes("monetization")){
+                    remarks = "(Monetization)"+remarks;
+                }
+
 				if(leaveIDs.has(leave_id)){
                     var factor_info = leaveIDs.get(leave_id);
 					factor_info.when_taken+=when_taken;
@@ -949,8 +955,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 });
 //</editor-fold> end Employee Display
 
-/*Requires parent controller: employee_display*/
-app.controller('employee_leave_records',function($scope,$rootScope){
+//<editor-fold> Section 4.0 Employee Leave Records (requires parent controller: employee_display)
+app.controller('employee_leave_records',function($scope,$rootScope,$window){
     $scope.leave = {
         info:{},
         date_ranges:[]
@@ -1278,8 +1284,9 @@ app.controller('employee_leave_records',function($scope,$rootScope){
         );
     }
 });
+//</editor-fold> end Employee Leave Records
 
-/*Requires employee_display controller as parent*/
+//<editor-fold> Section 5.0 Employee Statistics (requires parent controller: employee_display)
 app.controller('employee_statistics',function($scope,$rootScope){
     $scope.statistics={
         labels:['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -1374,3 +1381,4 @@ app.controller('employee_statistics',function($scope,$rootScope){
     });
 
 });
+//</editor-fold> end Employee Statistics
