@@ -114,7 +114,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.sortAndFormatLeaves();
         $scope.employee.first_day = moment($scope.employee.first_day);
     }
-	
+
 	$scope.startDateRender = function($view,$dates){
         var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
 
@@ -227,7 +227,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						firstMC -= creditUsed;
 						lwop += creditUsed;
 						wopCtr += creditUsed;
-                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Vacation, Forced, Mandatory, and Sick Leaves (WOP)',date:range.start_date.clone(),leave_info:leave.info,date_range:range});
+
+                        var leave_info_copy = angular.copy(leave.info);
+                        var range_copy  = angular.copy(range);
+                        range_copy.credits *= 1000;
+                        leave_info_copy.is_without_pay = true;
+                        $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:0,s:0},balance:{v:0,s:0},remarks:'Vacation, Forced, Mandatory, and Sick Leaves (WOP)',date:range.start_date.clone(),leave_info:leave_info_copy,date_range:range_copy});
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						$rootScope.showCustomModal('Error','Employee may not monetize yet.',function(){angular.element('#customModal').modal('hide');},function(){});
 					}else if(leave.info.type.toLowerCase().includes('spl') || leave.info.type.toLowerCase().includes('special')){
