@@ -51,9 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 	</noscript>
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="background-color:black">
-		<a class="navbar-brand" href="<?=base_url()?>">
+		<a class="navbar-brand m-0" href="<?=base_url()?>">
 			<span><img src="<?=base_url()?>/favicon.png" width="25" height="25" alt="DICT Logo" /></span>
-			DICT Leave Credit Computation
+			<span>DICT Leave Credit Computation</span>
 		</a>
 		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -123,4 +123,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		</div>
 	</nav>
-	<div class="content-wrapper p-5" ng-cloak>
+	<div class="content-wrapper p-lg-5 p-2 pt-5" ng-cloak>

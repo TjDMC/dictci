@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div>
             <h3>Leave History</h3>
 			<div class="form-group row">
-				<div class="col btn-group btn-group-toggle">
+				<div class="col btn-group btn-group-toggle" style="overflow-x:auto;min-width:300px">
 					<label class="btn btn-outline-info" ng-class="{active:filter.type.every}" ng-click="reFilter('every')">All</label>
                     <label ng-init="initFilters()" ng-repeat="type_filter in type_filters" class="btn btn-outline-info text-capitalize" ng-class="{active:filter.type[type_filter]}" ng-click="reFilter(type_filter)">{{type_filter}}</label>
 				</div>
@@ -229,62 +229,64 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">
 					<div class="alert alert-info">
 						<h5 class="font-weight-bold mb-3">Select display range</h5>
-						<table class="table">
-							<tr>
-								<th>From</th>
-								<th>To</th>
-								<th></th>
-							</tr>
-							<tr>
-								<td>
-									<div class="dropdown">
-										<a id="startDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
-											<div class="input-group">
-												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.start_date" required>
-												<div class="input-group-append">
-													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-												</div>
-											</div>
-										</a>
-										<ul class="dropdown-menu">
-											<datetimepicker
-												data-ng-model="rol.start_date"
-												data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month',renderOn:'rol-end-date-set'}"
-												data-on-set-time="rolStartDateSet()"
-												data-before-render="rolStartDateRender($view,$dates)"></datetimepicker>
-										</ul>
-									</div>
-								</td>
-								<td>
-									<div class="dropdown">
-										<a id="endDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
-											<div class="input-group">
-												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.end_date" required>
-												<div class="input-group-append">
-													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-												</div>
-											</div>
-										</a>
-										<ul class="dropdown-menu">
-											<datetimepicker
-												data-ng-model="rol.end_date"
-												data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month',renderOn:'rol-start-date-set'}"
-												data-on-set-time="rolEndDateSet()"
-												data-before-render="rolEndDateRender($view,$dates)"></datetimepicker>
-										</ul>
-									</div>
-								</td>
-								<td>
-									<button class="btn btn-success" ng-click="setAllTime()">All Time</button>
-								</td>
-							</tr>
-						</table>
+                        <div class="table-responsive">
+    						<table class="table">
+    							<tr>
+    								<th>From</th>
+    								<th>To</th>
+    								<th></th>
+    							</tr>
+    							<tr>
+    								<td style="min-width:200px;">
+    									<div class="dropdown">
+    										<a id="startDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+    											<div class="input-group">
+    												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.start_date" required>
+    												<div class="input-group-append">
+    													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+    												</div>
+    											</div>
+    										</a>
+    										<ul class="dropdown-menu">
+    											<datetimepicker
+    												data-ng-model="rol.start_date"
+    												data-datetimepicker-config="{ dropdownSelector:'#startDateRange', startView:'month', minView:'month',renderOn:'rol-end-date-set'}"
+    												data-on-set-time="rolStartDateSet()"
+    												data-before-render="rolStartDateRender($view,$dates)"></datetimepicker>
+    										</ul>
+    									</div>
+    								</td>
+    								<td style="min-width:200px;">
+    									<div class="dropdown">
+    										<a id="endDateRange" data-toggle="dropdown" style="text-decoration:none" data-target="dropdown" href="#">
+    											<div class="input-group">
+    												<input data-date-time-input="MMMM YYYY" class="form-control" type="text" data-ng-model="rol.end_date" required>
+    												<div class="input-group-append">
+    													<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+    												</div>
+    											</div>
+    										</a>
+    										<ul class="dropdown-menu">
+    											<datetimepicker
+    												data-ng-model="rol.end_date"
+    												data-datetimepicker-config="{ dropdownSelector:'#endDateRange', startView:'month', minView: 'month',renderOn:'rol-start-date-set'}"
+    												data-on-set-time="rolEndDateSet()"
+    												data-before-render="rolEndDateRender($view,$dates)"></datetimepicker>
+    										</ul>
+    									</div>
+    								</td>
+    								<td style="min-width:50px;">
+    									<button class="btn btn-success" ng-click="setAllTime()">All Time</button>
+    								</td>
+    							</tr>
+    						</table>
+                        </div>
 						<div class="text-center">
 							<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
 							<a class="btn btn-primary" style="color:white" ng-click="exportROLTable()">Export As CSV</a>
 						</div>
 					</div>
-                    <div class="mt-3" id="rolTable">
+                    <div class="mt-3 table-responsive" id="rolTable">
                         <div style="text-align:center">
             				<h4 style="font-weight:bold;margin:0;">RECORD OF LEAVES OF ABSENCE</h4>
             				<p style="font-weight:bold;margin:0;font-size:0.8em;">(UNDER R.A. 2266)</p>

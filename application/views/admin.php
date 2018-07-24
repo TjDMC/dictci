@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="card-header">
             <h2>Admin Settings</h2>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body p-2 p-lg-4">
             <h5>Change login credentials</h5>
             <div class="row justify-content-start">
                 <form class="col-md-3 col-xs-12" ng-submit="confirmPassword('username')">
