@@ -810,14 +810,14 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var t1 = performance.now();
 		var salary = 100*$scope.employee.salary;
 		var balance = $scope.computeBal($scope.terminal_date);
-		var credits = Number(balance[0]) + Number(balance[1]);
+		var credits = Number(balance[0])*1000 + Number(balance[1])*1000;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits+" * "+constantFactor+" = "+(tlb/100).toFixed(2);
+        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 1: "+(t2-t1));
-		return (tlb/100).toFixed(2);
+		//return (tlb/100000).toFixed(2);
 	}
 
 	$scope.terminalBenefit2 = function(){
@@ -875,7 +875,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 2: "+(t2-t1));
-		return (tlb/100000).toFixed(2);
+		//return (tlb/100000).toFixed(2);
 	}
     //#endregion end Terminal Benefit Computations
 
