@@ -293,10 +293,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             			</div>
             			<div>
             				<div style="width:auto;float:left">
-            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_name}} {{employee.middle_name ? employee.middle_name.charAt(0)+".":''}} {{employee.last_name}}&nbsp;&nbsp;</span></p>
             				</div>
             				<div style="width:auto;float:right">
-            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
                         <table class="rol-table" id="rol-table" style="width:100%">
