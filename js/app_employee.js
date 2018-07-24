@@ -97,6 +97,7 @@ app.controller('employee_add',function($scope,$rootScope,$window){
 //<editor-fold> Section 3.0 Employee Display
 app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     //#region Section 3.1 Initialization/
+	$scope.edit=true;
     $scope.employee = {};
     $scope.leaves = [];
     $scope.init = function(employee,leaves){

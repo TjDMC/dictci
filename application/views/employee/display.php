@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
 
         <div class="form-group text-center">
-            <button title="Edit Leave" ng-click="$broadcast('openLeaveModal')" class="btn btn-primary">Add Leave Record</button>
+            <button title="Edit Leave" ng-click="edit=false;$broadcast('openLeaveModal')" class="btn btn-primary">Add Leave Record</button>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#monetizeLeaveModal">Monetize Leave</button>
             <button type="button" ng-click="setTerminalDate()" class="btn btn-primary" data-toggle="modal" data-target="#terminalModal">Terminal Leave Benefits</button>
         </div>
@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     							{{leave.info.remarks}}
     						</td>
                             <td style="text-align:right">
-    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave"  ng-click="$parent.$broadcast('openLeaveModal',leaves[$index])"> <!--$parent is required because of scoping issues with ng-repeat -->
+    							<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave"  ng-click="edit=true;$parent.$broadcast('openLeaveModal',leaves[$index])"> <!--$parent is required because of scoping issues with ng-repeat -->
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button ng-init="leave.expand=true" ng-click="leave.expand=!leave.expand" class="btn btn-light" style="background-color:transparent;border:0px" title="{{leave.expand?'Collapse':'Expand'}}">
@@ -291,7 +291,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             			</div>
             			<div>
             				<div style="width:auto;float:left">
-            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span><p>
+            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}&nbsp;&nbsp;</span></p>
             				</div>
             				<div style="width:auto;float:right">
             					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span>&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
@@ -384,7 +384,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addOrEditLeaveLabel">Add/Edit Leave</h5>
+                    <h5 class="modal-title" id="addOrEditLeaveLabel">{{edit}} {{edit?'Edit':'Add'}} Leave</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
