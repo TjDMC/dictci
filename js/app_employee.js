@@ -109,7 +109,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             sick:0,
             vacation:0
         };
-        $scope.bal_date = moment().subtract(1,'month').endOf('month');
+		if(moment().subtract(1,'month').endOf('month').isBefore(moment(employee.first_day,'YYYY-MM-DD'))){
+			$scope.bal_date = moment().endOf('month');
+		}else{
+			$scope.bal_date = moment().subtract(1,'month').endOf('month');
+		}
         //Sort Leaves
         $scope.sortAndFormatLeaves();
         $scope.employee.first_day = moment($scope.employee.first_day);

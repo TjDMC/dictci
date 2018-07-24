@@ -482,7 +482,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <datetimepicker data-before-render="startDateRender($view,$dates,$index)" data-on-set-time="setTerminalDate(newDate)" data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
+                                        <datetimepicker data-before-render="startDateRender($view,$dates)" data-on-set-time="setTerminalDate(newDate)" data-ng-model="terminal_date" data-datetimepicker-config="{ dropdownSelector:'#terminationDate',minView:'day'}"></datetimepicker>
                                     </ul>
                                 </div>
                             </td>
