@@ -169,9 +169,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			<div class="cssload-internal"><div class="cssload-ballcolor cssload-ball_4"> </div></div>
 	</div>
 </div>
-
-
 </body>
+<script>
+ $('body') .on('show.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "visible"); }) .on('hide.bs.dropdown', '.table-responsive', function () { $(this).css("overflow", "auto"); });
+</script>
+
 <script>
 (function($) {
   "use strict"; // Start of use strict
