@@ -323,7 +323,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                                     currS += currV;
 									enjoyed.v += currV;
 									enjoyed.s -= currV;
-                                    $scope.computations.factors.push({type:'Vacation and Sick',amount:{s:currV,v:-creditUsed-5000},balance:{s:currS,v:5000},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+                                    $scope.computations.factors.push({type:'Vacation and Sick',amount:{s:currV,v:creditUsed-currS},balance:{s:currS,v:5000},remarks:'Monetization',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
                                 }
 							}
 							currV=5000;
