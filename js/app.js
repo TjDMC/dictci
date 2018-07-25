@@ -169,7 +169,7 @@ app.controller('admin',function($scope,$rootScope,$window){
 			$rootScope.showCustomModal(
 				'Error',
 				'Passwords do not match',
-				function(){},
+				function(){angular.element('#customModal').modal('hide');},
 				function(){},
 				'OK'
 			);
@@ -199,7 +199,7 @@ app.controller('admin',function($scope,$rootScope,$window){
 				);
 			},
 			function(response){
-				$rootScope.showCustomModal('Error',response.msg,function(){},function(){});
+				$rootScope.showCustomModal('Error',response.msg,function(){angular.element('#customModal').modal('hide');},function(){});
 			}
 		);
 	}
@@ -226,6 +226,7 @@ app.controller('init_db',function($http,$scope,$rootScope,$window){
 				'Error',
 				response.msg,
 				function(){
+					angular.element('#customModal').modal('hide');
 				},
 				function(){
 				}
@@ -253,6 +254,7 @@ app.controller('init_db',function($http,$scope,$rootScope,$window){
 				'Error',
 				response.msg,
 				function(){
+					angular.element('#customModal').modal('hide');
 				},
 				function(){
 				}
