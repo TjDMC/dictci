@@ -635,6 +635,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
 				if(factor.balance.v<0){//negative vac balance
 					factor.without_pay.total-=factor.balance.v;
+                    factor.leaves_taken.v += factor.balance.v; //dedcut leaves taken
 					factor.balance.v = 0;
 				}
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
