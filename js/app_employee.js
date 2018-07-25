@@ -693,7 +693,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var printContents = document.getElementById('rolTable').innerHTML;
         var popupWin = window.open('', '_blank', 'width=1000,height=700');
         popupWin.document.open();
-        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="'+$rootScope.baseURL+'css/print.css" /></head><body onload="window.print()">' + printContents + '</body></html>');
+        popupWin.document.write('<html><body onload="window.print()">' + printContents + '</body></html>');
         popupWin.document.close();
     }
 
@@ -710,7 +710,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             while (html.indexOf('ú') != -1) html = html.replace(/ú/g, '&uacute;');
             while (html.indexOf('º') != -1) html = html.replace(/º/g, '&ordm;');
             var a = document.createElement('a');
-            a.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,' + encodeURIComponent(html);
             a.download=$scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls";
             a.click();
         }
