@@ -698,23 +698,35 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     $scope.exportROLTable = function(){
-        function generateExcel(el) {
-            var clon = el.clone();
-            var html = clon.wrap('<div>').parent().html();
+        var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
 
-            //add more symbols if needed...
-            while (html.indexOf('á') != -1) html = html.replace(/á/g, '&aacute;');
-            while (html.indexOf('é') != -1) html = html.replace(/é/g, '&eacute;');
-            while (html.indexOf('í') != -1) html = html.replace(/í/g, '&iacute;');
-            while (html.indexOf('ó') != -1) html = html.replace(/ó/g, '&oacute;');
-            while (html.indexOf('ú') != -1) html = html.replace(/ú/g, '&uacute;');
-            while (html.indexOf('º') != -1) html = html.replace(/º/g, '&ordm;');
-            var a = document.createElement('a');
-            a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,' + encodeURIComponent(html);
-            a.download=$scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls";
-            a.click();
+        tab_text = tab_text + '<x:Name>Test Sheet</x:Name>';
+
+        tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+        tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+        tab_text = tab_text + "<table border='1px'>";
+        tab_text = tab_text + $('#rol-table').html(); //rol table id
+        tab_text = tab_text + '</table></body></html>';
+
+        var data_type = 'data:application/vnd.ms-excel';
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            if (window.navigator.msSaveBlob) {
+                var blob = new Blob([tab_text], {
+                    type: "application/csv;charset=utf-8;"
+                });
+                navigator.msSaveBlob(blob, $scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
+            }
+        } else {
+            $('#rol-export').attr('href', data_type + ', ' + encodeURIComponent(tab_text)); //export button id
+            $('#rol-export').attr('download', $scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
         }
-        generateExcel($('#rol-table'));
+
     }
 
     $scope.rolStartDateSet = function(){

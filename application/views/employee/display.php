@@ -283,7 +283,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
 						<div class="text-center">
 							<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
-							<a class="btn btn-primary" style="color:white" ng-click="exportROLTable()">Export As XLS</a>
+                            <a href="#" class="btn btn-primary" id="rol-export" style="color:white" ng-click="exportROLTable();">Export as XLS</a>
 						</div>
 					</div>
                     <div class="mt-3 table-responsive" id="rolTable">
@@ -299,77 +299,93 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
+                        <style>
+                            #rol-table colgroup{
+                                border:2px solid black;
+                            }
+                            #rol-table th{
+                                border:1px solid gray;
+                            }
+                            #rol-table td{
+                                border:1px solid gray;
+                            }
+                            #rol-table .eoma{
+                                border-bottom:2px solid black;
+                                border-top:2px solid black;
+                                font-weight:bold;
+                            }
+                        </style>
                         <table id="rol-table" style="border-collapse:collapse;margin:0;padding:0;width:100%;">
-        					<colgroup style="border:2px solid black;">
+        					<colgroup>
         						<col width="5%">
         						<col width="5%">
                             </colgroup>
-                            <colgroup style="border:2px solid black;">
+                            <colgroup>
         						<col width="22%">
                             </colgroup>
-                            <colgroup style="border:2px solid black;">
+                            <colgroup>
         						<col width="6%">
         						<col width="6%">
                             </colgroup>
-                            <colgroup style="border:2px solid black;">
-        						<col width="4%">
-        						<col width="4%">
-        						<col width="4%">
-                            </colgroup>
-                            <colgroup style="border:2px solid black;">
+                            <colgroup>
         						<col width="4%">
         						<col width="4%">
         						<col width="4%">
                             </colgroup>
-                            <colgroup style="border:2px solid black;">
+                            <colgroup>
+        						<col width="4%">
+        						<col width="4%">
+        						<col width="4%">
+                            </colgroup>
+                            <colgroup>
         						<col width="6%">
         						<col width="6%">
                             </colgroup>
-                            <colgroup style="border:2px solid black;">
+                            <colgroup>
         						<col width="20%">
         					</colgroup>
-        					<tr style="text-align:center;">
-        						<th colspan="2" style="border:1px solid gray;font-weight:bold;font-size:0.7em;">Leaves Earned</th>
-        						<th rowspan="3" style="border:1px solid gray;font-weight:bold;">WHEN TAKEN</th>
-        						<th colspan="2" style="font-size:0.7em;border:1px solid gray;font-weight:bold;">LEAVES TAKEN</th>
-        						<th colspan="3" style="font-size:0.75em;border:1px solid gray;font-weight:bold;">UNDERTIME</th>
-        						<th rowspan="2" colspan="3" style="border:1px solid gray;font-weight:bold;">W/O PAY</th>
-        						<th colspan="2" style="border:1px solid gray;font-weight:bold;">BALANCE</th>
-        						<th rowspan="3" style="border:1px solid gray;font-weight:bold;">REMARK</th>
+        					<tr style="text-align:center">
+        						<th colspan="2" style="font-weight:bold;font-size:0.7em;">Leaves Earned</th>
+        						<th rowspan="3" style="font-weight:bold;">WHEN TAKEN</th>
+        						<th colspan="2" style="font-size:0.7em;font-weight:bold;">LEAVES TAKEN</th>
+        						<th colspan="3" style="font-size:0.75em;font-weight:bold;">UNDERTIME</th>
+        						<th rowspan="2" colspan="3" style="font-weight:bold;">W/O PAY</th>
+        						<th colspan="2" style="font-weight:bold;">BALANCE</th>
+        						<th rowspan="3" style="font-weight:bold;">REMARK</th>
         					</tr>
         					<tr style="text-align:center;font-size:0.8em;">
-                                <th rowspan="2" style="border:1px solid gray;font-weight:bold;">VAC</th>
-        						<th rowspan="2" style="border:1px solid gray;font-weight:bold;">SICK</th>
-                                <th rowspan="2" style="border:1px solid gray;font-weight:bold;">VAC</th>
-        						<th rowspan="2" style="border:1px solid gray;font-weight:bold;">SICK</th>
-        						<th colspan="3" style="border:1px solid gray;font-weight:bold;">VAC</th>
-        						<th rowspan="2" style="border:1px solid gray;font-weight:bold;">VAC</th>
-        						<th rowspan="2" style="border:1px solid gray;font-weight:bold;">SICK</th>
+                                <th rowspan="2" style="font-weight:bold;">VAC</th>
+        						<th rowspan="2" style="font-weight:bold;">SICK</th>
+                                <th rowspan="2" style="font-weight:bold;">VAC</th>
+        						<th rowspan="2" style="font-weight:bold;">SICK</th>
+        						<th colspan="3" style="font-weight:bold;">VAC</th>
+        						<th rowspan="2" style="font-weight:bold;">VAC</th>
+        						<th rowspan="2" style="font-weight:bold;">SICK</th>
         					</tr>
         					<tr style="font-size:0.6em;text-align:center;">
-        						<th style="border:1px solid gray;font-weight:bold;">HOUR</th>
-        						<th style="border:1px solid gray;font-weight:bold;">MIN</th>
-        						<th style="border:1px solid gray;font-weight:bold;">TOTAL</th>
-        						<th style="border:1px solid gray;font-weight:bold;">HOUR</th>
-        						<th style="border:1px solid gray;font-weight:bold;">MIN</th>
-        						<th style="border:1px solid gray;font-weight:bold;">TOTAL</th>
+        						<th style="font-weight:bold;">HOUR</th>
+        						<th style="font-weight:bold;">MIN</th>
+        						<th style="font-weight:bold;">TOTAL</th>
+        						<th style="font-weight:bold;">HOUR</th>
+        						<th style="font-weight:bold;">MIN</th>
+        						<th style="font-weight:bold;">TOTAL</th>
         					</tr>
-                            <tbody ng-repeat="month in rol.factors" style="font-size:0.75em;">
-                                <tr ng-repeat="factor in month track by $index" style="text-align:right;" ng-style="factor.eoma?{'border-bottom':'2px solid black','border-top':'2px solid black','font-weight':'bold'}:{}">
-                                    <td style="border:1px solid gray;">{{factor.leaves_earned.v == '0.000' ? '':factor.leaves_earned.v}}</td>
-                                    <td style="border:1px solid gray;">{{factor.leaves_earned.s == '0.000' ? '':factor.leaves_earned.s}}</td>
-                                    <td style="text-align:left;border:1px solid gray;">{{factor.when_taken}}</td>
-                                    <td style="border:1px solid gray;">{{factor.leaves_taken.v == '0.000' ? '':factor.leaves_taken.v}}</td>
-                                    <td style="border:1px solid gray;">{{factor.leaves_taken.s == '0.000' ? '':factor.leaves_taken.s}}</td>
-                                    <td style="border:1px solid gray;">{{factor.undertime.hour == 0 ? '':factor.undertime.hour}}</td>
-                                    <td style="border:1px solid gray;">{{factor.undertime.min == 0 ? '':factor.undertime.min}}</td>
-                                    <td style="border:1px solid gray;">{{factor.undertime.total == '0.000' ? '':factor.undertime.total}}</td>
-                                    <td style="border:1px solid gray;">{{factor.without_pay.hour == 0 ? '':factor.without_pay.hour}}</td>
-                                    <td style="border:1px solid gray;">{{factor.without_pay.min == 0 ? '':factor.without_pay.hour}}</td>
-                                    <td style="border:1px solid gray;">{{factor.without_pay.total == '0.000' ? '':factor.without_pay.total}}</td>
-                                    <td style="border:1px solid gray;">{{factor.balance.v}}</td>
-                                    <td style="border:1px solid gray;">{{factor.balance.s}}</td>
-                                    <td style="text-align:left;border:1px solid gray;">{{factor.remarks}}</td>
+                            <tbody ng-repeat="month in rol.factors" style="font-size:0.75em;" >
+                                <tr ng-repeat="factor in month track by $index" style="text-align:right;" ng-class="{eoma:factor.eoma}">
+                                    <td>{{factor.leaves_earned.v == '0.000' ? '':factor.leaves_earned.v}}</td>
+                                    <td>{{factor.leaves_earned.s == '0.000' ? '':factor.leaves_earned.s}}</td>
+                                    <td style="text-align:left;">{{factor.when_taken}}</td>
+                                    <td>{{factor.leaves_taken.v == '0.000' ? '':factor.leaves_taken.v}}</td>
+                                    <td>{{factor.leaves_taken.s == '0.000' ? '':factor.leaves_taken.s}}</td>
+                                    <td>{{factor.undertime.hour == 0 ? '':factor.undertime.hour}}</td>
+                                    <td>{{factor.undertime.min == 0 ? '':factor.undertime.min}}</td>
+                                    <td>{{factor.undertime.total == '0.000' ? '':factor.undertime.total}}</td>
+                                    <td>{{factor.without_pay.hour == 0 ? '':factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.min == 0 ? '':factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.total == '0.000' ? '':factor.without_pay.total}}</td>
+                                    <td>{{factor.balance.v}}</td>
+                                    <td>{{factor.balance.s}}</td>
+                                    <td style="text-align:left;">{{factor.remarks}}</td>
                                 </tr>
                             </tbody>
         				</table>
