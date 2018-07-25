@@ -8,7 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div class="card-body">
 		<div class="form-group">
-            <button title="Edit Holidays" ng-click="showModal(null)" class="btn btn-primary">Add Holidays</button>
+            <button title="Edit Holidays" ng-click="edit=false;showModal(null)" class="btn btn-primary">Add Holidays</button>
         </div>
 		<div class="table-responsive">
 			<table class="table">
@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<td>{{event.title}}</td>
 					<td>{{event.date.format('MMMM DD, YYYY')}}</td>
 					<td>
-						<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="showModal(event)">
+						<button class="btn btn-light" style="background-color:transparent;border:0px" title="Edit Leave" ng-click="$parent.edit=true;showModal(event)">
 							<i class="fas fa-edit"></i>
 						</button>
 					</td>
@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-dialog  modal-dialog-centered modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="eventLabel">Add/Edit Holiday Event</h5>
+                    <h5 class="modal-title" id="eventLabel">{{edit?'Edit':'Add'}} Holiday Event</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
