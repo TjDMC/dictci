@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-on-set-time="modelEvent.date = moment(modalEvent.date)" data-ng-model="modalEvent.date" data-datetimepicker-config="{ dropdownSelector:'#eventdate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-on-set-time="modalEvent.date = moment(modalEvent.date)" data-ng-model="modalEvent.date" data-datetimepicker-config="{ dropdownSelector:'#eventdate',minView:'day' }"></datetimepicker>
                             </ul>
 						</div>
                         <div class="form-group">
