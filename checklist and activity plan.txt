@@ -32,7 +32,19 @@ leave application
 
 documentation
 
-external employee database (deployment)
+external employee table
+	-backup employee database (in case integration fails)
+		-employee_no
+		-surname
+		-first_name
+		-last_name
+	-employee to employee_leaves connector table
+		-employee_no
+		-vac_leave_bal
+		-sick_leave_bal
+		-highest_salary
+		-first_day_compute
+	-migration ui page (asks admin for the employee table and column names at initialization)
 
 infographics
 	-charts - done July 10, 2018
