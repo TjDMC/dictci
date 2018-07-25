@@ -217,6 +217,7 @@ app.controller('event_display',function($scope,$rootScope,$window){
         var succMsg='';
         var data = $scope.modalEvent;
         var succFunction = function(response){};
+		data.date = moment(data.date);
 		data.date = data.date.format('YYYY-MM-DD');
         switch(action){
             case 'add':
