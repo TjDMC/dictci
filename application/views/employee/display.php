@@ -283,7 +283,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
 						<div class="text-center">
 							<button class="btn btn-primary" ng-click="printROLTable()">Print</button>
-							<a class="btn btn-primary" style="color:white" ng-click="exportROLTable()">Export As CSV</a>
+							<a class="btn btn-primary" style="color:white" ng-click="exportROLTable()">Export As XLS</a>
 						</div>
 					</div>
                     <div class="mt-3 table-responsive" id="rolTable">
