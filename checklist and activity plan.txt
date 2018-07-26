@@ -38,6 +38,7 @@ external employee table
 		-surname
 		-first_name
 		-last_name
+		-first_day_employ
 	-employee to employee_leaves connector table
 		-employee_no
 		-vac_leave_bal

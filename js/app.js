@@ -206,6 +206,7 @@ app.controller('admin',function($scope,$rootScope,$window){
 });
 
 app.controller('init_db',function($http,$scope,$rootScope,$window){
+	$scope.meta={};
 	$scope.initialize = function(){
 		$http({
 			method: 'GET',
