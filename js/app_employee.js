@@ -882,22 +882,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
-		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)];
+		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)] + Math.floor(((days*1000)%500)*1.25/30);
 		//	#credits_earned
 
 		//	Credits Used
 		var creditsUsed = ($scope.cEnjoyed.v + $scope.cEnjoyed.s)*1000;
-		/*var creditsUsed = 0;
-		for(var i=0;i<$scope.leaves.length;i++){
-			var leave = $scope.leaves[i];
-			for(var j=0;j<leave.date_ranges.length;j++){
-				var range = leave.date_ranges[j];
-				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
-					creditsUsed += range.hours*125 + range.minutes*25/12;
-				}
-			}
-		}
-		creditsUsed -= $scope.lwop[1]*1000;*/
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
