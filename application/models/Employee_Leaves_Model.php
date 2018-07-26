@@ -161,22 +161,18 @@ class Employee_Leaves_Model extends MY_Model{
         }
     }
 
-    public function createTable(){
+    private function createTable(){
         $m = $this->getEmployeeTableMeta();
-        if(!$this->db->table_exists(DB_PREFIX."employee")){
-            $this->dbforge->add_field("flag int not null default 0");
-            $this->dbforge->add_field("emp_no char(7) not null unique");
-            $this->dbforge->add_field("last_name varchar(20) not null");
-            $this->dbforge->add_field("first_name varchar(20) not null");
-            $this->dbforge->add_field("middle_name varchar(20)");
-            $this->dbforge->add_field("first_day_employ date not null");
-            $this->dbforge->add_field("position varchar(50)");
-            $this->dbforge->add_field("salary decimal(8,2)");
-            $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
-            $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
-            $this->dbforge->add_field("primary key (emp_no)");
-            $this->dbforge->create_table(DB_PREFIX."employee",true);
+        if(!$m['is_external'] && !$this->db->table_exists($m['table_name'])){ //create default employees table
+            $this->dbforge->add_field($m['emp_no']." tinytext not null unique");
+            $this->dbforge->add_field($m['surname']." tinytext not null");
+            $this->dbforge->add_field($m['first_name']."tinytext not null");
+            $this->dbforge->add_field($m['middle_name']."tinytext");
+            $this->dbforge->add_field($m['first_day_employ']." date not null");
+            $this->dbforge->add_field("primary key (".$m['emp_no'].")");
+            $this->dbforge->create_table($m['table_name'],true);
         }
+
         if(!$this->db->table_exists(DB_PREFIX.'employee_leaves')){
             $this->dbforge->add_field('emp_no tinytext not null');
             $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
@@ -184,6 +180,9 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->add_field("first_day_compute date not null");
             $this->dbforge->add_field("highest_salary decimal(6,3) not null default 0");
             $this->dbforge->add_field("foreign key (emp_no) references ".$m['table_name']."(".$m['emp_no'].") on update cascade on delete cascade");
+        }else{
+            //update foreign keys
+            $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." drop foreign key emp_no; alter table ".DB_PREFIX.'employee_leaves'." add foreign key (emp_no) references $m[table_name]($m[emp_no])");
         }
 
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
@@ -196,8 +195,11 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->add_field("emp_no tinytext not null");
             $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (leave_id)");
-            $this->dbforge->add_field("foreign key (emp_no) references ".DB_PREFIX."employee(emp_no) on update cascade on delete cascade");
+            $this->dbforge->add_field("foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX."leaves",true);
+        }else{
+            //update foreign keys
+            $this->db->query("alter table ".DB_PREFIX.'leaves'." drop foreign key emp_no; alter table ".DB_PREFIX.'leaves'." add foreign key (emp_no) references $m[table_name] ($m[emp_no])");
         }
 
 		if(!$this->db->table_exists(DB_PREFIX."leave_date_range")){
@@ -228,60 +230,31 @@ class Employee_Leaves_Model extends MY_Model{
         if(!is_array($checker)){
             return $checker;
         }
-        if(count($this->db->get(DB_PREFIX.'employee_table_meta')->result_array())>0){
+        if($checker['is_external']){ //check if table and columns exists
+            if(!$this->db->table_exists($checker['table_name'])){
+                return 'Employee table does not exist.';
+            }
+            $res = $this->db->query("show columns from $checker[table_name] like $checker[first_name]")->result_array();
+            if(count($res)<1) return "Column $checker[first_name] is not defined";
+            $res = $this->db->query("show columns from $checker[table_name] like $checker[surname_name]")->result_array();
+            if(count($res)<1) return "Column $checker[surname] is not defined";
+            $res = $this->db->query("show columns from $checker[table_name] like $checker[middle_name]")->result_array();
+            if(count($res)<1) return "Column $checker[middle_name] is not defined";
+            $res = $this->db->query("show columns from $checker[table_name] like $checker[first_day_employ]")->result_array();
+            if(count($res)<1) return "Column $checker[first_day_employ] is not defined";
+            $res = $this->db->query("show columns from $checker[table_name] like $checker[emp_no]")->result_array();
+            if(count($res)<1) return "Column $checker[emp_no] is not defined";
+        }
+        if(count($this->db->get(DB_PREFIX.'employee_table_meta')->result_array())>0){ //add table and column names to meta table
             $this->db->update(DB_PREFIX.'employee_table_meta',$checker);
         }else{
             $this->db->insert(DB_PREFIX.'employee_table_meta',$checker);
         }
-        if(!$checker['is_external']){ //create default table
-            if(!$this->db->table_exists($checker['table_name'])){
-                $this->dbforge->add_field($checker['emp_no']." tinytext not null unique");
-                $this->dbforge->add_field($checker['surname']." tinytext not null");
-                $this->dbforge->add_field($checker['first_name']."tinytext not null");
-                $this->dbforge->add_field($checker['middle_name']."tinytext");
-                $this->dbforge->add_field($checker['first_day_employ']." date not null");
-                $this->dbforge->add_field("primary key (".$checker['emp_no'].")");
-                $this->dbforge->create_table($checker['table_name'],true);
-            }
-        }
+        $this->createTable();
     }
 
     public function getEmployeeTableMeta(){
         return $this->db->get(DB_PREFIX.'employee_table_meta')->result_array()[0];
-    }
-
-    public function populate(){
-        $this->db->insert_batch(DB_PREFIX."employee",
-            array(
-                array(
-                    "emp_no"=>"0000001",
-                    "last_name"=>"Naraval",
-                    "first_name"=>"Paul",
-                    "middle_name"=>"Paul",
-                    "first_day"=>"2018/06/19",
-                    "position"=>"idk",
-                    "salary"=>123
-                ),
-                array(
-                    "emp_no"=>"0000002",
-                    "last_name"=>"Ramos",
-                    "first_name"=>"Peter",
-                    "middle_name"=>"Peter",
-                    "first_day"=>"2018/04/19",
-                    "position"=>"idk",
-                    "salary"=>1234
-                ),
-                array(
-                    "emp_no"=>"0000003",
-                    "last_name"=>"Aquino",
-                    "first_name"=>"Israel",
-                    "middle_name"=>"Israel",
-                    "first_day"=>"2018/05/19",
-                    "position"=>"idk",
-                    "salary"=>1234
-                )
-            )
-        );
     }
 
     public function addEmployee($employeeData){

@@ -207,59 +207,34 @@ app.controller('admin',function($scope,$rootScope,$window){
 
 app.controller('init_db',function($http,$scope,$rootScope,$window){
 	$scope.meta={};
-	$scope.initialize = function(){
-		$http({
-			method: 'GET',
-			url: $rootScope.baseURL+'db/initdb'
-		}).then(function(response){
-			$rootScope.showCustomModal(
-				'Success',
-				'Database initialized Successfully',
-				function(){
-					$window.location.reload();
-				},
-				function(){
-					$window.location.reload();
-				}
-			);
-		},function(response){
-			$rootScope.showCustomModal(
-				'Error',
-				response.msg,
-				function(){
-					angular.element('#customModal').modal('hide');
-				},
-				function(){
-				}
-			);
-		});
-	}
-
-	$scope.populate = function(){
-		$http({
-			method: 'GET',
-			url:  $rootScope.baseURL+'db/populate',
-		}).then(function(response){
-			$rootScope.showCustomModal(
-				'Success',
-				'Database populated Successfully',
-				function(){
-					$window.location.reload();
-				},
-				function(){
-					$window.location.reload();
-				}
-			);
-		},function(response){
-			$rootScope.showCustomModal(
-				'Error',
-				response.msg,
-				function(){
-					angular.element('#customModal').modal('hide');
-				},
-				function(){
-				}
-			);
-		});
+	$scope.initialize = function(data){
+		if(!data.hasOwnProperty('is_external')) data.is_external = true;
+		$rootScope.post(
+			$rootScope.baseURL+'db/initdb',
+			data,
+			function(response){
+				$rootScope.showCustomModal(
+					'Success',
+					'Database initialized Successfully',
+					function(){
+						$window.location.reload();
+					},
+					function(){
+						$window.location.reload();
+					}
+				);
+			},
+			function(response){
+				$rootScope.showCustomModal(
+					'Error',
+					response.msg,
+					function(){
+						angular.element('#customModal').modal('hide');
+					},
+					function(){
+					}
+				);
+			}
+		);
 	}
 });

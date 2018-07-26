@@ -16,8 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <h4>Use internal employees table</h4>
                 </div>
                 <div class="card-body">
-                    <button class="btn btn-primary" ng-click="initialize()"> Initialize Database </button>
-                    <button class="btn btn-primary" ng-click="populate()"> Populate Database (Use Carefully) </button>
+                    <button class="btn btn-primary" ng-click="initialize({is_external:false})"> Initialize Database </button>
                 </div>
             </div>
             <div class="w-50 float-right p-0 card">
@@ -25,26 +24,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <h4>Use external</h4>
                 </div>
                 <div class="card-body">
-                    <form ng-submit="initialize">
+                    <form ng-submit="initialize(meta)">
                         <div class="form-group">
                             <label>Employee Table Name:</label>
-                            <input class="form-control" type="text" required/>
+                            <input ng-model="meta.table_name" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">
                             <label>'Employee No.'' Column Name:</label>
-                            <input class="form-control" type="text" required/>
+                            <input ng-model="meta.emp_no" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">
                             <label>'Employee First Name 'Column Name:</label>
-                            <input class="form-control" type="text" required/>
+                            <input ng-model="meta.first_name" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">
                             <label>'Employee Middle Name' Column Name:</label>
-                            <input class="form-control" type="text" required/>
+                            <input ng-model="meta.middle_name" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">
                             <label>'Employee Surname' Column Name:</label>
-                            <input class="form-control" type="text" required/>
+                            <input ng-model="meta.surname" class="form-control" type="text" required/>
                         </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </form>
