@@ -634,8 +634,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					factor.balance.s = 0;
 				}
 				if(factor.balance.v<0){//negative vac balance
+					while(-factor.balance.v > factor.leaves_taken.v) //make sure the negative balance comes only from the current factor
+						factor.balance.v += factor.leaves_taken.v;
 					factor.without_pay.total-=factor.balance.v;
-                    factor.leaves_taken.v += factor.balance.v; //dedcut leaves taken
+                    factor.leaves_taken.v += factor.balance.v; //deduct leaves taken
 					factor.balance.v = 0;
 				}
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
