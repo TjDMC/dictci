@@ -568,7 +568,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		//formatting leaveROL
 		var nLeaveROL = {};
-        var resolvedNegatives = {};
+        var resolvedNegatives = {}; //this stores the negative balances that have been resolved. it is used to prevent negative balances to be resolved again
 		angular.forEach(leaveROL,function(factors,date){
 			var leaveIDs = new Map();
             resolvedNegatives[date] = {v:0,s:0};
@@ -626,10 +626,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			}
             //sort leaves
             leaveIDs = new Map([...leaveIDs.entries()].sort( (a,b)=>(a.valueOf()-b.valueOf()) ));
-            //return;
+
             //format factors for display
 			leaveIDs.forEach(function(factor){
-                var stvFlag = false;
+                var stvFlag = false; //sick to vac
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
                 factor.balance.s += resolvedNegatives[date].s;
                 if(factor.balance.s<0 ){ //negative sick balance. deduct from vac
@@ -646,11 +646,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                     resolvedNegatives[date].v -= factor.balance.v;
 					factor.without_pay.total-=factor.balance.v; //w = 1000
                     factor.leaves_taken.v += factor.balance.v; //deduct leaves taken. t.v = 500
-					factor.balance.v = 0;
+                    if(stvFlag){
+                        resolvedNegatives[date].v += factor.balance.v-factor.leaves_taken.v;
+                    }
+                    factor.balance.v = 0;
 				}
-                if(stvFlag){
-                    resolvedNegatives[date].v -= factor.without_pay.total+factor.leaves_taken.v;
-                }
                 //console.log(resolvedNegatives);
                 //console.log(angular.copy(factor));
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
