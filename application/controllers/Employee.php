@@ -59,7 +59,32 @@ class Employee extends MY_Controller{
 
     }
 
+    public function edit(){
+        $input = $this->input->post('data');
+        if($input === null)
+            redirect(site_url("employee"));
+        $data = parse_custom_post($input);
+        $response = $this->employee_leaves_model->editEmployee($data);
+        if($response!==null){
+            custom_response(false,$response);
+        }else{
+            custom_response(true,"Successfully edited employee info.");
+        }
+    }
+
     public function delete(){
+        $input = $this->input->post('data');
+        if($input === null)
+            redirect(site_url("employee"));
+        $data = parse_custom_post($input);
+        if(!isset($data['emp_no']) || !isset($data['password'])){
+            custom_response(false,'Incomplete input.');
+        }
+        if(!$this->ion_auth->hash_password_db($this->ion_auth->user()->row()->id, $data['password'])){
+            custom_response(false,'Incorrect Password');
+        }
+        $this->employee_leaves_model->deleteEmployee($data['emp_no']);
+        custom_response(true,'Success.');
     }
 
     public function leaveRecords($employeeNo=null){

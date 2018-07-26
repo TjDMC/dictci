@@ -45,6 +45,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <label>'Employee Surname' Column Name:</label>
                             <input ng-model="meta.surname" class="form-control" type="text" required/>
                         </div>
+                        <div class="form-group">
+                            <label>'Employee Employment Date' Column Name:</label>
+                            <input ng-model="meta.first_day_employ" class="form-control" type="text" required/>
+                        </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </form>
                 </div>

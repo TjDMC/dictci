@@ -64,7 +64,7 @@ app.controller('employee_nav',function($scope,$rootScope){
 app.controller('employee_add',function($scope,$rootScope,$window){
     $scope.employee={};
     $scope.add = function(){
-        $scope.employee.first_day = moment($scope.employee.first_day).format('YYYY-MM-DD');
+        $scope.employee.first_day_compute = moment($scope.employee.first_day_compute).format('YYYY-MM-DD');
         $rootScope.post(
             $rootScope.baseURL+"employee/add/",
             $scope.employee,
@@ -116,11 +116,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		}
         //Sort Leaves
         $scope.sortAndFormatLeaves();
-        $scope.employee.first_day = moment($scope.employee.first_day);
+        $scope.employee.first_day_compute = moment($scope.employee.first_day_compute);
     }
 
 	$scope.startDateRender = function($view,$dates){
-        var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
+        var activeDate = $scope.employee.first_day_compute.clone().subtract(1, $view).add(1, 'minute');
 
         $dates.filter(function(date){
             return date.localDateValue() <= activeDate.valueOf();
@@ -145,6 +145,61 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 date_range.minutes = $rootScope.creditsToTime(date_range.credits).minutes;
 			}
         }
+    }
+
+    $scope.editEmployee = function(){
+        $rootScope.post(
+            $rootScope.baseURL+'employee/edit',
+            $scope.clone_employee,
+            function(response){
+                $rootScope.showCustomModal('Success',response.msg,
+                    function(){
+                        $window.location.reload();
+                    },
+                    function(){
+                        $window.location.reload();
+                    }
+                );
+            },
+            function(response){
+                $rootScope.showCustomModal('Error',response.msg,
+                    function(){
+                        angular.element('#customModal').modal('hide');
+                    },
+                    function(){
+                    }
+                );
+            }
+        );
+    }
+    $scope.deleteEmployee = function(){
+        $rootScope.post(
+            $rootScope.baseURL+'employee/delete',
+            {emp_no:$scope.emp_no,password:$scope.password},
+            function(response){
+                $rootScope.showCustomModal('Success',response.msg,
+                    function(){
+                        $window.location.href = $rootScope.baseURL+'employee';
+                    },
+                    function(){
+                        $window.location.href = $rootScope.baseURL+'employee';
+                    }
+                );
+            },
+            function(response){
+                $rootScope.showCustomModal('Error',response.msg,
+                    function(){
+                        angular.element('#customModal').modal('hide');
+                    },
+                    function(){
+                    }
+                );
+            }
+        );
+    }
+    $scope.showEditEmployeeModal = function(){
+        $scope.clone_employee = angular.copy($scope.employee);
+        angular.element('#editEmployeeModal').modal('show');
     }
     //#endregion end Initialization
 
@@ -184,7 +239,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 		var dateEnd = lastDay.clone().endOf('month');
-		var dateStart = $scope.employee.first_day.clone().subtract(1,'days');
+		var dateStart = $scope.employee.first_day_compute.clone().subtract(1,'days');
 		var lwop = 0, wopCtr = 0; // Leave Without Pay
 		var fLeave = 0, spLeave = 0, pLeave = 0; // Forced Leave, Special Priviledge Leave, Parental Leave
 		var monetized = false;
@@ -201,7 +256,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		$scope.totalDays.months = months;
 		$scope.totalDays.days = days;
 
-		dateStart =$scope.employee.first_day.clone();
+		dateStart =$scope.employee.first_day_compute.clone();
 
 		//(Side effect) Storage for computation factors
         $scope.computations.factors=[];
@@ -480,7 +535,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
     $scope.computationsDateRender = function($view,$dates){
         $dates.filter(function(date){
-            return date.localDateValue()<$scope.employee.first_day.clone().startOf('year').valueOf() || date.localDateValue() > $scope.bal_date.valueOf();
+            return date.localDateValue()<$scope.employee.first_day_compute.clone().startOf('year').valueOf() || date.localDateValue() > $scope.bal_date.valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });
@@ -494,13 +549,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         factors:{}
     }
     $scope.initRecordOfLeaves = function(){
-        $scope.rol.start_date = moment().startOf('year').isBefore($scope.employee.first_day,'months') ? $scope.employee.first_day.clone():moment().startOf('year');
+        $scope.rol.start_date = moment().startOf('year').isBefore($scope.employee.first_day_compute,'months') ? $scope.employee.first_day_compute.clone():moment().startOf('year');
         $scope.rol.end_date = $scope.rol.start_date.clone().endOf('year');
         updateROL();
     }
 
     $scope.setAllTime = function(){
-        $scope.rol.start_date = $scope.employee.first_day.clone();
+        $scope.rol.start_date = $scope.employee.first_day_compute.clone();
         $scope.rol.end_date = moment().endOf('year');
         updateROL();
     }
@@ -530,8 +585,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			undertime:{hour:'',min:'',total:''},
 			without_pay:{hour:'',min:'',total:''},
 			balance:{v:$scope.employee.vac_leave_bal.toFixed(3),s:$scope.employee.sick_leave_bal.toFixed(3)},
-			remarks:'bal. as of '+$scope.employee.first_day.format('MMM. DD, YYYY'),
-			date:moment($scope.employee.first_day).format('MMMM YYYY'),//not displayed
+			remarks:'bal. as of '+$scope.employee.first_day_compute.format('MMM. DD, YYYY'),
+			date:moment($scope.employee.first_day_compute).format('MMMM YYYY'),//not displayed
             eoma:true //not displayed
 		};
         for(var i = 0;i<factors.length;i++){
@@ -754,7 +809,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     $scope.rolStartDateRender = function($view,$dates) {
-		var limitDate = $scope.employee.first_day.clone().subtract(1,$view).add(1,'minute');
+		var limitDate = $scope.employee.first_day_compute.clone().subtract(1,$view).add(1,'minute');
         var activeDate = moment($scope.rol.end_date);
 		$dates.filter(function (date) {
 			return date.localDateValue() < limitDate.valueOf() ||  date.localDateValue() > activeDate.valueOf();
@@ -764,7 +819,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 	}
 
 	$scope.rolEndDateRender = function($view, $dates) {
-		var limitDate = $scope.employee.first_day.clone().subtract(1,$view).add(1,'minute');
+		var limitDate = $scope.employee.first_day_compute.clone().subtract(1,$view).add(1,'minute');
         var activeDate = moment($scope.rol.start_date).subtract(1, $view).add(1, 'minute');
 		$dates.filter(function (date) {
 			return date.localDateValue() < limitDate.valueOf() || date.localDateValue() <= activeDate.valueOf();
@@ -842,13 +897,13 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 	$scope.terminalBenefit = function(){
 		var t1 = performance.now();
-		var salary = 100*$scope.employee.salary;
+		var salary = 100*$scope.employee.highest_salary;
 		var balance = $scope.computeBal($scope.terminal_date);
 		var credits = Number(balance[0])*1000 + Number(balance[1])*1000;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-        $scope.terBenefit.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
+        $scope.terBenefit.computation = $scope.employee.highest_salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 1: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
@@ -860,7 +915,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
-		var dateStart = $scope.employee.first_day.clone().subtract(1, 'days');
+		var dateStart = $scope.employee.first_day_compute.clone().subtract(1, 'days');
 		var dateEnd = $scope.terminal_date.clone();
 
 		var years = $scope.totalDays.years;
@@ -902,11 +957,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		var credits = 2*leaveEarned + currV + currS;
 		credits -= creditsUsed;
-		var salary = 100*$scope.employee.salary;
+		var salary = 100*$scope.employee.highest_salary;
 		var constantFactor = 0.0481927;
 
 		var tlb = salary * credits * constantFactor;
-        $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
+        $scope.terBenefit2.computation = $scope.employee.highest_salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
 		var t2 = performance.now();
 		console.log(" Method 2: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
@@ -1191,7 +1246,7 @@ app.controller('employee_leave_records',function($scope,$rootScope,$window){
     }
 
     $scope.startDateRender = function($view,$dates,index){
-        var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
+        var activeDate = $scope.employee.first_day_compute.clone().subtract(1, $view).add(1, 'minute');
 
         $dates.filter(function(date){
             return date.localDateValue() <= activeDate.valueOf();
@@ -1360,7 +1415,7 @@ app.controller('employee_statistics',function($scope,$rootScope){
     $scope.bal_history = {};
 
     $scope.addYear = function(amt){
-        if($scope.year.year()+amt > moment().year() || $scope.year.year()+amt < $scope.employee.first_day.year())
+        if($scope.year.year()+amt > moment().year() || $scope.year.year()+amt < $scope.employee.first_day_compute.year())
             return;
         $scope.year.add(amt,'year');
         var endDate = $scope.year.clone().endOf('year').isSameOrAfter(moment(),'month') ? moment():$scope.year.clone().endOf('year');
@@ -1375,7 +1430,7 @@ app.controller('employee_statistics',function($scope,$rootScope){
 
     $scope.statisticsDateRender = function($view,$dates){
         $dates.filter(function(date){
-            return date.localDateValue()<$scope.employee.first_day.clone().startOf('year').valueOf() || date.localDateValue() > moment().endOf('year').valueOf();
+            return date.localDateValue()<$scope.employee.first_day_compute.clone().startOf('year').valueOf() || date.localDateValue() > moment().endOf('year').valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });
