@@ -568,8 +568,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		//formatting leaveROL
 		var nLeaveROL = {};
+        var resolvedNegatives = {};
 		angular.forEach(leaveROL,function(factors,date){
 			var leaveIDs = new Map();
+            resolvedNegatives[date] = {v:0,s:0};
 			for(var i=0;i<factors.length;i++){ //group together all date ranges with the same leave id
 				var leave_id = factors[i].leave_info.leave_id;
 				var start_date = factors[i].date_range.start_date.clone();
@@ -620,26 +622,37 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                         precise_date:factors[i].date
 					});
 				}
+                //console.log(angular.copy(leaveIDs.get(leave_id)));
 			}
             //sort leaves
             leaveIDs = new Map([...leaveIDs.entries()].sort( (a,b)=>(a.valueOf()-b.valueOf()) ));
-
+            //return;
             //format factors for display
 			leaveIDs.forEach(function(factor){
+                var stvFlag = false;
 				factor.when_taken += ' '+moment(date,'MMMM YYYY').year();
-                if(factor.balance.s<0){ //negative sick balance. deduct from vac
-					factor.balance.v+=factor.balance.s;
-                    factor.leaves_taken.s+=factor.balance.s;
-                    factor.leaves_taken.v-=factor.balance.s; //add to leaves vac taken
-					factor.balance.s = 0;
+                factor.balance.s += resolvedNegatives[date].s;
+                if(factor.balance.s<0 ){ //negative sick balance. deduct from vac
+                    resolvedNegatives[date].s -= factor.balance.s;
+					factor.balance.v+=factor.balance.s; //b.v = -1000
+                    factor.leaves_taken.s+=factor.balance.s; //t.s = 500
+                    factor.leaves_taken.v-=factor.balance.s; //add to leaves vac taken. t.v=1500
+					factor.balance.s = 0; //b.s = 0
+                    stvFlag = true;
 				}
+                factor.balance.v += resolvedNegatives[date].v;
+                //console.log(angular.copy(factor));
 				if(factor.balance.v<0){//negative vac balance
-					while(-factor.balance.v > factor.leaves_taken.v) //make sure the negative balance comes only from the current factor
-						factor.balance.v += factor.leaves_taken.v;
-					factor.without_pay.total-=factor.balance.v;
-                    factor.leaves_taken.v += factor.balance.v; //deduct leaves taken
+                    resolvedNegatives[date].v -= factor.balance.v;
+					factor.without_pay.total-=factor.balance.v; //w = 1000
+                    factor.leaves_taken.v += factor.balance.v; //deduct leaves taken. t.v = 500
 					factor.balance.v = 0;
 				}
+                if(stvFlag){
+                    resolvedNegatives[date].v -= factor.without_pay.total+factor.leaves_taken.v;
+                }
+                //console.log(resolvedNegatives);
+                //console.log(angular.copy(factor));
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
 				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
@@ -652,6 +665,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				factor.without_pay.min = wp_time.minutes;
 				factor.balance.v = (factor.balance.v/1000).toFixed(3);
 				factor.balance.s = (factor.balance.s/1000).toFixed(3);
+
 				addToROL(nLeaveROL,date,factor);
 			});
 		});
