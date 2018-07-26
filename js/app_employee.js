@@ -841,7 +841,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $rootScope.longComputation($scope.terBenefit2,'value',$scope.terminalBenefit2);
     }
 	$scope.terminalBenefit = function(){
-		var t1 = performance.now();
 		var salary = 100*$scope.employee.salary;
 		var balance = $scope.computeBal($scope.terminal_date);
 		var credits = Number(balance[0])*1000 + Number(balance[1])*1000;
@@ -849,13 +848,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		var tlb = salary * credits * constantFactor;
         $scope.terBenefit.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 1: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
 	}
 
 	$scope.terminalBenefit2 = function(){
-		var t1 = performance.now();
 		var balance = $scope.computeBal($scope.terminal_date);
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
@@ -896,8 +892,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		var tlb = salary * credits * constantFactor;
         $scope.terBenefit2.computation = $scope.employee.salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 2: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
 	}
     //#endregion end Terminal Benefit Computations
@@ -950,7 +944,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		if($scope.filter.date.date.clone().isBefore(moment($scope.employee.first_day))){
 			$scope.filter.date.date = moment($scope.employee.first_day);
 		}
-		console.log($scope.filter.date.date);
         for(var i=0;i<$scope.leaves.length;i++){
             var show = false;
             for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
