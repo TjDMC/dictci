@@ -381,7 +381,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <td>{{factor.undertime.min == 0 ? '':factor.undertime.min}}</td>
                                     <td>{{factor.undertime.total == '0.000' ? '':factor.undertime.total}}</td>
                                     <td>{{factor.without_pay.hour == 0 ? '':factor.without_pay.hour}}</td>
-                                    <td>{{factor.without_pay.min == 0 ? '':factor.without_pay.hour}}</td>
+                                    <td>{{factor.without_pay.min == 0 ? '':factor.without_pay.min}}</td>
                                     <td>{{factor.without_pay.total == '0.000' ? '':factor.without_pay.total}}</td>
                                     <td>{{factor.balance.v}}</td>
                                     <td>{{factor.balance.s}}</td>

@@ -622,7 +622,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                         precise_date:factors[i].date
 					});
 				}
-                //console.log(angular.copy(leaveIDs.get(leave_id)));
 			}
             //sort leaves
             leaveIDs = new Map([...leaveIDs.entries()].sort( (a,b)=>(a.valueOf()-b.valueOf()) ));
@@ -634,25 +633,22 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 factor.balance.s += resolvedNegatives[date].s;
                 if(factor.balance.s<0 ){ //negative sick balance. deduct from vac
                     resolvedNegatives[date].s -= factor.balance.s;
-					factor.balance.v+=factor.balance.s; //b.v = -1000
-                    factor.leaves_taken.s+=factor.balance.s; //t.s = 500
-                    factor.leaves_taken.v-=factor.balance.s; //add to leaves vac taken. t.v=1500
-					factor.balance.s = 0; //b.s = 0
+					factor.balance.v+=factor.balance.s;
+                    factor.leaves_taken.s+=factor.balance.s;
+                    factor.leaves_taken.v-=factor.balance.s; //add to leaves vac taken.
+					factor.balance.s = 0;
                     stvFlag = true;
 				}
                 factor.balance.v += resolvedNegatives[date].v;
-                //console.log(angular.copy(factor));
 				if(factor.balance.v<0){//negative vac balance
                     resolvedNegatives[date].v -= factor.balance.v;
-					factor.without_pay.total-=factor.balance.v; //w = 1000
-                    factor.leaves_taken.v += factor.balance.v; //deduct leaves taken. t.v = 500
+					factor.without_pay.total-=factor.balance.v;
+                    factor.leaves_taken.v += factor.balance.v; //deduct leaves taken.
                     if(stvFlag){
                         resolvedNegatives[date].v += factor.balance.v-factor.leaves_taken.v;
                     }
                     factor.balance.v = 0;
 				}
-                //console.log(resolvedNegatives);
-                //console.log(angular.copy(factor));
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
 				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
