@@ -958,6 +958,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 break;
         }
         $scope.filter.date.date = moment($scope.filter.date.date);
+		if($scope.filter.date.date.clone().isBefore(moment($scope.employee.first_day))){
+			$scope.filter.date.date = moment($scope.employee.first_day);
+		}
+		console.log($scope.filter.date.date);
         for(var i=0;i<$scope.leaves.length;i++){
             var show = false;
             for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
