@@ -123,8 +123,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var activeDate = $scope.employee.first_day.clone().subtract(1, $view).add(1, 'minute');
 
         $dates.filter(function(date){
-            return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment().endOf('month');
-            //return date.localDateValue() <= activeDate.valueOf();
+            //return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment().endOf('month');
+            return date.localDateValue() <= activeDate.valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });
@@ -212,7 +212,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		if(dateStart.isSame(dateStart.clone().startOf('month'),'day')){
 
 		}else{
-			fLeave=5000; spLeave=3000; pLeave=7000;
+			fLeave=5000; spLeave=3000; pLeave=7000; monetized=false;
 			var firstMC;
 			if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				firstMC = Math.abs(lastDay.clone().diff(dateStart, 'days'))+1;
@@ -285,8 +285,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				fLeave=5000;
 				spLeave=3000;
 				pLeave=7000;
+				monetized=false;
 			}
-			monetized=false;
 			var mLWOP = 0;	// month's without pays
 			for(var i=leaves.length-1;i>=0;i--){
 				var leave = leaves[i];
@@ -380,6 +380,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				if(leave.date_ranges.length==0){
 					leaves.splice(i,1);
 				}
+			}
+			if(moment(dateStart).month()==11){
+				console.log(fLeave);
+				console.log(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd ));
 			}
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd )){
                 currV = currV-fLeave;
