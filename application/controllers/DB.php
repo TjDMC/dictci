@@ -16,16 +16,19 @@ class DB extends MY_Controller {
 		}
 		$this->load->model("employee_leaves_model");
 		$this->load->model("calendar_model");
-		$this->employee_leaves_model->createTable();
-		$this->calendar_model->createTable();
-	}
 
-	public function populate(){
-		if(!$this->ion_auth->is_admin()){
-			show_error("You don't have permission to access this page.",403);
-			return;
+		$input = $this->input->post('data');
+		$data = parse_custom_post($input);
+		$res = null;
+		if(isset($data['is_external']) && !$data['is_external']){
+			$res = $this->employee_leaves_model->setEmployeeTableMeta();
+		}else{
+			$res = $this->employee_leaves_model->setEmployeeTableMeta($data);
 		}
-		$this->load->model("employee_leaves_model");
-		$this->employee_leaves_model->populate();
+		if($res!=null){
+			custom_response(false,$res);
+		}
+		$this->calendar_model->createTable();
+		custom_response(true,'Success');
 	}
 }

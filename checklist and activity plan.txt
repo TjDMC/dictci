@@ -33,18 +33,19 @@ leave application
 documentation
 
 external employee table
-	-backup employee database (in case integration fails)
+	-backup employee database (in case integration fails) - done July 27, 2018
 		-employee_no
 		-surname
 		-first_name
 		-last_name
-	-employee to employee_leaves connector table
+		-first_day_employ
+	-employee to employee_leaves connector table - done July 27, 2018
 		-employee_no
 		-vac_leave_bal
 		-sick_leave_bal
 		-highest_salary
 		-first_day_compute
-	-migration ui page (asks admin for the employee table and column names at initialization)
+	-migration ui page (asks admin for the employee table and column names at initialization) - done July 27, 2018
 
 infographics
 	-charts - done July 10, 2018

@@ -9,9 +9,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="card-body">
         <div class="alert alert-dark">
             <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
-            <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
-            <p><span class="font-weight-bold">First Day:</span> {{employee.first_day.format('MMMM DD, YYYY')}}</p>
+            <p><span class="font-weight-bold">Name:</span> {{employee.surname}}, {{employee.first_name}} {{employee.middle_name}}</p>
+            <p><span class="font-weight-bold">Employement Date:</span> {{employee.first_day_employ.format('MMMM DD, YYYY')}}</p>
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
+            <p><span class="font-weight-bold">Computation Date:</span> {{employee.first_day_compute.format('MMMM DD, YYYY')}}</p>
+            <div class="text-right">
+                <button class="btn btn-primary" ng-click="showEditEmployeeModal()" ng-if="<?=isset($editable)?$editable:'true'?>">Edit Employee Info</button>
+            </div>
         </div>
 
         <div class="form-group text-center">
@@ -104,6 +108,111 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 
+    <div class="modal fade" id="editEmployeeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Employee Info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="editEmployee()">
+                        <div class="form-group">
+                            <label>Employee No: </label>
+                            <input class="form-control" type="text" ng-model="clone_employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name: </label>
+                            <input class="form-control" type="text" ng-model="clone_employee.surname" required>
+                        </div>
+                        <div class="form-group">
+                            <label>First Name: </label>
+                            <input class="form-control" type="text" ng-model="clone_employee.first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Middle Name: </label>
+                            <input class="form-control" type="text" ng-model="clone_employee.middle_name">
+                        </div>
+                        <div class="dropdown form-group" ng-init="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)">
+                            <label>Employment Date:</label>
+                            <a id="firstdayemploy" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                <div class="input-group">
+                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="clone_employee.first_day_employ">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <datetimepicker data-on-set-time="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)" data-ng-model="clone_employee.first_day_employ" data-datetimepicker-config="{ dropdownSelector:'#firstdayemploy',minView:'day' }"></datetimepicker>
+                            </ul>
+                        </div>
+                        <div class="form-group">
+                            <label>Initial Vacation Leave Credit Balance: </label>
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.vac_leave_bal">
+                        </div>
+                        <div class="form-group">
+                            <label>Initial Sick Leave Credit Balance: </label>
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.sick_leave_bal">
+                        </div>
+                        <div class="form-group">
+                            <label>Highest Salary: </label>
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.highest_salary">
+                        </div>
+                        <div class="dropdown form-group" ng-init="clone_employee.first_day_compute = moment(clone_employee.first_day_compute)">
+                            <label>Computation Date:</label>
+                            <a id="firstdaycompute" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                <div class="input-group">
+                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="clone_employee.first_day_compute">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <datetimepicker data-on-set-time="clone_employee.first_day_compute = moment(clone_employee.first_day_compute)"  data-ng-model="clone_employee.first_day_compute" data-datetimepicker-config="{ dropdownSelector:'#firstdaycompute',minView:'day' }"></datetimepicker>
+                            </ul>
+                        </div>
+                        <div class="text-center">
+                            <button ng-disabled="busy" class="btn btn-primary" type="Submit">Save Changes</button>
+                            <button ng-disabled="busy" class="btn btn-danger" data-toggle="modal" type="button" data-target="#confirmDeleteModal">Delete Employee Records</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Warning</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form ng-submit="deleteEmployee()">
+                        <div class="form-group">
+                            <label>Enter Password:</label>
+                            <input class="form-control" ng-model="password" type="text" required/>
+                        </div>
+                        <button class="btn btn-block btn-danger">Confirm</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="computeBalModal" tabindex="-1" role="dialog" aria-labelledby="computeBalModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:1000px" role="document">
             <div class="modal-content">
@@ -133,7 +242,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div class="text-center">
                         <div class="btn btn-group">
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day,'year')" ng-click="computations.year_filter.add(-1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day_compute,'year')" ng-click="computations.year_filter.add(-1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
                             <div class="btn-group">
                                 <a  class="btn btn-outline-primary dropdown-toggle" id="computationsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{computations.year_filter.year()}}</a>
                                 <ul class="dropdown-menu" role="menu">
@@ -194,7 +303,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
                     <div class="btn btn-group mx-auto">
-                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= employee.first_day.year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= employee.first_day_compute.year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
                         <div class="btn-group">
                             <a  class="btn btn-outline-primary dropdown-toggle" id="statisticsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{year.year()}}</a>
                             <ul class="dropdown-menu" role="menu">
@@ -293,10 +402,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             			</div>
             			<div>
             				<div style="width:auto;float:left">
-            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_name}} {{employee.middle_name ? employee.middle_name.charAt(0)+".":''}} {{employee.last_name}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_name}} {{employee.middle_name ? employee.middle_name.charAt(0)+".":''}} {{employee.surname}}&nbsp;&nbsp;</span></p>
             				</div>
             				<div style="width:auto;float:right">
-            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day_employ.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
                         <style>
@@ -443,7 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-on-set-time="monetize.date = moment(monetize.date)" data-before-render="startDateRender($view,$dates)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-on-set-time="monetize.date = moment(monetize.date)" data-before-render="startDateRender($view,$dates,true)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
                             </ul>
                         </div>
                         <div class="form-group">
@@ -486,7 +595,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <th>Leave Without Pay</th>
                         </tr>
                         <tr>
-                            <td>{{employee.first_day.format('MMMM DD, YYYY')}}</td>
+                            <td>{{employee.first_day_employ.format('MMMM DD, YYYY')}}</td>
                             <td>
                                 <div class=" dropdown">
                                     <a id="terminationDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
@@ -511,10 +620,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <tr>
                             <th>Credits Earned (Vac:Sick)</th>
                             <th>Credits Enjoyed (Vac:Sick)</th>
+                            <th>Highest Salary</th>
                         </tr>
                         <tr>
                             <td>{{cEarned.v}} : {{cEarned.s}}</td>
                             <td>{{cEnjoyed.v}} : {{cEnjoyed.s}}</td>
+                            <td>{{employee.highest_salary}}</td>
                         </tr>
                     </table>
 

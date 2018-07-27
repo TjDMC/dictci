@@ -65,21 +65,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<span class="nav-link-text">Home</span>
 					</a>
 				</li>
-				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-					<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Employees">
+					<a class="nav-link" href="<?= base_url().'employee' ?>">
 						<i class="fas fa-fw fa-user-tie"></i>
 						<span class="nav-link-text">Employees</span>
 					</a>
-					<ul class="sidenav-second-level collapse" id="collapseComponents">
-						<li>
-							<a href="<?= base_url()?>employee">View List</a>
-						</li>
-						<li>
-							<a href="<?= base_url()?>employee/add">Add Employee</a>
-						</li>
-					</ul>
 				</li>
-				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
+				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Calendar">
 					<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
 						<i class="fas fa-fw fa-calendar-alt"></i>
 						<span class="nav-link-text">Calendar</span>

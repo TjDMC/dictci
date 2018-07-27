@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h1>Employees</h1>
     </div>
     <div class="card-body p-2 p-lg-5">
-        <div class="form-group">
+        <div class="form-group" ng-if="<?=isset($editable)?$editable:'true'?>">
             <a href="<?=base_url()."employee/add"?>" class="btn btn-primary">Add Employee</a>
         </div>
         <div ng-init='employeeArray =employeesToArray(<?=$employees?>)'>

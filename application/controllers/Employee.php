@@ -11,7 +11,8 @@ class Employee extends MY_Controller{
 
     public function body(){
         $this->load->view("employee/navigation",array(
-            "employees"=>json_encode($this->employee_leaves_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT)
+            "employees"=>json_encode($this->employee_leaves_model->getEmployees(),JSON_HEX_APOS|JSON_HEX_QUOT),
+            "editable"=>$this->canEditEmployees() ? 'true':'false'
         ));
     }
 
@@ -25,21 +26,23 @@ class Employee extends MY_Controller{
             show_404();
         }
         $leaves = $this->employee_leaves_model->getLeaves($employeeNo);
-
 		$events = $this->calendar_model->getEvents();
+        $editable = $this->canEditEmployees();
 
         $this->html(
-            function() use ($employee,$leaves,$events){
+            function() use ($employee,$leaves,$events,$editable){
                 $this->load->view("employee/display",array(
                     "employee"=>json_encode($employee,JSON_HEX_APOS|JSON_HEX_QUOT),
                     "leaves"=>json_encode($leaves,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK),
-                    "events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK)
+                    "events"=>json_encode($events,JSON_HEX_APOS|JSON_HEX_QUOT|JSON_NUMERIC_CHECK),
+                    "editable"=>$editable ? 'true':'false'
                 ));
             }
         );
     }
 
     public function add(){
+        if(!$this->canEditEmployees()) return;
         $input = $this->input->post('data');
         if($input === null){
             $this->html(
@@ -59,7 +62,35 @@ class Employee extends MY_Controller{
 
     }
 
+    public function edit(){
+        if(!$this->canEditEmployees()) return;
+        $input = $this->input->post('data');
+        if($input === null)
+            redirect(site_url("employee"));
+        $data = parse_custom_post($input);
+        $response = $this->employee_leaves_model->editEmployee($data);
+        if($response!==null){
+            custom_response(false,$response);
+        }else{
+            custom_response(true,"Successfully edited employee info.");
+        }
+    }
+
     public function delete(){
+        if(!$this->canEditEmployees()) return;
+        $input = $this->input->post('data');
+        if($input === null)
+            redirect(site_url("employee"));
+        $data = parse_custom_post($input);
+        log_message('debug','teeest'.print_r($data,true));
+        if(!isset($data['emp_no']) || !isset($data['password'])){
+            custom_response(false,'Incomplete input.');
+        }
+        if(!$this->ion_auth->hash_password_db($this->ion_auth->user()->row()->id, $data['password'])){
+            custom_response(false,'Incorrect Password');
+        }
+        $this->employee_leaves_model->deleteEmployee($data['emp_no']);
+        custom_response(true,'Success.');
     }
 
     public function leaveRecords($employeeNo=null){
@@ -111,6 +142,10 @@ class Employee extends MY_Controller{
         $data = parse_custom_post($this->input->post('data'));
         $this->employee_leaves_model->deleteLeave($data);
         custom_response(true,'Leave record deleted');
+    }
+
+    public function canEditEmployees(){
+        return $this->employee_leaves_model->getEmployeeTableMeta()['is_external'] ? $this->config->item('employee_editable_if_external') : true;
     }
 
 }

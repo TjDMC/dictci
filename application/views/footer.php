@@ -4,10 +4,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <footer class="sticky-footer none-printable">
         <div class="container">
             <div class="text-center">
-                <small>Copyright © 2018. All Rights Reserved</small>
+                <small>Copyright © 2018. All Rights Reserved.</small>
+                <small><a href="#" data-toggle="modal" data-target="#contactUsModal">Contact Us</a></small>
             </div>
         </div>
     </footer>
+</div>
+
+<div class="modal fade" id="contactUsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Us</h5>
+                <button type="button" class="close" data-dismiss="modal" ng-click="customModalData.action.close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-3">
+                <p class="text-center">tadogup1@up.edu.ph</p>
+                <p class="text-center">pdnaraval@up.edu.ph</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" ng-click="customModalData.action.close()" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true" ng-blur="customModalData.action.close()">
