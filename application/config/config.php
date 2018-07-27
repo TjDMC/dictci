@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// determines whether the employee table is editable if it is from an external source
+$config['employee_editable_if_external'] = false;
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL

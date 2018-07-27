@@ -121,12 +121,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.employee.first_day_employ = moment($scope.employee.first_day_employ);
     }
 
-	$scope.startDateRender = function($view,$dates){
+	$scope.startDateRender = function($view,$dates,monet = false){
         var activeDate = $scope.employee.first_day_compute.clone().subtract(1, $view).add(1, 'minute');
 
         $dates.filter(function(date){
-            return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment().endOf('month');
-            //return date.localDateValue() <= activeDate.valueOf();
+            return monet ? date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment().endOf('month') : date.localDateValue() <= activeDate.valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });

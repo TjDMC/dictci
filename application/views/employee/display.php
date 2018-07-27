@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
             <p><span class="font-weight-bold">Computation Date:</span> {{employee.first_day_compute.format('MMMM DD, YYYY')}}</p>
             <div class="text-right">
-                <button class="btn btn-primary" ng-click="showEditEmployeeModal()">Edit Employee Info</button>
+                <button class="btn btn-primary" ng-click="showEditEmployeeModal()" ng-if="<?=isset($editable)?$editable:'true'?>">Edit Employee Info</button>
             </div>
         </div>
 
@@ -552,7 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                             </a>
                             <ul class="dropdown-menu">
-                                <datetimepicker data-on-set-time="monetize.date = moment(monetize.date)" data-before-render="startDateRender($view,$dates)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
+                                <datetimepicker data-on-set-time="monetize.date = moment(monetize.date)" data-before-render="startDateRender($view,$dates,true)" data-ng-model="monetize.date" data-datetimepicker-config="{ dropdownSelector:'#monetizationDate',minView:'day' }"></datetimepicker>
                             </ul>
                         </div>
                         <div class="form-group">
