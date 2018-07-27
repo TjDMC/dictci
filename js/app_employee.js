@@ -855,7 +855,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		//		"who have accumulated fifteen (15) days of vacation leave credits shall be allowed to monetize a minimum of ten (10) days"
 		if(balance[0]<15){
 			$rootScope.showCustomModal('Error','The employee should have accumulated at least 15 vacation leave credits before monetization of leave credits is allowed.',function(){angular.element('#customModal').modal('hide');},function(){});
-			//return;
+			return;
 		}
 		if($scope.monetize.credits<10){
 			$rootScope.showCustomModal('Error','At least 10 vacation leaves should be monetized.',function(){angular.element('#customModal').modal('hide');},function(){});
