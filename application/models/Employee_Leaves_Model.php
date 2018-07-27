@@ -181,7 +181,7 @@ class Employee_Leaves_Model extends MY_Model{
         }
 
         if(!$this->db->table_exists(DB_PREFIX.'employee_leaves')){
-            $this->dbforge->add_field('emp_no char(7) not null');
+            $this->dbforge->add_field('emp_no char(7) not null unique');
             $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("first_day_compute date not null");
