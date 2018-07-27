@@ -190,8 +190,10 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->create_table(DB_PREFIX.'employee_leaves',true);
         }else{
             //update foreign keys
+            $this->db->db_debug = false;
             $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." drop foreign key emp_no_fk_1");
             $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." add constraint emp_no_fk_1 foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
+            $this->db->db_debug = true;
         }
 
         //import employees
@@ -215,8 +217,10 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->create_table(DB_PREFIX."leaves",true);
         }else{
             //update foreign keys
+            $this->db->db_debug = false;
             $this->db->query("alter table ".DB_PREFIX.'leaves'." drop foreign key emp_no_fk_2");
             $this->db->query("alter table ".DB_PREFIX.'leaves'." add constraint emp_no_fk_2 foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
+            $this->db->db_debug = true;
         }
 
 		if(!$this->db->table_exists(DB_PREFIX."leave_date_range")){
