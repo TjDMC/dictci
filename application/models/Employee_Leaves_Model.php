@@ -199,8 +199,10 @@ class Employee_Leaves_Model extends MY_Model{
         //import employees
         $employees = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
         foreach($employees as $e){
-            if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1)
-                $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('YYYY-MM-DD')));
+            if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1){
+                log_message('debug',date('YYYY-MM-DD'));
+                $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('Y-m-d')));
+            }
         }
 
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
@@ -272,6 +274,11 @@ class Employee_Leaves_Model extends MY_Model{
                     }
                 }
             }
+
+            if(count($this->db->query("SHOW INDEXES FROM $checker[table_name] WHERE Column_name='$checker[emp_no]' AND NOT Non_unique")->result_array())<1){ //check for emp_no index
+                return 'Employee Number must be an index of '.$checker['table_name'];
+            }
+
             $tableMeta = $this->db->query("show table status like '$checker[table_name]'")->result_array()[0]; //check for proper collation
             if(isset($tableMeta['Collation']) && $tableMeta['Collation']!=$this->db->dbcollat){
                 return 'Table must be "'.$this->db->dbcollat.'" (collation).';
