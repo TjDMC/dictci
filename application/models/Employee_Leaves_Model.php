@@ -384,24 +384,33 @@ class Employee_Leaves_Model extends MY_Model{
         $this->db->insert(DB_PREFIX.'employee_leaves',$checker2);
     }
 
-    public function editEmployee($employeeData){
+    public function editEmployee($employeeData,$isEditable){
         $oldEmpNo = '';
         if(!isset($employeeData['old_emp_no']))
             return 'Missing input';
         $oldEmpNo = $employeeData['old_emp_no'];
 
-        $checker1 = $this->checkFields($this->employeeFields,$employeeData);
-        if(!is_array($checker1)){
-            return $checker1;
+        if($isEditable){
+            $checker1 = $this->checkFields($this->employeeFields,$employeeData);
+            if(!is_array($checker1)){
+                return $checker1;
+            }
         }
         $checker2 = $this->checkFields($this->employeeLeavesFields,$employeeData);
         if(!is_array($checker2)){
             return $checker2;
         }
         $m = $this->getEmployeeTableMeta();
-        $checker1 = $this->replaceEmployeeFieldsIn($checker1);
-        $this->db->where($m['emp_no'],$oldEmpNo);
-        $this->db->update($m['table_name'],$checker1);
+        //check for existence of new emp_no
+        if(isset($checker1['emp_no']) && $oldEmpNo!=$checker1['emp_no']){
+            if(count($this->db->select($m['emp_no'])->where($m['emp_no'],$checker1['emp_no'])->get($m['table_name'])->result_array())>0) return 'Employee Number is already being used.';
+        }
+
+        if($isEditable){
+            $checker1 = $this->replaceEmployeeFieldsIn($checker1);
+            $this->db->where($m['emp_no'],$oldEmpNo);
+            $this->db->update($m['table_name'],$checker1);
+        }
 
         $this->db->where('emp_no',$checker2['emp_no']);
         $this->db->update(DB_PREFIX.'employee_leaves',$checker2);
@@ -509,7 +518,7 @@ class Employee_Leaves_Model extends MY_Model{
         $m = $this->getEmployeeTableMeta();
         //check for existence of employee in employee_leaves
         //make new records if employee does not exist
-        $employee = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
+        $employee = $this->db->select($m['emp_no'])->where($m['emp_no'],$employeeNo)->get($m['table_name'])->result_array();
         if(count($employee)<1){
             return null;
         }
