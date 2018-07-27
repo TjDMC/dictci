@@ -150,6 +150,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     $scope.editEmployee = function(){
+        $scope.clone_employee.old_emp_no = $scope.employee.emp_no;
         $scope.clone_employee.first_day_employ = moment($scope.clone_employee.first_day_employ).format('YYYY-MM-DD');
         $scope.clone_employee.first_day_compute = moment($scope.clone_employee.first_day_compute).format('YYYY-MM-DD');
         $rootScope.post(

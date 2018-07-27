@@ -376,6 +376,11 @@ class Employee_Leaves_Model extends MY_Model{
     }
 
     public function editEmployee($employeeData){
+        $oldEmpNo = '';
+        if(!isset($employeeData['old_emp_no']))
+            return 'Missing input';
+        $oldEmpNo = $employeeData['old_emp_no'];
+
         $checker1 = $this->checkFields($this->employeeFields,$employeeData);
         if(!is_array($checker1)){
             return $checker1;
@@ -386,7 +391,7 @@ class Employee_Leaves_Model extends MY_Model{
         }
         $m = $this->getEmployeeTableMeta();
         $checker1 = $this->replaceEmployeeFieldsIn($checker1);
-        $this->db->where($m['emp_no'],$checker1['emp_no']);
+        $this->db->where($m['emp_no'],$oldEmpNo);
         $this->db->update($m['table_name'],$checker1);
 
         $this->db->where('emp_no',$checker2['emp_no']);

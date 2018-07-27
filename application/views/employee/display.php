@@ -120,6 +120,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">
                     <form ng-submit="editEmployee()">
                         <div class="form-group">
+                            <label>Employee No: </label>
+                            <input class="form-control" type="text" ng-model="clone_employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
+                        </div>
+                        <div class="form-group">
                             <label>Last Name: </label>
                             <input class="form-control" type="text" ng-model="clone_employee.surname" required>
                         </div>
