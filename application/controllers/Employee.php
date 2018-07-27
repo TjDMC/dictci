@@ -63,12 +63,11 @@ class Employee extends MY_Controller{
     }
 
     public function edit(){
-        if(!$this->canEditEmployees()) return;
         $input = $this->input->post('data');
         if($input === null)
             redirect(site_url("employee"));
         $data = parse_custom_post($input);
-        $response = $this->employee_leaves_model->editEmployee($data);
+        $response = $this->employee_leaves_model->editEmployee($data,$this->canEditEmployees());
         if($response!==null){
             custom_response(false,$response);
         }else{
