@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
             <p><span class="font-weight-bold">Computation Date:</span> {{employee.first_day_compute.format('MMMM DD, YYYY')}}</p>
             <div class="text-right">
-                <button class="btn btn-primary" ng-click="showEditEmployeeModal()" ng-if="<?=isset($editable)?$editable:'true'?>">Edit Employee Info</button>
+                <button class="btn btn-primary" ng-click="showEditEmployeeModal()">Edit Employee Info</button>
             </div>
         </div>
 
@@ -119,35 +119,37 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body">
                     <form ng-submit="editEmployee()">
-                        <div class="form-group">
-                            <label>Employee No: </label>
-                            <input class="form-control" type="text" ng-model="clone_employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name: </label>
-                            <input class="form-control" type="text" ng-model="clone_employee.surname" required>
-                        </div>
-                        <div class="form-group">
-                            <label>First Name: </label>
-                            <input class="form-control" type="text" ng-model="clone_employee.first_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Middle Name: </label>
-                            <input class="form-control" type="text" ng-model="clone_employee.middle_name">
-                        </div>
-                        <div class="dropdown form-group" ng-init="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)">
-                            <label>Employment Date:</label>
-                            <a id="firstdayemploy" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
-                                <div class="input-group">
-                                    <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="clone_employee.first_day_employ">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        <div ng-if="<?= isset($editable) ? $editable:'true'?>">
+                            <div class="form-group">
+                                <label>Employee No: </label>
+                                <input class="form-control" type="text" ng-model="clone_employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name: </label>
+                                <input class="form-control" type="text" ng-model="clone_employee.surname" required>
+                            </div>
+                            <div class="form-group">
+                                <label>First Name: </label>
+                                <input class="form-control" type="text" ng-model="clone_employee.first_name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name: </label>
+                                <input class="form-control" type="text" ng-model="clone_employee.middle_name">
+                            </div>
+                            <div class="dropdown form-group" ng-init="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)">
+                                <label>Employment Date:</label>
+                                <a id="firstdayemploy" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
+                                    <div class="input-group">
+                                        <input data-date-time-input="MMMM DD, YYYY" class="form-control" type="text" data-ng-model="clone_employee.first_day_employ">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <datetimepicker data-on-set-time="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)" data-ng-model="clone_employee.first_day_employ" data-datetimepicker-config="{ dropdownSelector:'#firstdayemploy',minView:'day' }"></datetimepicker>
-                            </ul>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <datetimepicker data-on-set-time="clone_employee.first_day_employ = moment(clone_employee.first_day_employ)" data-ng-model="clone_employee.first_day_employ" data-datetimepicker-config="{ dropdownSelector:'#firstdayemploy',minView:'day' }"></datetimepicker>
+                                </ul>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Initial Vacation Leave Credit Balance: </label>

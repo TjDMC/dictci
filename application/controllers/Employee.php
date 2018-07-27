@@ -63,11 +63,17 @@ class Employee extends MY_Controller{
     }
 
     public function edit(){
-        if(!$this->canEditEmployees()) return;
         $input = $this->input->post('data');
         if($input === null)
             redirect(site_url("employee"));
         $data = parse_custom_post($input);
+        if(!$this->canEditEmployees()){ //if not editable, remove first_name,last_name,middle_name,employement date, and emp_no
+            unset($data['first_name']);
+            unset($data['surname']);
+            unset($data['middle_name']);
+            unset($data['first_day_employ']);
+            unset($data['emp_no']);
+        }
         $response = $this->employee_leaves_model->editEmployee($data);
         if($response!==null){
             custom_response(false,$response);

@@ -182,10 +182,10 @@ class Employee_Leaves_Model extends MY_Model{
 
         if(!$this->db->table_exists(DB_PREFIX.'employee_leaves')){
             $this->dbforge->add_field('emp_no char(7) not null unique');
-            $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
-            $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
+            $this->dbforge->add_field("vac_leave_bal decimal(7,3) not null default 0");
+            $this->dbforge->add_field("sick_leave_bal decimal(7,3) not null default 0");
             $this->dbforge->add_field("first_day_compute date not null");
-            $this->dbforge->add_field("highest_salary decimal(6,3) not null default 0");
+            $this->dbforge->add_field("highest_salary decimal(10,3) not null default 0");
             $this->dbforge->add_field("constraint emp_no_fk_1 foreign key (emp_no) references ".$m['table_name']."(".$m['emp_no'].") on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX.'employee_leaves',true);
         }else{
@@ -194,14 +194,6 @@ class Employee_Leaves_Model extends MY_Model{
             $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." drop foreign key emp_no_fk_1");
             $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." add constraint emp_no_fk_1 foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
             $this->db->db_debug = true;
-        }
-
-        //import employees
-        $employees = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
-        foreach($employees as $e){
-            if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1){
-                $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('Y-m-d')));
-            }
         }
 
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
@@ -515,6 +507,16 @@ class Employee_Leaves_Model extends MY_Model{
 
     public function getEmployee($employeeNo){
         $m = $this->getEmployeeTableMeta();
+        //check for existence of employee in employee_leaves
+        //make new records if employee does not exist
+        $employee = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
+        if(count($employee)<1){
+            return null;
+        }
+        if(count($this->db->where('emp_no',$employeeNo)->get(DB_PREFIX.'employee_leaves')->result_array())<1){
+            $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$employeeNo,'first_day_compute'=>date('Y-m-d')));
+        }
+
         $this->db->select($this->getEmployeeSelectFields().','.DB_PREFIX.'employee_leaves.*');
         $this->db->from($m['table_name']);
         $this->db->join(DB_PREFIX.'employee_leaves',DB_PREFIX.'employee_leaves.emp_no = '."$m[table_name].$m[emp_no]");
@@ -530,7 +532,16 @@ class Employee_Leaves_Model extends MY_Model{
     }
 
     public function getEmployees(){
+
         $m = $this->getEmployeeTableMeta();
+        //check for existence of employees in employee_leaves
+        //make new records if empoyees do not exist
+        $employees = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
+        foreach($employees as $e){
+            if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1){
+                $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('Y-m-d')));
+            }
+        }
         $this->db->select($this->getEmployeeSelectFields().','.DB_PREFIX.'employee_leaves.*');
         $this->db->from($m['table_name']);
         $this->db->join(DB_PREFIX.'employee_leaves',DB_PREFIX.'employee_leaves.emp_no = '."$m[table_name].$m[emp_no]");
