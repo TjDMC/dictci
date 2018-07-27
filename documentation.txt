@@ -52,7 +52,7 @@ Models: (/application/models/)
 
 Views: (/application/views/)
 Most of the views are backed by AngularJS. While the backend is in charge of storing data, AngularJS does the computations and formatting of these data.
--header.php (ng-app directive is set here, uses the 'initializer' controller), footer.php, breadcrumbs.php
+-header.php (ng-app directive is set here, uses the 'initializer' and 'login' controller), footer.php, breadcrumbs.php
     -respectively displays the header, footer, and breadcrumbs of the website.
 -welcome_message.php
     -displays the homepage of the website (The one with two big buttons-Employee and Calendar)
@@ -81,7 +81,7 @@ AngularJS-Related Files and Controllers: (It is imperative that the reader knows
         -Global Variables
             -dateFormat - refers to the date format used for displaying date data.
             -busy - refers to whether the website is loading or handling some computation.
-            -customModalData - A global modal is defined in the application for displaying dialog to the user. customModalData is the object the contains the data of this modal.
+            -customModalData - A global modal is defined in the application for displaying dialog to the user. customModalData is the object that contains the data of this modal.
             -minuteCreditTable and hourCreditTable - stores time-credit equivalence as defined by Omnibus. Minute to credit equivalence cannot be computed because it sometimes does not equal the Omnibus defined equivalence. Hour to credit equivalence table is defined for consistency.
             -moment - A global variable for Moment.js. This is defined so that Moment.js functions can be used in HTML.
         -Global Functions
@@ -98,6 +98,12 @@ AngularJS-Related Files and Controllers: (It is imperative that the reader knows
                 -converts leave credits ($credits) to time. Returns an object containing the fields 'hours', and 'minutes'
             -timeToCredits($hours,$minutes)
                 -converts $hours and $minutes to leave credits.
-
+    -Controllers:
+        -initializer
+            -adds the base URL of the site to the root scope, as well as the csrf token name and hash. (The csrf token name and hash are used for the Cross-Site Request Forgery protection of the site)
+        -login
+            - handles the loggin in of the user.
+        -admin
+            - handles the logging in and out of the user.
 
 Communication between CodeIgniter and AngularJS.
