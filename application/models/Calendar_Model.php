@@ -152,7 +152,7 @@ class Calendar_Model extends MY_Model
 		$output['leaves']=array();
 		foreach($leaveIDs as $leaveID){
 			$m = $this->employee_leaves_model->getEmployeeTableMeta();
-			$this->db->select($this->employee_leaves_model->getEmployeeSelectFields());
+			$this->db->select($this->employee_leaves_model->getEmployeeSelectFields().','.DB_PREFIX.'employee_leaves.*');
 			$this->db->from(DB_PREFIX.'leaves');
 			$this->db->join($m['table_name'],DB_PREFIX."leaves.emp_no = $m[table_name].$m[emp_no]");
 			$this->db->join(DB_PREFIX.'employee_leaves',"$m[table_name].$m[emp_no] = ".DB_PREFIX."employee_leaves.emp_no");

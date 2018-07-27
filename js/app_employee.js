@@ -118,6 +118,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         //Sort Leaves
         $scope.sortAndFormatLeaves();
         $scope.employee.first_day_compute = moment($scope.employee.first_day_compute);
+        $scope.employee.first_day_employ = moment($scope.employee.first_day_employ);
     }
 
 	$scope.startDateRender = function($view,$dates){

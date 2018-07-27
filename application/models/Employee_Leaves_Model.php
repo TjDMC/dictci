@@ -312,7 +312,7 @@ class Employee_Leaves_Model extends MY_Model{
         return $data;
     }
 
-    protected function replaceEmployeeFieldsOut($data){ //replace employee fields that's coming out of the backend
+    public function replaceEmployeeFieldsOut($data){ //replace employee fields that's coming out of the backend
         $m = $this->getEmployeeTableMeta();
         foreach($data as $i=>$v){
             switch($i){
