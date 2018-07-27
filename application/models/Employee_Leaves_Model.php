@@ -194,6 +194,13 @@ class Employee_Leaves_Model extends MY_Model{
             $this->db->query("alter table ".DB_PREFIX.'employee_leaves'." add constraint emp_no_fk_1 foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
         }
 
+        //import employees
+        $employees = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
+        foreach($employees as $e){
+            if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1)
+                $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('YYYY-MM-DD')));
+        }
+
         if(!$this->db->table_exists(DB_PREFIX."leaves")){
             $this->dbforge->add_field("flag int not null default 0");
             $this->dbforge->add_field("leave_id int unsigned not null auto_increment unique");
