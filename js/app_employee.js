@@ -849,7 +849,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         //Validation code goes here
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
 		var balance = $scope.computeBal($scope.monetize.date);
-		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>balance[0]+balance[1]-5 ) ){
+		
+		//	As per MC 41, s. 1998: Sec 22
+		
+		//		"who have accumulated fifteen (15) days of vacation leave credits shall be allowed to monetize a minimum of ten (10) days"
+		if(balance[0]<15){
+			$rootScope.showCustomModal('Error','The employee should have accumulated at least 15 vacation leave credits before monetization of leave credits is allowed.',function(){angular.element('#customModal').modal('hide');},function(){});
+			//return;
+		}
+		if($scope.monetize.credits<10){
+			$rootScope.showCustomModal('Error','At least 10 vacation leaves should be monetized.',function(){angular.element('#customModal').modal('hide');},function(){});
+			return;
+		}
+		
+		//		At least 5 days is retained after monetization
+		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>Number(balance[0])+Number(balance[1])-5 ) ){
 			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
