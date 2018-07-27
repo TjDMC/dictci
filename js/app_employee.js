@@ -124,7 +124,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         var activeDate = $scope.employee.first_day_compute.clone().subtract(1, $view).add(1, 'minute');
 
         $dates.filter(function(date){
-            return date.localDateValue() <= activeDate.valueOf();
+            return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() > moment().endOf('month');
+            //return date.localDateValue() <= activeDate.valueOf();
         }).forEach(function(date){
             date.selectable = false;
         });
@@ -899,7 +900,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $rootScope.longComputation($scope.terBenefit2,'value',$scope.terminalBenefit2);
     }
 	$scope.terminalBenefit = function(){
-		var t1 = performance.now();
+
 		var salary = 100*$scope.employee.highest_salary;
 		var balance = $scope.computeBal($scope.terminal_date);
 		var credits = Number(balance[0])*1000 + Number(balance[1])*1000;
@@ -907,13 +908,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		var tlb = salary * credits * constantFactor;
         $scope.terBenefit.computation = $scope.employee.highest_salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 1: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
 	}
 
 	$scope.terminalBenefit2 = function(){
-		var t1 = performance.now();
 		var balance = $scope.computeBal($scope.terminal_date);
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
@@ -940,22 +938,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		var currV = Math.floor(Number($scope.employee.vac_leave_bal)*1000);
 		var currS = Math.floor(Number($scope.employee.sick_leave_bal)*1000);
 
-		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)];
+		var leaveEarned = 15000*years + 1250*months + creditByHalfDay[Math.floor(2*days)] + Math.floor(((days*1000)%500)*1.25/30);
 		//	#credits_earned
 
 		//	Credits Used
 		var creditsUsed = ($scope.cEnjoyed.v + $scope.cEnjoyed.s)*1000;
-		/*var creditsUsed = 0;
-		for(var i=0;i<$scope.leaves.length;i++){
-			var leave = $scope.leaves[i];
-			for(var j=0;j<leave.date_ranges.length;j++){
-				var range = leave.date_ranges[j];
-				if(!leave.info.is_without_pay && moment(range.end_date,$rootScope.dateFormat).isSameOrBefore(moment($scope.terminal_date,$rootScope.dateFormat))){
-					creditsUsed += range.hours*125 + range.minutes*25/12;
-				}
-			}
-		}
-		creditsUsed -= $scope.lwop[1]*1000;*/
 		//	#credits_used
 
 		var credits = 2*leaveEarned + currV + currS;
@@ -965,8 +952,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		var tlb = salary * credits * constantFactor;
         $scope.terBenefit2.computation = $scope.employee.highest_salary+" * "+credits/1000+" * "+constantFactor+" = "+(tlb/100000).toFixed(2);
-		var t2 = performance.now();
-		console.log(" Method 2: "+(t2-t1));
 		//return (tlb/100000).toFixed(2);
 	}
     //#endregion end Terminal Benefit Computations
@@ -1016,6 +1001,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 break;
         }
         $scope.filter.date.date = moment($scope.filter.date.date);
+		if($scope.filter.date.date.clone().isBefore(moment($scope.employee.first_day))){
+			$scope.filter.date.date = moment($scope.employee.first_day);
+		}
         for(var i=0;i<$scope.leaves.length;i++){
             var show = false;
             for(var j=0;j<$scope.leaves[i].date_ranges.length ; j++){
