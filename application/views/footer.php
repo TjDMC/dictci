@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="modal-body p-3">
                 <p class="text-center">tadogup1@up.edu.ph</p>
-                <p class="text-center">pjnaraval@up.edu.ph</p>
+                <p class="text-center">pdnaraval@up.edu.ph</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" ng-click="customModalData.action.close()" data-dismiss="modal">Close</button>
