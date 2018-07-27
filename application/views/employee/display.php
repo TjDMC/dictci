@@ -179,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="text-center">
                             <button ng-disabled="busy" class="btn btn-primary" type="Submit">Save Changes</button>
-                            <button ng-disabled="busy" class="btn btn-danger" data-toggle="modal" type="button" data-target="#confirmDeleteModal">Delete Employee Records</button>
+                            <button ng-disabled="busy" class="btn btn-danger" data-toggle="modal" type="button" data-target="#confirmDeleteModal" ng-if="<?=isset($editable)?$editable:'true'?>">Delete Employee Records</button>
                         </div>
                     </form>
                 </div>
