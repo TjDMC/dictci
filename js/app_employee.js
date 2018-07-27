@@ -159,10 +159,10 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
             function(response){
                 $rootScope.showCustomModal('Success',response.msg,
                     function(){
-                        $window.location.reload();
+                        $window.location.href=$rootScope.baseURL+'employee/display/'+$scope.clone_employee.emp_no;
                     },
                     function(){
-                        $window.location.reload();
+                        $window.location.href=$rootScope.baseURL+'employee/display/'+$scope.clone_employee.emp_no;
                     }
                 );
             },
