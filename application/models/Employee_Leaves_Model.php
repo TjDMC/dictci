@@ -200,7 +200,6 @@ class Employee_Leaves_Model extends MY_Model{
         $employees = $this->db->select($m['emp_no'])->get($m['table_name'])->result_array();
         foreach($employees as $e){
             if(count($this->db->where('emp_no',$e[$m['emp_no']])->get(DB_PREFIX.'employee_leaves')->result_array())<1){
-                log_message('debug',date('YYYY-MM-DD'));
                 $this->db->insert(DB_PREFIX.'employee_leaves',array('emp_no'=>$e[$m['emp_no']],'first_day_compute'=>date('Y-m-d')));
             }
         }
