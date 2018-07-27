@@ -31,8 +31,8 @@ app.controller('employee_nav',function($scope,$rootScope){
 			}
 			result.push({
 				emp_no:employees[i].emp_no,
-				emp_name:employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name,
-				string:employees[i].emp_no+" - "+employees[i].last_name+", "+employees[i].first_name+" "+employees[i].middle_name
+				emp_name:employees[i].surname+", "+employees[i].first_name+" "+employees[i].middle_name,
+				string:employees[i].emp_no+" - "+employees[i].surname+", "+employees[i].first_name+" "+employees[i].middle_name
 			});
 		}
 		return result;
@@ -104,6 +104,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         $scope.employee = employee;
 		$scope.employee.vac_leave_bal = parseFloat($scope.employee.vac_leave_bal);
 		$scope.employee.sick_leave_bal = parseFloat($scope.employee.sick_leave_bal);
+        $scope.employee.highest_salary = parseFloat($scope.employee.highest_salary);
         $scope.leaves = leaves;
         $scope.employee.credits = {
             sick:0,
@@ -148,6 +149,8 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     }
 
     $scope.editEmployee = function(){
+        $scope.clone_employee.first_day_employ = moment($scope.clone_employee.first_day_employ).format('YYYY-MM-DD');
+        $scope.clone_employee.first_day_compute = moment($scope.clone_employee.first_day_compute).format('YYYY-MM-DD');
         $rootScope.post(
             $rootScope.baseURL+'employee/edit',
             $scope.clone_employee,
@@ -175,7 +178,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.deleteEmployee = function(){
         $rootScope.post(
             $rootScope.baseURL+'employee/delete',
-            {emp_no:$scope.emp_no,password:$scope.password},
+            {emp_no:$scope.employee.emp_no,password:$scope.password},
             function(response){
                 $rootScope.showCustomModal('Success',response.msg,
                     function(){
@@ -788,11 +791,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 var blob = new Blob([tab_text], {
                     type: "application/csv;charset=utf-8;"
                 });
-                navigator.msSaveBlob(blob, $scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
+                navigator.msSaveBlob(blob, $scope.employee.surname+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
             }
         } else {
             $('#rol-export').attr('href', data_type + ', ' + encodeURIComponent(tab_text)); //export button id
-            $('#rol-export').attr('download', $scope.employee.last_name+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
+            $('#rol-export').attr('download', $scope.employee.surname+"_"+$scope.rol.start_date.format("YYYYMMDD")+"-"+$scope.rol.end_date.format("YYYYMMDD")+".xls");
         }
 
     }
@@ -915,7 +918,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		//	Credits Earned
 		var creditByHalfDay = [0, 21, 42, 62, 83, 104, 125, 146, 167, 187, 208, 229, 250, 271, 292, 312, 333, 354, 375, 396, 417, 437, 458, 479, 500, 521, 542, 562, 583, 604, 625, 646, 667, 687, 708, 729, 750, 771, 792, 813, 833, 854, 875, 896, 917, 938, 958, 979,1000,1021,1042,1063,1083,1104,1125,1146,1167,1188,1208,1229,1250];
 
-		var dateStart = $scope.employee.first_day_compute.clone().subtract(1, 'days');
+		var dateStart = $scope.employee.first_day_employ.clone().subtract(1, 'days');
 		var dateEnd = $scope.terminal_date.clone();
 
 		var years = $scope.totalDays.years;

@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div ng-if="collisions.events" ng-repeat="emp_leave in collisions.leaves">
             <div class="alert alert-dark">
                 <p class="font-weight-bold">#{{$index+1}}</p>
-                <p><span class="font-weight-bold">Employee:</span> {{emp_leave.employee.emp_no}}. {{emp_leave.employee.last_name}}, {{emp_leave.employee.first_name}} {{emp_leave.employee.middle_name}}</p>
+                <p><span class="font-weight-bold">Employee:</span> {{emp_leave.employee.emp_no}}. {{emp_leave.employee.surname}}, {{emp_leave.employee.first_name}} {{emp_leave.employee.middle_name}}</p>
                 <p><span class="font-weight-bold">Leave Info:</span> {{emp_leave.leave.info.type}}. <span class="font-italic">{{emp_leave.leave.info.remarks}}</span></p>
                 <p><span class="font-weight-bold">Suspensions Collided With:</span></p>
                 <p class="ml-4" ng-repeat="event in emp_leave.leave.collision_events">- {{event.title}}. {{moment(event.date).format('MMMM DD, YYYY')}}. <span class="font-italic">{{event.description}}</span></p>

@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+$this->load->database();
 ?>
 
 <div ng-controller="init_db" class="card">
@@ -26,11 +27,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="card-body">
                     <form ng-submit="initialize(meta)">
                         <div class="form-group">
-                            <label>Employee Table Name:</label>
+                            <label>Employee Table Name (must be <?=$this->db->dbcollat?> (collation)):</label>
                             <input ng-model="meta.table_name" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">
-                            <label>'Employee No.'' Column Name:</label>
+                            <label>'Employee No.'' Column Name (must be 'char(7)'):</label>
                             <input ng-model="meta.emp_no" class="form-control" type="text" required/>
                         </div>
                         <div class="form-group">

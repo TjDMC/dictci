@@ -66,6 +66,13 @@ class Employee_Leaves_Model extends MY_Model{
             "field_name"=>"first_day_employ",
             "field_title"=>"First Day Employ",
             "required"=>false
+        )
+    );
+    private $employeeLeavesFields = array(
+        array(
+            "field_name"=>"emp_no",
+            "field_title"=>"Employee Number",
+            "required"=>true
         ),
         array(
             "field_name"=>"first_day_compute",
@@ -164,7 +171,7 @@ class Employee_Leaves_Model extends MY_Model{
     private function createTable(){
         $m = $this->getEmployeeTableMeta();
         if(!$m['is_external'] && !$this->db->table_exists($m['table_name'])){ //create default employees table
-            $this->dbforge->add_field($m['emp_no']." varchar(7) not null unique");
+            $this->dbforge->add_field($m['emp_no']." char(7) not null unique");
             $this->dbforge->add_field($m['surname']." tinytext not null");
             $this->dbforge->add_field($m['first_name']." tinytext not null");
             $this->dbforge->add_field($m['middle_name']." tinytext");
@@ -174,7 +181,7 @@ class Employee_Leaves_Model extends MY_Model{
         }
 
         if(!$this->db->table_exists(DB_PREFIX.'employee_leaves')){
-            $this->dbforge->add_field('emp_no varchar(7) not null');
+            $this->dbforge->add_field('emp_no char(7) not null');
             $this->dbforge->add_field("vac_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("sick_leave_bal decimal(6,3) not null default 0");
             $this->dbforge->add_field("first_day_compute date not null");
@@ -194,7 +201,7 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->add_field("is_without_pay boolean not null default false");
             $this->dbforge->add_field("date_added date not null");
             $this->dbforge->add_field("date_last_edited date not null");
-            $this->dbforge->add_field("emp_no varchar(7) not null");
+            $this->dbforge->add_field("emp_no char(7) not null");
             $this->dbforge->add_field("remarks varchar(50)");
             $this->dbforge->add_field("primary key (leave_id)");
             $this->dbforge->add_field("constraint emp_no_fk_2 foreign key (emp_no) references $m[table_name]($m[emp_no]) on update cascade on delete cascade");
@@ -239,13 +246,29 @@ class Employee_Leaves_Model extends MY_Model{
             if(!$this->db->table_exists($checker['table_name'])){
                 return 'Employee table does not exist.';
             }
-            $tableFields = $this->db->list_fields($checker['table_name']);
+            $tableFields = $this->db->list_fields($checker['table_name']); //check for existence of columns
             if(!in_array($checker['first_name'],$tableFields)) return "Column $checker[first_name] is not defined";
             if(!in_array($checker['surname'],$tableFields)) return "Column $checker[surname] is not defined";
             if(!in_array($checker['middle_name'],$tableFields)) return "Column $checker[middle_name] is not defined";
             if(!in_array($checker['first_day_employ'],$tableFields)) return "Column $checker[first_day_employ] is not defined";
             if(!in_array($checker['emp_no'],$tableFields)) return "Column $checker[emp_no] is not defined";
+
+            $tableFields = $this->db->field_data($checker['table_name']); //check for data type of emp_no
+            foreach($tableFields as $field){
+                if($field->name == $checker['emp_no']){
+                    if($field->type !== 'char' || $field->max_length != 7){
+                        return 'Employee Number field must have a data type of "char(7)"';
+                    }
+                }
+            }
+            $tableMeta = $this->db->query("show table status like '$checker[table_name]'")->result_array()[0]; //check for proper collation
+            if(isset($tableMeta['Collation']) && $tableMeta['Collation']!=$this->db->dbcollat){
+                return 'Table must be "'.$this->db->dbcollat.'" (collation).';
+            }else{
+                log_message('debug','WARNING! This database doesn\'t display metadata. Unexpected behaviour might occur.');
+            }
         }
+
         if(count($this->db->get(DB_PREFIX.'employee_table_meta')->result_array())>0){ //add table and column names to meta table
             $this->db->update(DB_PREFIX.'employee_table_meta',$checker);
         }else{
@@ -258,40 +281,69 @@ class Employee_Leaves_Model extends MY_Model{
         return $this->db->get(DB_PREFIX.'employee_table_meta')->result_array()[0];
     }
 
-    protected function replaceEmployeeFieldsIn($data){
+    protected function replaceEmployeeFieldsIn($data){ //replace employee fields from input that came from the frontend
         $m = $this->getEmployeeTableMeta();
-        $newData = array(
-            $m['first_name'] => $data['first_name'],
-            $m['middle_name'] => $data['middle_name'],
-            $m['surname'] => $data['surname'],
-            $m['first_day_employ'] => $data['first_day_employ'],
-            $m['emp_no'] => $data['emp_no']
-        );
-        return $newData;
+        if(isset($data['first_name'])){
+            $data[$m['first_name']]=$data['first_name'];
+            if($m['first_name']!='first_name')
+                unset($data['first_name']);
+        }
+        if(isset($data['surname'])){
+            $data[$m['surname']]=$data['surname'];
+            if($m['surname']!='surname')
+                unset($data['surname']);
+        }
+        if(isset($data['middle_name'])){
+            $data[$m['middle_name']]=$data['middle_name'];
+            if($m['middle_name']!='middle_name')
+                unset($data['middle_name']);
+        }
+        if(isset($data['emp_no'])){
+            $data[$m['emp_no']]=$data['emp_no'];
+            if($m['emp_no']!='emp_no')
+                unset($data['emp_no']);
+        }
+        if(isset($data['first_day_employ'])){
+            $data[$m['first_day_employ']]=$data['first_day_employ'];
+            if($m['first_day_employ']!='first_day_employ')
+                unset($data['first_day_employ']);
+        }
+
+        return $data;
     }
 
-    protected function replaceEmployeeFieldsOut($data){
+    protected function replaceEmployeeFieldsOut($data){ //replace employee fields that's coming out of the backend
         $m = $this->getEmployeeTableMeta();
-        $newData = array();
         foreach($data as $i=>$v){
             switch($i){
                 case $m['first_name']:
-                    $newData['first_name']=$data[$m['first_name']];
+                    $data['first_name']=$data[$m['first_name']];
+                    if($m['first_name']!='first_name')
+                        unset($data[$m['first_name']]);
                     break;
                 case $m['middle_name']:
-                    $newData['middle_name']=$data[$m['middle_name']];
+                    $data['middle_name']=$data[$m['middle_name']];
+                    if($m['middle_name']!='middle_name')
+                        unset($data[$m['middle_name']]);
                     break;
                 case $m['surname']:
-                    $newData['surname']=$data[$m['surname']];
+                    $data['surname']=$data[$m['surname']];
+                    if($m['surname']!='surname')
+                        unset($data[$m['surname']]);
                     break;
-                case $m['first_date_employ']:
-                    $newData['first_date_employ']=$data[$m['first_date_employ']];
+                case $m['first_day_employ']:
+                    $data['first_day_employ']=$data[$m['first_day_employ']];
+                    if($m['first_day_employ']!='first_day_employ')
+                        unset($data[$m['first_day_employ']]);
                     break;
                 case $m['emp_no']:
-                    $newData['emp_no']=$data[$m['emp_no']];
+                    $data['emp_no']=$data[$m['emp_no']];
+                    if($m['emp_no']!='emp_no')
+                        unset($data[$m['emp_no']]);
                     break;
             }
         }
+        return $data;
     }
 
     public function getEmployeeSelectFields(){
@@ -300,32 +352,45 @@ class Employee_Leaves_Model extends MY_Model{
     }
 
     public function addEmployee($employeeData){
-        $checker = $this->checkFields($this->employeeFields,$employeeData);
-        if(!is_array($checker)){
-            return $checker;
+        log_message('debug',print_r($employeeData,true));
+        $checker1 = $this->checkFields($this->employeeFields,$employeeData);
+        if(!is_array($checker1)){
+            return $checker1;
+        }
+        log_message('debug',print_r($checker1,true));
+        $checker2 = $this->checkFields($this->employeeLeavesFields,$employeeData);
+        if(!is_array($checker2)){
+            return $checker2;
         }
         $m = $this->getEmployeeTableMeta();
-        $checker = $this->replaceEmployeeFieldsIn($checker);
-
-        $this->db->where($m['emp_no'],$checker[$m['emp_no']]);
+        $checker1 = $this->replaceEmployeeFieldsIn($checker1);
+        log_message('debug',print_r($checker1,true));
+        $this->db->where($m['emp_no'],$checker1[$m['emp_no']]);
         $res = $this->db->get($m['table_name'])->result_array();
 
         if(count($res)>0){
             return "Employee Number already exists";
         }
-        $this->db->insert($m['table_name'],$checker);
-        return null;
+        $this->db->insert($m['table_name'],$checker1);
+        $this->db->insert(DB_PREFIX.'employee_leaves',$checker2);
     }
 
     public function editEmployee($employeeData){
-        $checker = $this->checkFields($this->employeeFields,$employeeData);
-        if(!is_array($checker)){
-            return $checker;
+        $checker1 = $this->checkFields($this->employeeFields,$employeeData);
+        if(!is_array($checker1)){
+            return $checker1;
+        }
+        $checker2 = $this->checkFields($this->employeeLeavesFields,$employeeData);
+        if(!is_array($checker2)){
+            return $checker2;
         }
         $m = $this->getEmployeeTableMeta();
-        $checker = $this->replaceEmployeeFieldsIn($checker);
-        $this->db->where($m['emp_no'],$checker['emp_no']);
-        $this->db->update($m['table_name'],$checker);
+        $checker1 = $this->replaceEmployeeFieldsIn($checker1);
+        $this->db->where($m['emp_no'],$checker1['emp_no']);
+        $this->db->update($m['table_name'],$checker1);
+
+        $this->db->where('emp_no',$checker2['emp_no']);
+        $this->db->update(DB_PREFIX.'employee_leaves',$checker2);
     }
 
     public function deleteEmployee($emp_no){
@@ -428,24 +493,31 @@ class Employee_Leaves_Model extends MY_Model{
 
     public function getEmployee($employeeNo){
         $m = $this->getEmployeeTableMeta();
+        $this->db->select($this->getEmployeeSelectFields().','.DB_PREFIX.'employee_leaves.*');
         $this->db->from($m['table_name']);
         $this->db->join(DB_PREFIX.'employee_leaves',DB_PREFIX.'employee_leaves.emp_no = '."$m[table_name].$m[emp_no]");
-        $this->db->where($m["emp_no"],$employeeNo);
+        $this->db->where($m['table_name'].'.'.$m["emp_no"],$employeeNo);
         $res = $this->db->get()->result_array();
 
         if(count($res)!=1){
             return null;
         }
+        $res = $this->replaceEmployeeFieldsOut($res[0]);
 
-        return $res[0];
+        return $res;
     }
 
     public function getEmployees(){
         $m = $this->getEmployeeTableMeta();
+        $this->db->select($this->getEmployeeSelectFields().','.DB_PREFIX.'employee_leaves.*');
         $this->db->from($m['table_name']);
         $this->db->join(DB_PREFIX.'employee_leaves',DB_PREFIX.'employee_leaves.emp_no = '."$m[table_name].$m[emp_no]");
         $res = $this->db->get()->result_array();
-        return $res;
+        $newRes = array();
+        foreach($res as $r){
+            array_push($newRes,$this->replaceEmployeeFieldsOut($r));
+        }
+        return $newRes;
     }
 
     public function getLeaves($employeeNo){

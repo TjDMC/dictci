@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="card-body">
         <div class="alert alert-dark">
             <p><span class="font-weight-bold">Employee No:</span> {{employee.emp_no}}</p>
-            <p><span class="font-weight-bold">Name:</span> {{employee.last_name}}, {{employee.first_name}} {{employee.middle_name}}</p>
+            <p><span class="font-weight-bold">Name:</span> {{employee.surname}}, {{employee.first_name}} {{employee.middle_name}}</p>
             <p><span class="font-weight-bold">Employement Date:</span> {{employee.first_day_employ.format('MMMM DD, YYYY')}}</p>
             <p><span class="font-weight-bold">Initial Credits:</span> Vacation {{employee.vac_leave_bal}} | Sick {{employee.sick_leave_bal}} </p>
             <p><span class="font-weight-bold">Computation Date:</span> {{employee.first_day_compute.format('MMMM DD, YYYY')}}</p>
@@ -118,11 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form ng-submit="add()">
-                        <div class="form-group">
-                            <label>Employee No: </label>
-                            <input class="form-control" type="text" ng-model="clone_employee.emp_no" pattern="[0-9]{7}" maxlength="7" required>
-                        </div>
+                    <form ng-submit="editEmployee()">
                         <div class="form-group">
                             <label>Last Name: </label>
                             <input class="form-control" type="text" ng-model="clone_employee.surname" required>
@@ -151,15 +147,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="form-group">
                             <label>Initial Vacation Leave Credit Balance: </label>
-                            <input class="form-control" type="number" min=0 ng-model="clone_employee.vac_leave_bal">
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.vac_leave_bal">
                         </div>
                         <div class="form-group">
                             <label>Initial Sick Leave Credit Balance: </label>
-                            <input class="form-control" type="number" min=0 ng-model="clone_employee.sick_leave_bal">
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.sick_leave_bal">
                         </div>
                         <div class="form-group">
                             <label>Highest Salary: </label>
-                            <input class="form-control" type="number" min=0 ng-model="clone_employee.highest_salary">
+                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.highest_salary">
                         </div>
                         <div class="dropdown form-group" ng-init="clone_employee.first_day_compute = moment(clone_employee.first_day_compute)">
                             <label>Computation Date:</label>
@@ -177,7 +173,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="text-center">
                             <button ng-disabled="busy" class="btn btn-primary" type="Submit">Save Changes</button>
-                            <button ng-disabled="busy" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">Delete Employee Records</button>
+                            <button ng-disabled="busy" class="btn btn-danger" data-toggle="modal" type="button" data-target="#confirmDeleteModal">Delete Employee Records</button>
                         </div>
                     </form>
                 </div>
@@ -242,7 +238,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <div class="text-center">
                         <div class="btn btn-group">
-                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day,'year')" ng-click="computations.year_filter.add(-1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
+                            <button class="btn btn-outline-primary" ng-disabled="computations.year_filter.isSameOrBefore(employee.first_day_compute,'year')" ng-click="computations.year_filter.add(-1,'year'); longComputation(this.computations,'table',getComputationsTable,[computations.year_filter.year()])" type="button"><i class="fas fa-angle-left"></i></button>
                             <div class="btn-group">
                                 <a  class="btn btn-outline-primary dropdown-toggle" id="computationsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{computations.year_filter.year()}}</a>
                                 <ul class="dropdown-menu" role="menu">
@@ -303,7 +299,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="modal-body text-center">
                     <div class="btn btn-group mx-auto">
-                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= employee.first_day.year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
+                        <button class="btn btn-outline-primary" ng-disabled="year.year() <= employee.first_day_compute.year()"  ng-click="addYear(-1)" type="button"><i class="fas fa-angle-left"></i></button>
                         <div class="btn-group">
                             <a  class="btn btn-outline-primary dropdown-toggle" id="statisticsDate" role="button" data-toggle="dropdown" data-target="#" href="#">{{year.year()}}</a>
                             <ul class="dropdown-menu" role="menu">
@@ -402,10 +398,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             			</div>
             			<div>
             				<div style="width:auto;float:left">
-            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_name}} {{employee.middle_name ? employee.middle_name.charAt(0)+".":''}} {{employee.last_name}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">NAME:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_name}} {{employee.middle_name ? employee.middle_name.charAt(0)+".":''}} {{employee.surname}}&nbsp;&nbsp;</span></p>
             				</div>
             				<div style="width:auto;float:right">
-            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
+            					<p><span style="font-weight:bold">Date Entered Service:</span>&nbsp;&nbsp;<span style="text-decoration:underline">&nbsp;&nbsp;{{employee.first_day_employ.format('MMMM DD, YYYY')}}&nbsp;&nbsp;</span></p>
             				</div>
             			</div>
                         <style>
@@ -595,7 +591,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <th>Leave Without Pay</th>
                         </tr>
                         <tr>
-                            <td>{{employee.first_day.format('MMMM DD, YYYY')}}</td>
+                            <td>{{employee.first_day_employ.format('MMMM DD, YYYY')}}</td>
                             <td>
                                 <div class=" dropdown">
                                     <a id="terminationDate" style="text-decoration:none" data-toggle="dropdown" data-target="dropdown" href="#">
