@@ -217,7 +217,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     $scope.bal_date = '';
 	$scope.lwop = [];		/* 0: total lwop; 1: lwop due to currV<0 */
 	$scope.cEnjoyed = {};	/* 0: vacation; 1: sick */
-	$scope.cEarned = {};		/* 0: vacation; 1: sick */
+	$scope.cEarned = {};	/* 0: vacation; 1: sick */
 	$scope.totalDays = {years:0,months:0,days:0};
     $scope.getBalance = function(){
 		var hold = $scope.computeBal($scope.bal_date);
@@ -854,7 +854,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 		
 		//		"who have accumulated fifteen (15) days of vacation leave credits shall be allowed to monetize a minimum of ten (10) days"
 		if(balance[0]<15){
-			$rootScope.showCustomModal('Error','The employee should have accumulated at least 15 vacation leave credits before monetization of leave credits is allowed.',function(){angular.element('#customModal').modal('hide');},function(){});
+			$rootScope.showCustomModal('Error','The employee should first have accumulated at least 15 vacation leave credits.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
 		if($scope.monetize.credits<10){
