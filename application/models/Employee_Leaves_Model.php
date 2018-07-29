@@ -185,7 +185,7 @@ class Employee_Leaves_Model extends MY_Model{
             $this->dbforge->add_field("vac_leave_bal decimal(7,3) not null default 0");
             $this->dbforge->add_field("sick_leave_bal decimal(7,3) not null default 0");
             $this->dbforge->add_field("first_day_compute date not null");
-            $this->dbforge->add_field("highest_salary decimal(10,3) not null default 0");
+            $this->dbforge->add_field("highest_salary decimal(10,2) not null default 0");
             $this->dbforge->add_field("constraint emp_no_fk_1 foreign key (emp_no) references ".$m['table_name']."(".$m['emp_no'].") on update cascade on delete cascade");
             $this->dbforge->create_table(DB_PREFIX.'employee_leaves',true);
         }else{
