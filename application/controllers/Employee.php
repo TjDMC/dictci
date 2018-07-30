@@ -81,7 +81,6 @@ class Employee extends MY_Controller{
         if($input === null)
             redirect(site_url("employee"));
         $data = parse_custom_post($input);
-        log_message('debug','teeest'.print_r($data,true));
         if(!isset($data['emp_no']) || !isset($data['password'])){
             custom_response(false,'Incomplete input.');
         }
