@@ -161,7 +161,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                         <div class="form-group">
                             <label>Highest Salary: </label>
-                            <input class="form-control" type="number"  min=0 step="0.001" ng-model="clone_employee.highest_salary">
+                            <input class="form-control" type="number"  min=0 step="0.01" ng-model="clone_employee.highest_salary">
                         </div>
                         <div class="dropdown form-group" ng-init="clone_employee.first_day_compute = moment(clone_employee.first_day_compute)">
                             <label>Computation Date:</label>
