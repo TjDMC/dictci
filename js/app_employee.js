@@ -857,7 +857,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			$rootScope.showCustomModal('Error','The employee should first have accumulated at least 15 vacation leave credits.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
-		if($scope.monetize.credits<10){
+		if($scope.monetize.credits<10 && !$scope.monetize.special){
 			$rootScope.showCustomModal('Error','At least 10 vacation leaves should be monetized.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
