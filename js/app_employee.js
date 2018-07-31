@@ -388,6 +388,23 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						currS -= creditUsed;
 						enjoyed.s += creditUsed;
                         $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+						if(currS<0){// When the employee is absent due to sickness and run out of sick leave
+							console.log("In");
+							if(currV+currS>=0){
+								currV += currS;
+								fLeave += currS;
+								enjoyed.v -= currS;
+							}else if(currV>0){
+								fLeave -= currV;
+								enjoyed.v += currV;
+								currV = 0;
+							}else{
+								
+							}
+							enjoyed.s += currS;
+							currS = 0;
+							$scope.computations.factors.push({type:'Vacation and Sick',amount:{v:currS,s:0},balance:{v:currV,s:0},remarks:'Sick leave balance is negative. Deducting credits from vacation.',date:dateStart.clone()});
+						}
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						// Temporal Solution for Monetization of Leaves
 						monetized=true;
@@ -440,23 +457,11 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					leaves.splice(i,1);
 				}
 			}
-			if(moment(dateStart).month()==11){
-				console.log(fLeave);
-				console.log(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd ));
-			}
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd )){
                 currV = currV-fLeave;
 				enjoyed.v += fLeave;
                 $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
             }
-			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
-				currV += currS;
-				fLeave += currS;
-				enjoyed.v -= currS;
-				enjoyed.s += currS;
-				currS = 0;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:currS,s:0},balance:{v:currV,s:0},remarks:'Sick leave balance is negative. Deducting credits from vacation.',date:dateStart.clone()});
-			}
 			if(currV<0 || mLWOP>0){// Employee incurring absence without pay
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var notPresent = mLWOP;
