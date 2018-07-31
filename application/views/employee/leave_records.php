@@ -17,11 +17,14 @@ if(!isset($events)){
 				<label id="leaveTypeSick" class="btn btn-outline-info" >
 				    <input type="radio" name="type" ng-value="'Sick'" ng-model="leave.info.type" autocomplete="off" required> Sick
 			    </label>
-				<label id="leaveTypeMaternity" class="btn btn-outline-info" >
-				    <input type="radio" name="type" ng-value="'Maternity'" ng-model="leave.info.type" autocomplete="off" required> Maternity
+				<label id="leaveTypeUndertime" class="btn btn-outline-info" >
+				    <input type="radio" name="type" ng-value="'Undertime'" ng-model="leave.info.type" autocomplete="off" required> Undertime
 			    </label>
-				<label id="leaveTypePaternity" class="btn btn-outline-info" >
-				    <input type="radio" name="type" ng-value="'Paternity'" ng-model="leave.info.type" autocomplete="off" required> Paternity
+				<label id="leaveTypeSpecialLeave" class="btn btn-outline-info" >
+				    <input type="radio" name="type" ng-value="'Special Leave'" ng-model="leave.info.type" autocomplete="off" required> Special
+			    </label>
+                <label id="leaveTypeForcedLeave" class="btn btn-outline-info" >
+				    <input type="radio" name="type" ng-value="'Forced Leave'" ng-model="leave.info.type" autocomplete="off" required> Forced
 			    </label>
 				<label id="leaveTypeOthers" class="btn btn-outline-info">
 				    <input type="radio" name="type" ng-value="'Others'" ng-model="leave.info.type" autocomplete="off" required> Others
@@ -36,9 +39,8 @@ if(!isset($events)){
 					</div>
 					<input class="form-control" type="text" ng-model="leave.info.type_others" ng-required="leave.info.type=='Others'"/>
                     <div class="input-group-append">
-                        <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Forced Leave'">Forced Leave</button>
-                        <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Special Leave'">Special Leave</button>
-                        <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Undertime'">Undertime</button>
+                        <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Maternity'">Maternity</button>
+                        <button type="button" class="btn btn-outline-secondary" ng-click="leave.info.type_others='Paternity'">Paternity</button>
                     </div>
 				</div>
 			</div>

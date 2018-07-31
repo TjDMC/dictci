@@ -81,7 +81,6 @@ class Employee extends MY_Controller{
         if($input === null)
             redirect(site_url("employee"));
         $data = parse_custom_post($input);
-        log_message('debug','teeest'.print_r($data,true));
         if(!isset($data['emp_no']) || !isset($data['password'])){
             custom_response(false,'Incomplete input.');
         }
@@ -117,7 +116,7 @@ class Employee extends MY_Controller{
                 if(!isset($data['info']['type_others'])){
                     custom_response(false,"Please specify the leave type.");
                 }
-                $invalidSpecialTypes = array('Maternity','Paternity','Vacation','Sick');
+                $invalidSpecialTypes = array('Special Leave','Forced Leave','Undertime','Vacation','Sick');
                 if(in_array($data['info']["type_others"],$invalidSpecialTypes)){
                     custom_response(false,"Invalid leave type.");
                 }

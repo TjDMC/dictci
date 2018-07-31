@@ -32,7 +32,7 @@ fieldset.icon-buttons {
 			<div class="col-md-3 col-sm-8 col-12 text-center" style="min-width:300px">
 				<a href="<?= base_url()?>employee">
 					<fieldset class="btn btn-outline-success p-4 text-center icon-buttons">
-						<legend class="icon-buttons-success">Employees</legend>
+						<legend class="icon-buttons-success text-center">Employees</legend>
 						<span class="fas fa-user-tie fa-10x mb-3"></span></br>
 					</fieldset>
 				</a>
@@ -41,7 +41,7 @@ fieldset.icon-buttons {
 			<div class="col-md-3 col-sm-8 col-12 text-center" style="min-width:300px">
 				<a href="<?= base_url()?>calendar">
 					<fieldset class="btn btn-outline-primary p-4 text-center icon-buttons">
-						<legend class="icon-buttons-primary">Calendar</legend>
+						<legend class="icon-buttons-primary text-center">Calendar</legend>
 						<span class="far fa-calendar-alt fa-10x mb-3" ></span></br>
 					</fieldset>
 				</a>

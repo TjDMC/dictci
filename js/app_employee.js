@@ -337,7 +337,6 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 
 		earned.v = currV;
 		earned.s = currS;
-
 		// Computation For Months Other Than The First
 		while(dateStart<dateEnd){
 			if(moment(dateStart).month()==0){
@@ -347,6 +346,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				monetized=false;
 			}
 			var mLWOP = 0;	// month's without pays
+            var deductFromMLWOP = 0;
 			for(var i=leaves.length-1;i>=0;i--){
 				var leave = leaves[i];
 				for(var j=leave.date_ranges.length-1;j>=0;j--){
@@ -388,6 +388,26 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 						currS -= creditUsed;
 						enjoyed.s += creditUsed;
                         $scope.computations.factors.push({type:'Sick',amount:{v:0,s:-creditUsed},balance:{v:currV,s:currS},remarks:'Sick Leaves',date:range.start_date.clone(),date_range:range,leave_info:leave.info});
+						if(currS<0){// When the employee is absent due to sickness and run out of sick leave
+                            if(currV+currS<0){
+                                deductFromMLWOP = -(currV+currS);
+                            }
+							/*console.log("In");
+							if(currV+currS>=0){
+								currV += currS;
+								fLeave += currS;
+								enjoyed.v -= currS;
+							}else if(currV>0){
+								fLeave -= currV;
+								enjoyed.v += currV;
+								currV = 0;
+							}else{
+
+							}
+							enjoyed.s += currS;
+							currS = 0;
+							$scope.computations.factors.push({type:'Vacation and Sick',amount:{v:currS,s:0},balance:{v:currV,s:0},remarks:'Sick leave balance is negative. Deducting credits from vacation.',date:dateStart.clone()});*/
+						}
 					}else if(leave.info.type.toLowerCase().includes('monet')){
 						// Temporal Solution for Monetization of Leaves
 						monetized=true;
@@ -440,26 +460,22 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 					leaves.splice(i,1);
 				}
 			}
-			if(moment(dateStart).month()==11){
-				console.log(fLeave);
-				console.log(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd ));
-			}
 			if(moment(dateStart).month()==11 && fLeave>0 && ( monetized || currV>10000 ) && ( lastDay.clone().month()!=11 || !isDistinctEnd )){
                 currV = currV-fLeave;
 				enjoyed.v += fLeave;
                 $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
             }
-			if(currS<0){// When the employee is absent due to sickness and run out of sick leave
-				currV += currS;
-				fLeave += currS;
-				enjoyed.v -= currS;
-				enjoyed.s += currS;
-				currS = 0;
+            if(currS<0){// When the employee is absent due to sickness and run out of sick leave
+                currV += currS;
+                fLeave += currS;
+                enjoyed.v -= currS;
+                enjoyed.s += currS;
+                currS = 0;
                 $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:currS,s:0},balance:{v:currV,s:0},remarks:'Sick leave balance is negative. Deducting credits from vacation.',date:dateStart.clone()});
-			}
+            }
 			if(currV<0 || mLWOP>0){// Employee incurring absence without pay
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
-				var notPresent = mLWOP;
+				var notPresent = mLWOP - deductFromMLWOP;
 				if(currV<0){
 					notPresent += Math.abs(currV);
 					wopCtr += Math.abs(currV);
@@ -480,7 +496,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				currS += tmp;
 				earned.v += tmp;
 				earned.s += tmp;
-                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:Math.floor(creditByHalfDay[60-absent]-(rem*cpd)),s:Math.floor(creditByHalfDay[60-absent]-(rem*cpd))},balance:{s:currS,v:currV},remarks:'End of Month Accumulation w/ Absence Without Pay',date:dateStart.clone().endOf('month')});
+                $scope.computations.factors.push({type:'Vacation and Sick',amount:{v:tmp,s:tmp},balance:{s:currS,v:currV},remarks:'End of Month Accumulation w/ Absence Without Pay',date:dateStart.clone().endOf('month')});
 			}else if(dateStart.isSame(dateEnd,'month') && isDistinctEnd){
 				var lastCredit = Math.floor(creditByHalfDay[60-2*Math.abs(lastDay.clone().diff(lastDay.clone().endOf('month'),'days'))]);
 				currV += lastCredit;
@@ -647,7 +663,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				var undertime={hour:0,min:0,total:0};
 				var ut_credits = factors[i].date_range.credits;
 				if(factors[i].leave_info.type.toLowerCase() == 'undertime'){ //undertime
-					undertime.total=factors[i].date_range.credits;
+					undertime.total=factors[i].date_range.credits*1000;
 				}
 
 				var without_pay={hour:0,min:0,total:0};
@@ -705,20 +721,21 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
                 factor.balance.v += resolvedNegatives[date].v;
 				if(factor.balance.v<0){//negative vac balance
-                    resolvedNegatives[date].v -= factor.balance.v;
+                    if(!stvFlag)
+                        resolvedNegatives[date].v -= factor.balance.v;
 					factor.without_pay.total-=factor.balance.v;
                     factor.leaves_taken.v += factor.balance.v; //deduct leaves taken.
-                    if(stvFlag){
-                        resolvedNegatives[date].v += factor.balance.v-factor.leaves_taken.v;
-                    }
                     factor.balance.v = 0;
 				}
-				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
+                if(stvFlag){
+                    resolvedNegatives[date].v -= factor.leaves_taken.v;
+                }
+				factor.leaves_taken.v = factor.undertime.total == factor.leaves_taken.v ? 0:(factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
 				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
-				factor.undertime.total = (factor.undertime.total/1000).toFixed(3);
-				factor.undertime.hour = ut_time.hours;
-				factor.undertime.min = ut_time.minutes;
+                factor.undertime.hour = factor.without_pay.total == factor.undertime.total ? 0:ut_time.hours;
+				factor.undertime.min = factor.without_pay.total == factor.undertime.total ? 0:ut_time.minutes;
+				factor.undertime.total = factor.without_pay.total == factor.undertime.total ? 0:(factor.undertime.total/1000).toFixed(3);
 				var wp_time = $rootScope.creditsToTime(factor.without_pay.total/1000);
 				factor.without_pay.total=(factor.without_pay.total/1000).toFixed(3);
 				factor.without_pay.hour = wp_time.hours;
@@ -849,19 +866,19 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         //Validation code goes here
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
 		var balance = $scope.computeBal($scope.monetize.date);
-		
+
 		//	As per MC 41, s. 1998: Sec 22
-		
+
 		//		"who have accumulated fifteen (15) days of vacation leave credits shall be allowed to monetize a minimum of ten (10) days"
 		if(balance[0]<15){
 			$rootScope.showCustomModal('Error','The employee should first have accumulated at least 15 vacation leave credits.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
-		if($scope.monetize.credits<10){
+		if($scope.monetize.credits<10 && !$scope.monetize.special){
 			$rootScope.showCustomModal('Error','At least 10 vacation leaves should be monetized.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
-		
+
 		//		At least 5 days is retained after monetization
 		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>Number(balance[0])+Number(balance[1])-5 ) ){
 			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -976,7 +993,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     //#endregion end Terminal Benefit Computations
 
     //#region Section 3.6 leave history
-    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
+    $scope.type_filters = ['vacation','sick','undertime','special leave','forced leave','others']; //should not contain 'every'. 'others' is essential
     $scope.filter = {
         type:{
             every:true
@@ -1122,7 +1139,7 @@ app.controller('employee_leave_records',function($scope,$rootScope,$window){
                 date_range.start_date = moment(date_range.start_date);
                 date_range.end_date = moment(date_range.end_date);
             }
-            var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
+            var validLeaves = ["Vacation","Sick","Undertime","Forced Leave","Special Leave","Paternity"];
             if(validLeaves.indexOf($scope.leave.info.type)==-1){
                 $scope.leave.info.type_others = $scope.leave.info.type;
                 $scope.leave.info.type = 'Others';
@@ -1131,16 +1148,16 @@ app.controller('employee_leave_records',function($scope,$rootScope,$window){
             $scope.addOrDeleteRange(0);
         }
         /* Setting css styling for leave type radio group (ng-class is not working :c)*/
-        var leaveTypes = ['Vacation','Sick','Maternity','Paternity','Others'];
+        var leaveTypes = ['Vacation','Sick','Forced Leave','Undertime','Special Leave','Paternity','Others'];
         if($scope.leave.info.type){
-            angular.element('#leaveType'+$scope.leave.info.type).addClass('active');
+            angular.element('#leaveType'+$scope.leave.info.type.replace(/\s/g,"")).addClass('active');
             var index = leaveTypes.indexOf($scope.leave.info.type);
             if(index>-1){
                 leaveTypes.splice(index,1);
             }
         }
         for(var i = 0 ; i<leaveTypes.length ; i++){
-            angular.element('#leaveType'+leaveTypes[i]).removeClass('active');
+            angular.element('#leaveType'+leaveTypes[i].replace(/\s/g,"")).removeClass('active');
         }
 
         angular.element('#addOrEditLeaveModal').modal('show');

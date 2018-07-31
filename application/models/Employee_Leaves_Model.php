@@ -361,19 +361,16 @@ class Employee_Leaves_Model extends MY_Model{
     }
 
     public function addEmployee($employeeData){
-        log_message('debug',print_r($employeeData,true));
         $checker1 = $this->checkFields($this->employeeFields,$employeeData);
         if(!is_array($checker1)){
             return $checker1;
         }
-        log_message('debug',print_r($checker1,true));
         $checker2 = $this->checkFields($this->employeeLeavesFields,$employeeData);
         if(!is_array($checker2)){
             return $checker2;
         }
         $m = $this->getEmployeeTableMeta();
         $checker1 = $this->replaceEmployeeFieldsIn($checker1);
-        log_message('debug',print_r($checker1,true));
         $this->db->where($m['emp_no'],$checker1[$m['emp_no']]);
         $res = $this->db->get($m['table_name'])->result_array();
 
@@ -631,7 +628,6 @@ class Employee_Leaves_Model extends MY_Model{
         $this->db->select(DB_PREFIX.'leave_date_range.*,('.$subquery.') as holiday_conflicts');
         $this->db->from(DB_PREFIX.'leave_date_range');
         $this->db->where("leave_id",$leaveID);
-        //log_message('debug',print_r($this->db->get_compiled_select(),true));
         $leave = array(
             'info'=>$res[0],
             'date_ranges'=>$this->db->order_by("start_date","desc")->get()->result_array()
