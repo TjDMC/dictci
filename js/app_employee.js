@@ -705,14 +705,15 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				}
                 factor.balance.v += resolvedNegatives[date].v;
 				if(factor.balance.v<0){//negative vac balance
-                    resolvedNegatives[date].v -= factor.balance.v;
+                    if(!stvFlag)
+                        resolvedNegatives[date].v -= factor.balance.v;
 					factor.without_pay.total-=factor.balance.v;
                     factor.leaves_taken.v += factor.balance.v; //deduct leaves taken.
-                    if(stvFlag){
-                        resolvedNegatives[date].v += factor.balance.v-factor.leaves_taken.v;
-                    }
                     factor.balance.v = 0;
 				}
+                if(stvFlag){
+                    resolvedNegatives[date].v -= factor.leaves_taken.v;
+                }
 				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
 				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
@@ -849,9 +850,9 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
         //Validation code goes here
         $scope.monetize.credits = parseFloat($scope.monetize.credits.toFixed(3));
 		var balance = $scope.computeBal($scope.monetize.date);
-		
+
 		//	As per MC 41, s. 1998: Sec 22
-		
+
 		//		"who have accumulated fifteen (15) days of vacation leave credits shall be allowed to monetize a minimum of ten (10) days"
 		if(balance[0]<15){
 			$rootScope.showCustomModal('Error','The employee should first have accumulated at least 15 vacation leave credits.',function(){angular.element('#customModal').modal('hide');},function(){});
@@ -861,7 +862,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 			$rootScope.showCustomModal('Error','At least 10 vacation leaves should be monetized.',function(){angular.element('#customModal').modal('hide');},function(){});
 			return;
 		}
-		
+
 		//		At least 5 days is retained after monetization
 		if( ( !$scope.monetize.special && $scope.monetize.credits>balance[0]-5 )  ||  ( $scope.monetize.special && $scope.monetize.credits>Number(balance[0])+Number(balance[1])-5 ) ){
 			$rootScope.showCustomModal('Error','At least 5 vacation leaves should remain.',function(){angular.element('#customModal').modal('hide');},function(){});
