@@ -399,7 +399,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 								enjoyed.v += currV;
 								currV = 0;
 							}else{
-								
+
 							}
 							enjoyed.s += currS;
 							currS = 0;
@@ -462,6 +462,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				enjoyed.v += fLeave;
                 $scope.computations.factors.push({type:'Vacation',amount:{v:-fLeave,s:0},balance:{v:currV,s:currS},remarks:'Forced Leave',date:dateStart.clone().endOf('year')});
             }
+            
 			if(currV<0 || mLWOP>0){// Employee incurring absence without pay
 				var cpd = 1.25/30; // Credit per day: ( 1.25 credits per month )/( 30 days per month )
 				var notPresent = mLWOP;
@@ -719,12 +720,12 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
                 if(stvFlag){
                     resolvedNegatives[date].v -= factor.leaves_taken.v;
                 }
-				factor.leaves_taken.v = (factor.leaves_taken.v/1000).toFixed(3);
+				factor.leaves_taken.v = factor.undertime.total == factor.leaves_taken.v ? 0:(factor.leaves_taken.v/1000).toFixed(3);
 				factor.leaves_taken.s = (factor.leaves_taken.s/1000).toFixed(3);
 				var ut_time = $rootScope.creditsToTime(factor.undertime.total/1000);
-				factor.undertime.total = (factor.undertime.total/1000).toFixed(3);
-				factor.undertime.hour = ut_time.hours;
-				factor.undertime.min = ut_time.minutes;
+                factor.undertime.hour = factor.without_pay.total == factor.undertime.total ? 0:ut_time.hours;
+				factor.undertime.min = factor.without_pay.total == factor.undertime.total ? 0:ut_time.minutes;
+				factor.undertime.total = factor.without_pay.total == factor.undertime.total ? 0:(factor.undertime.total/1000).toFixed(3);
 				var wp_time = $rootScope.creditsToTime(factor.without_pay.total/1000);
 				factor.without_pay.total=(factor.without_pay.total/1000).toFixed(3);
 				factor.without_pay.hour = wp_time.hours;
