@@ -80,27 +80,19 @@ June 25, 2018 - June 29, 2018
 
 July 02, 2018 - July 06, 2018
 	-Website Development
-	-Prototype 1 Testing
+	-Prototype Testing
 
-July 09, 2018 - July 14, 2018
+July 09, 2018 - July 20, 2018
 	-Website Development
-	-Prototype 2 Testing
-	-Test Deployment
 
 July 16, 2018 - July 20, 2018
-	-Deployment
+	-Website Development
 	-Integration with external employees table
-	-Bug-fixing
-	-Polishing
-	-Optimizations
-	-Documentation
 
 July 23, 2018 - July 27, 2018
-	-Bug-fixing
-	-Polishing
-	-Optimizations
+	-Website Development
 	-Documentation
-	-Signing of certificates (?)
 
 July 30, 2018 - July 31, 2018
-	-Signing of certificates
+	-Presentation
+	-Deployment
