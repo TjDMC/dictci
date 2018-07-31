@@ -647,7 +647,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
 				var undertime={hour:0,min:0,total:0};
 				var ut_credits = factors[i].date_range.credits;
 				if(factors[i].leave_info.type.toLowerCase() == 'undertime'){ //undertime
-					undertime.total=factors[i].date_range.credits;
+					undertime.total=factors[i].date_range.credits*1000;
 				}
 
 				var without_pay={hour:0,min:0,total:0};
