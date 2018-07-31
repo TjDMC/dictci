@@ -1,0 +1,9 @@
+Post-Deployment Checklist
+-Fix layouting of employee search filters on smaller screens.
+-Transfer without_pay field from leaves to leave_date_ranges.
+-Fix recurring events not getting counted in holiday conflicts.
+	-use CASE in SQL query.
+-Add name extension to employee table 
+
+-computation documentation
+-user manual
