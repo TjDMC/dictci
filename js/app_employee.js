@@ -982,7 +982,7 @@ app.controller('employee_display',function($scope,$rootScope,$window,$timeout){
     //#endregion end Terminal Benefit Computations
 
     //#region Section 3.6 leave history
-    $scope.type_filters = ['vacation','sick','maternity','paternity','others']; //should not contain 'every'. 'others' is essential
+    $scope.type_filters = ['vacation','sick','undertime','special leave','forced leave','others']; //should not contain 'every'. 'others' is essential
     $scope.filter = {
         type:{
             every:true
@@ -1128,7 +1128,7 @@ app.controller('employee_leave_records',function($scope,$rootScope,$window){
                 date_range.start_date = moment(date_range.start_date);
                 date_range.end_date = moment(date_range.end_date);
             }
-            var validLeaves = ["Vacation","Sick","Maternity","Paternity"];
+            var validLeaves = ["Vacation","Sick","Undertime","Forced Leave","Special Leave","Paternity"];
             if(validLeaves.indexOf($scope.leave.info.type)==-1){
                 $scope.leave.info.type_others = $scope.leave.info.type;
                 $scope.leave.info.type = 'Others';
@@ -1137,16 +1137,16 @@ app.controller('employee_leave_records',function($scope,$rootScope,$window){
             $scope.addOrDeleteRange(0);
         }
         /* Setting css styling for leave type radio group (ng-class is not working :c)*/
-        var leaveTypes = ['Vacation','Sick','Maternity','Paternity','Others'];
+        var leaveTypes = ['Vacation','Sick','Forced Leave','Undertime','Special Leave','Paternity','Others'];
         if($scope.leave.info.type){
-            angular.element('#leaveType'+$scope.leave.info.type).addClass('active');
+            angular.element('#leaveType'+$scope.leave.info.type.replace(/\s/g,"")).addClass('active');
             var index = leaveTypes.indexOf($scope.leave.info.type);
             if(index>-1){
                 leaveTypes.splice(index,1);
             }
         }
         for(var i = 0 ; i<leaveTypes.length ; i++){
-            angular.element('#leaveType'+leaveTypes[i]).removeClass('active');
+            angular.element('#leaveType'+leaveTypes[i].replace(/\s/g,"")).removeClass('active');
         }
 
         angular.element('#addOrEditLeaveModal').modal('show');
