@@ -38,12 +38,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="modal-body">
                     <form ng-submit="actionEvent(modalEvent.hasOwnProperty('event_id')?'edit':'add')">
                         <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" id="isRecurring" type="checkbox" ng-true-value=1 ng-false-value=0 ng-model="modalEvent.is_recurring"></input>
-                                <label for="isRecurring">Recurring</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label>Title</label>
                             <input class="form-control" type="text" ng-model="modalEvent.title" required></input>
                         </div>
